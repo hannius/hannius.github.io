@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[hexo fs.SyncWriteStream is deprecated]]></title>
+    <url>%2F2018%2F02%2F28%2Fhexo-fs-SyncWriteStream-is-deprecated%2F</url>
+    <content type="text"><![CDATA[fs.SyncWriteStream is deprecated出现这个错误需要更新hexo-fs插件 使用npm install hexo-fs –save 在执行hexo命令的时候，总会显示如下报错：(node:7048) [DEP0061] DeprecationWarning: fs.SyncWriteStream is deprecated. 从报错信息来看是因为fs.SyncWriteStream is deprecated，node.js从8.0开始已经弃用了fs.SyncWriteStream方法，所以是因为我们node_modules中某个插件调用了这个方法，通过查看Hexo作者GitHub对应的项目，在issue中看到有人提到这个问题，在hexo项目中其中有一个hexo-fs的插件调用了这个方法，所以需要更新hexo-fs插件，更新方法如下： npm install hexo-fs –save 更新插件后问题依然无法解决。 通过–debug来查看：[root@server init]# hexo –debug06:55:32.711 DEBUG Hexo version: 3.5.006:55:32.714 DEBUG Working directory: /data/wwwroot/init/06:55:32.787 DEBUG Config loaded: /data/wwwroot/init/_config.yml06:55:32.832 DEBUG Plugin loaded: hexo-admin(node:25414) [DEP0061] DeprecationWarning: fs.SyncWriteStream is deprecated. 问题出在：hexo-admin的hexo-fs因hexo-admin作为后台管理，无法npm uninstall hexo-admin卸载,则找到对应文件，注释： [root@server init]# grep -irn “SyncWriteStream” ./node_modules/hexo-admin/./node_modules/hexo-admin/node_modules/hexo-fs/lib/fs.js:718:exports.SyncWriteStream = fs.SyncWriteStream;[root@lywserver init]# 将对应的exports.SyncWriteStream = fs.SyncWriteStream;注释(前面 //)即可！]]></content>
+  </entry>
+  <entry>
     <title><![CDATA[ELK x-pack 详细说明]]></title>
     <url>%2F2018%2F02%2F26%2Fname%2F</url>
     <content type="text"><![CDATA[我还能说什么呢？？]]></content>
