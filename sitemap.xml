@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.leiyawu.com/about/index.html</loc>
+    
+    <lastmod>2018-02-28T07:34:09.600Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.leiyawu.com/2018/02/26/name/</loc>
     
     <lastmod>2018-02-28T07:26:19.502Z</lastmod>
@@ -33,13 +40,6 @@
     <loc>http://www.leiyawu.com/categories/index.html</loc>
     
     <lastmod>2018-02-28T07:13:36.533Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.leiyawu.com/about/index.html</loc>
-    
-    <lastmod>2018-02-27T08:10:06.279Z</lastmod>
     
   </url>
   
