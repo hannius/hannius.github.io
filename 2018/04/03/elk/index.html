@@ -81,16 +81,17 @@
 
 
 
-<meta name="description" content="Still Waters Run Deep">
-<meta property="og:type" content="website">
-<meta property="og:title" content="让一切随风">
-<meta property="og:url" content="http://www.leiyawu.com/tags/SyncWriteStream/index.html">
+<meta name="description" content="问题一  ● 最近发现kibana的日志传的很慢，常常查不到日志，由于所有的日志收集都只传输到了一个logstash进行收集和过滤，于是怀疑是否是由于logstash的吞吐量存在瓶颈。一看，还真是到了瓶颈。   ● 优化过程   ● 经过查询logstash完整配置文件，有几个参数需要调整 12345678# pipeline线程数，官方建议是等于CPU内核数pipeline.workers: 2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ELK的一次吞吐量优化">
+<meta property="og:url" content="http://www.leiyawu.com/2018/04/03/elk/index.html">
 <meta property="og:site_name" content="让一切随风">
-<meta property="og:description" content="Still Waters Run Deep">
+<meta property="og:description" content="问题一  ● 最近发现kibana的日志传的很慢，常常查不到日志，由于所有的日志收集都只传输到了一个logstash进行收集和过滤，于是怀疑是否是由于logstash的吞吐量存在瓶颈。一看，还真是到了瓶颈。   ● 优化过程   ● 经过查询logstash完整配置文件，有几个参数需要调整 12345678# pipeline线程数，官方建议是等于CPU内核数pipeline.workers: 2">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-03T03:48:32.207Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="让一切随风">
-<meta name="twitter:description" content="Still Waters Run Deep">
+<meta name="twitter:title" content="ELK的一次吞吐量优化">
+<meta name="twitter:description" content="问题一  ● 最近发现kibana的日志传的很慢，常常查不到日志，由于所有的日志收集都只传输到了一个logstash进行收集和过滤，于是怀疑是否是由于logstash的吞吐量存在瓶颈。一看，还真是到了瓶颈。   ● 优化过程   ● 经过查询logstash完整配置文件，有几个参数需要调整 12345678# pipeline线程数，官方建议是等于CPU内核数pipeline.workers: 2">
 
 
 
@@ -120,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://www.leiyawu.com/tags/SyncWriteStream/"/>
+  <link rel="canonical" href="http://www.leiyawu.com/2018/04/03/elk/"/>
 
 
 
 
 
-  <title>标签: SyncWriteStream  | 让一切随风</title>
+  <title>ELK的一次吞吐量优化 | 让一切随风</title>
   
 
 
@@ -155,7 +156,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
  
   <a href="https://github.com/hannius"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
@@ -305,54 +306,204 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>SyncWriteStream <small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/04/03/elk/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin Lei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="让一切随风">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/02/28/hexo-fs-SyncWriteStream-is-deprecated/" itemprop="url">
-              
-                <span itemprop="name">hexo fs.SyncWriteStream is deprecated</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">ELK的一次吞吐量优化</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-02-28T14:59:00+08:00"
-              content="2018-02-28" >
-          02-28
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-03T11:42:33+08:00">
+                2018-04-03
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="问题一"><a href="#问题一" class="headerlink" title="问题一"></a>问题一</h2><p>  ● 最近发现kibana的日志传的很慢，常常查不到日志，由于所有的日志收集都只传输到了一个logstash进行收集和过滤，于是怀疑是否是由于logstash的吞吐量存在瓶颈。一看，还真是到了瓶颈。</p>
+<p>  ● 优化过程</p>
+<p>  ● 经过查询logstash完整配置文件，有几个参数需要调整</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># pipeline线程数，官方建议是等于CPU内核数</span><br><span class="line">pipeline.workers: 24</span><br><span class="line"># 实际output时的线程数</span><br><span class="line">pipeline.output.workers: 24</span><br><span class="line"># 每次发送的事件数</span><br><span class="line">pipeline.batch.size: 3000</span><br><span class="line"># 发送延时</span><br><span class="line">pipeline.batch.delay: 5</span><br></pre></td></tr></table></figure>
+<p>PS:由于我们的ES集群数据量较大（&gt;28T），所以具体配置数值视自身生产环境</p>
+<h2 id="问题二"><a href="#问题二" class="headerlink" title="问题二"></a>问题二</h2><p>  ● 在查看logstash日志过程中，我们看到了大量的以下报错<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[2017-03-18T09:46:21,043][INFO ][logstash.outputs.elasticsearch] retrying failed action with response code: 429 (&#123;&quot;type&quot;=&gt;&quot;es_rejected_execution_exception&quot;, &quot;reason&quot;=&gt;&quot;rejected execution of org.elasticsearch.transport.TransportService$6@6918cf2e on EsThreadPoolExecutor[bulk, queue capacity = 50, org.elasticsearch.common.util.concurrent.EsThreadPoolExecutor@55337655[Running, pool size = 24, active threads = 24, queued tasks = 50, completed tasks = 1767887463]]&quot;&#125;)</span><br><span class="line">[2017-03-18T09:46:21,043][ERROR][logstash.outputs.elasticsearch] Retrying individual actions</span><br></pre></td></tr></table></figure></p>
+<p>  ● 查询官网，确认为时ES的写入遇到了瓶颈</p>
+<p>  ● Make sure to watch for TOO_MANY_REQUESTS (429) response codes (EsRejectedExecutionException with the Java client), which is the way that Elasticsearch tells you that it cannot keep up with the current indexing rate. When it happens, you should pause indexing a bit before trying again, ideally with randomized exponential backoff.</p>
+<p>我们首先想到的是来调整ES的线程数，但是官网写到”Don’t Touch There Settings!”, 那怎么办？于是乎官方建议我们修改logstash的参数pipeline.batch.size</p>
+<p>  ● 在ES5.0以后，es将bulk、flush、get、index、search等线程池完全分离，自身的写入不会影响其他功能的性能。<br>来查询一下ES当前的线程情况：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">GET _nodes/stats/thread_pool?pretty</span><br><span class="line"></span><br><span class="line">可以看到：</span><br><span class="line">&#123;</span><br><span class="line">  &quot;_nodes&quot;: &#123;</span><br><span class="line">    &quot;total&quot;: 6,</span><br><span class="line">    &quot;successful&quot;: 6,</span><br><span class="line">    &quot;failed&quot;: 0</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;cluster_name&quot;: &quot;dev-elasticstack5.0&quot;,</span><br><span class="line">  &quot;nodes&quot;: &#123;</span><br><span class="line">    &quot;nnfCv8FrSh-p223gsbJVMA&quot;: &#123;</span><br><span class="line">      &quot;timestamp&quot;: 1489804973926,</span><br><span class="line">      &quot;name&quot;: &quot;node-3&quot;,</span><br><span class="line">      &quot;transport_address&quot;: &quot;192.168.3.***:9301&quot;,</span><br><span class="line">      &quot;host&quot;: &quot;192.168.3.***&quot;,</span><br><span class="line">      &quot;ip&quot;: &quot;192.168.3.***:9301&quot;,</span><br><span class="line">      &quot;roles&quot;: [</span><br><span class="line">        &quot;master&quot;,</span><br><span class="line">        &quot;data&quot;,</span><br><span class="line">        &quot;ingest&quot;</span><br><span class="line">      ],</span><br><span class="line">      &quot;attributes&quot;: &#123;</span><br><span class="line">        &quot;rack&quot;: &quot;r1&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;thread_pool&quot;: &#123;</span><br><span class="line">        &quot;bulk&quot;: &#123;</span><br><span class="line">          &quot;threads&quot;: 24,</span><br><span class="line">          &quot;queue&quot;: 214,</span><br><span class="line">          &quot;active&quot;: 24,</span><br><span class="line">          &quot;rejected&quot;: 30804543,</span><br><span class="line">          &quot;largest&quot;: 24,</span><br><span class="line">          &quot;completed&quot;: 1047606679</span><br><span class="line">        &#125;,</span><br><span class="line"></span><br><span class="line">        ......</span><br><span class="line"></span><br><span class="line">        &quot;watcher&quot;: &#123;</span><br><span class="line">  &quot;threads&quot;: 0,</span><br><span class="line">  &quot;queue&quot;: 0,</span><br><span class="line">  &quot;active&quot;: 0,</span><br><span class="line">  &quot;rejected&quot;: 0,</span><br><span class="line">  &quot;largest&quot;: 0,</span><br><span class="line">  &quot;completed&quot;: 0</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中：”bulk”模板的线程数24，当前活跃的线程数24，证明所有的线程是busy的状态，queue队列214，rejected为30804543。那么问题就找到了，所有的线程都在忙，队列堵满后再有进程写入就会被拒绝，而当前拒绝数为30804543。<br>优化方案<br>问题找到了，如何优化呢。官方的建议是提高每次批处理的数量，调节传输间歇时间。当batch.size增大，es处理的事件数就会变少，写入也就愉快了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/logstash/logstash.yml</span><br><span class="line">#</span><br><span class="line">pipeline.workers: 24</span><br><span class="line">pipeline.output.workers: 24</span><br><span class="line">pipeline.batch.size: 10000</span><br><span class="line">pipeline.batch.delay: 10</span><br></pre></td></tr></table></figure>
+<p>具体的worker/output.workers数量建议等于CPU数，batch.size/batch.delay根据实际的数据量逐渐增大来测试最优值。</p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果文章对您有用请随意打赏，谢谢支持！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Martin Lei 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Martin Lei 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Martin Lei
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://www.leiyawu.com/2018/04/03/elk/" title="ELK的一次吞吐量优化">http://www.leiyawu.com/2018/04/03/elk/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/02/asd/" rel="next" title="23种非常有用的ElasticSearch查询例子">
+                <i class="fa fa-chevron-left"></i> 23种非常有用的ElasticSearch查询例子
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/03/ELK索引/" rel="prev" title="ELK索引">
+                ELK索引 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -360,6 +511,15 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDM4OS8xMDkyNg=="></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -380,8 +540,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -494,6 +663,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题一"><span class="nav-number">1.</span> <span class="nav-text">问题一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题二"><span class="nav-number">2.</span> <span class="nav-text">问题二</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -643,6 +828,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -671,6 +860,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 

@@ -81,16 +81,17 @@
 
 
 
-<meta name="description" content="Still Waters Run Deep">
-<meta property="og:type" content="website">
-<meta property="og:title" content="让一切随风">
-<meta property="og:url" content="http://www.leiyawu.com/tags/SyncWriteStream/index.html">
+<meta name="description" content="一、新建索引为了展示Elasticsearch中不同查询的用法，先在Elasticsearch里面创建了book相关的documents，每本书主要涉及以下字段： title, authors, summary, publish_date(发行日期),publisher以及评论条数。操作如下： curl -XPUT ‘https://www.iteblog.com:9200/iteblog_boo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="23种非常有用的ElasticSearch查询例子">
+<meta property="og:url" content="http://www.leiyawu.com/2018/04/02/asd/index.html">
 <meta property="og:site_name" content="让一切随风">
-<meta property="og:description" content="Still Waters Run Deep">
+<meta property="og:description" content="一、新建索引为了展示Elasticsearch中不同查询的用法，先在Elasticsearch里面创建了book相关的documents，每本书主要涉及以下字段： title, authors, summary, publish_date(发行日期),publisher以及评论条数。操作如下： curl -XPUT ‘https://www.iteblog.com:9200/iteblog_boo">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-02T06:35:11.801Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="让一切随风">
-<meta name="twitter:description" content="Still Waters Run Deep">
+<meta name="twitter:title" content="23种非常有用的ElasticSearch查询例子">
+<meta name="twitter:description" content="一、新建索引为了展示Elasticsearch中不同查询的用法，先在Elasticsearch里面创建了book相关的documents，每本书主要涉及以下字段： title, authors, summary, publish_date(发行日期),publisher以及评论条数。操作如下： curl -XPUT ‘https://www.iteblog.com:9200/iteblog_boo">
 
 
 
@@ -120,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://www.leiyawu.com/tags/SyncWriteStream/"/>
+  <link rel="canonical" href="http://www.leiyawu.com/2018/04/02/asd/"/>
 
 
 
 
 
-  <title>标签: SyncWriteStream  | 让一切随风</title>
+  <title>23种非常有用的ElasticSearch查询例子 | 让一切随风</title>
   
 
 
@@ -155,7 +156,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
  
   <a href="https://github.com/hannius"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
@@ -305,54 +306,234 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>SyncWriteStream <small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/04/02/asd/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin Lei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="让一切随风">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/02/28/hexo-fs-SyncWriteStream-is-deprecated/" itemprop="url">
-              
-                <span itemprop="name">hexo fs.SyncWriteStream is deprecated</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">23种非常有用的ElasticSearch查询例子</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-02-28T14:59:00+08:00"
-              content="2018-02-28" >
-          02-28
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-02T14:34:36+08:00">
+                2018-04-02
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>一、新建索引<br>为了展示Elasticsearch中不同查询的用法，先在Elasticsearch里面创建了book相关的documents，每本书主要涉及以下字段： title, authors, summary, publish_date(发行日期),publisher以及评论条数。操作如下：</p>
+<p>curl -XPUT ‘<a href="https://www.iteblog.com:9200/iteblog_book_index&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index&#39;</a> -d ‘{ “settings”: { “number_of_shards”: 1 }}’</p>
+<p>curl -XPOST ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_bulk&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_bulk&#39;</a> -d ‘<br>{ “index”: { “_id”: 1 }}<br>{ “title”: “Elasticsearch: The Definitive Guide”, “authors”: [“clinton gormley”, “zachary tong”], “summary” : “A distibuted real-time search and analytics engine”, “publish_date” : “2015-02-07”, “num_reviews”: 20, “publisher”: “oreilly” }<br>{ “index”: { “_id”: 2 }}<br>{ “title”: “Taming Text: How to Find, Organize, and Manipulate It”, “authors”: [“grant ingersoll”, “thomas morton”, “drew farris”], “summary” : “organize text using approaches such as full-text search, proper name recognition, clustering, tagging, information extraction, and summarization”, “publish_date” : “2013-01-24”, “num_reviews”: 12, “publisher”: “manning” }<br>{ “index”: { “_id”: 3 }}<br>{ “title”: “Elasticsearch in Action”, “authors”: [“radu gheorge”, “matthew lee hinman”, “roy russo”], “summary” : “build scalable search applications using Elasticsearch without having to do complex low-level programming or understand advanced data science algorithms”, “publish_date” : “2015-12-03”, “num_reviews”: 18, “publisher”: “manning” }<br>{ “index”: { “_id”: 4 }}<br>{ “title”: “Solr in Action”, “authors”: [“trey grainger”, “timothy potter”], “summary” : “Comprehensive guide to implementing a scalable search engine using Apache Solr”, “publish_date” : “2014-04-05”, “num_reviews”: 23, “publisher”: “manning” }<br>‘</p>
+<p>通过dev tools来模拟则为：</p>
+<p>POST /iteblog_book_index/book/_bulk<br>{ “index”: { “_id”: 1 }}<br>{ “title”: “Elasticsearch: The Definitive Guide”, “authors”: [“clinton gormley”, “zachary tong”], “summary” : “A distibuted real-time search and analytics engine”, “publish_date” : “2015-02-07”, “num_reviews”: 20, “publisher”: “oreilly” }<br>{ “index”: { “_id”: 2 }}<br>{ “title”: “Taming Text: How to Find, Organize, and Manipulate It”, “authors”: [“grant ingersoll”, “thomas morton”, “drew farris”], “summary” : “organize text using approaches such as full-text search, proper name recognition, clustering, tagging, information extraction, and summarization”, “publish_date” : “2013-01-24”, “num_reviews”: 12, “publisher”: “manning” }<br>{ “index”: { “_id”: 3 }}<br>{ “title”: “Elasticsearch in Action”, “authors”: [“radu gheorge”, “matthew lee hinman”, “roy russo”], “summary” : “build scalable search applications using Elasticsearch without having to do complex low-level programming or understand advanced data science algorithms”, “publish_date” : “2015-12-03”, “num_reviews”: 18, “publisher”: “manning” }<br>{ “index”: { “_id”: 4 }}<br>{ “title”: “Solr in Action”, “authors”: [“trey grainger”, “timothy potter”], “summary” : “Comprehensive guide to implementing a scalable search engine using Apache Solr”, “publish_date” : “2014-04-05”, “num_reviews”: 23, “publisher”: “manning” }</p>
+<p>ES中的查询请求有两种方式，一种是简易版的查询，另外一种是使用JSON完整的请求体，叫做结构化查询（DSL）。<br>由于DSL查询更为直观也更为简易，所以大都使用这种方式。<br>DSL查询是POST过去一个json，由于post的请求是json格式的，所以存在很多灵活性，也有很多形式。</p>
+<p>基本匹配查询主要形式：<br>（1）、使用Search Lite API，并将所有的搜索参数都通过URL传递<br>（2）、使用Elasticsearch DSL，其可以通过传递一个JSON请求来获取结果。Curl方式与其类似，只是提交方式不是POST，而是XGET，提交参数与DSL提交一致</p>
+<p>二、基本匹配查询(Basic Match Query)<br>1、在所有的字段中搜索带有”guide”的结果：<br>通过dev tools:<br>GET /iteblog_book_index/book/_search?q=guide</p>
+<p>通过curl方式：<br>curl -u elastic “<a href="http://10.104.37.115:9281/iteblog_book_index/book/_search?pretty&quot;" target="_blank" rel="noopener">http://10.104.37.115:9281/iteblog_book_index/book/_search?pretty&quot;</a> -d ‘<br>{<br>    “query”: {<br>        “multi_match” : {<br>            “query” : “guide”,<br>            “fields” : [“_all”]<br>        }<br>    }<br>}’</p>
+<p>通过DSL：(POST json方式)</p>
+<p>其输出和上面使用/iteblog_book_index/book/_search?q=guide的输出一样。上面的multi_match关键字通常在查询多个fields的时候作为match关键字的简写方式。fields属性指定需要查询的字段，如果我们想查询所有的字段，这时候可以使用_all关键字，正如上面的一样。</p>
+<p>如果只是查询summary字段，则为：</p>
+<p>title的Guide则不会显示。</p>
+<p>2、以上两种方式都允许我们指定查询哪些字段。比如，我们想查询title中出现in Action的图书，那么我们可以这么查询：</p>
+<p>GET /iteblog_book_index/book/_search?q=title:in%20action</p>
+<p>然而，DSL方式提供了更加灵活的方式来构建更加复杂的查询（我们将在后面看到），甚至指定你想要的返回结果。下面的例子中，我将指定需要返回结果的数量，开始的偏移量（这在分页的情况下非常有用），需要返回document中的哪些字段以及高亮关键字：</p>
+<p>curl -XGET ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;</a> -d ‘<br>{<br>    “query”: {<br>        “match” : {<br>            “title” : “in action”<br>        }<br>    },<br>    “size”: 2,   #返回结果的数量<br>    “from”: 0,  #开始的偏移量<br>    “_source”: [ “title”, “summary”, “publish_date” ],<br>    “highlight”: {<br>        “fields” : {<br>            “title” : {}<br>        }<br>    }<br>}’</p>
+<p>三、Multi-field Search<br>正如我们之前所看到的，想在一个搜索中查询多个 document field （比如使用同一个查询关键字同时在title和summary中查询），你可以使用multi_match查询，使用如下：<br>curl -XGET ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;</a> -d ‘<br>{<br>    “query”: {<br>        “multi_match” : {<br>            “query” : “elasticsearch guide”,<br>            “fields”: [“title”, “summary”]<br>        }<br>    }<br>}’</p>
+<p>四、Boosting<br>上面使用同一个搜索请求在多个field中查询，你也许想提高某个field的查询权重。在下面的例子中，我们把summary field的权重调成3，这样就提高了其在结果中的权重，这样把_id=4的文档相关性大大提高了，如下：</p>
+<p>curl -XGET ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;</a> -d ‘<br>{<br>    “query”: {<br>        “multi_match” : {<br>            “query” : “elasticsearch guide”,<br>            “fields”: [“title”, “summary^3”]<br>        }<br>    },<br>    “_source”: [“title”, “summary”, “publish_date”]<br>}’</p>
+<p>需要注意的是：Boosting不仅仅意味着计算出来的分数(calculated score)直接乘以boost factor，最终的boost value会经过归一化以及其他一些内部的优化</p>
+<p>五、Bool Query<br>在查询条件中使用AND/OR/NOT操作符，这就是布尔查询(Bool Query)。布尔查询可以接受一个must参数(等价于AND)，一个must_not参数(等价于NOT)，以及一个should参数(等价于OR)。比如，我想查询title中出现Elasticsearch或者Solr关键字的图书，图书的作者是clinton gormley，但没有radu gheorge，可以这么来查询：</p>
+<p>curl -XGET ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;</a> -d ‘<br>{<br>    “query”: {<br>        “bool”: {<br>            “must”: {<br>                “bool” : { “should”: [<br>                      { “match”: { “title”: “Elasticsearch” }},<br>                      { “match”: { “title”: “Solr” }} ] }<br>            },<br>            “must”: { “match”: { “authors”: “clinton gormely” }},<br>            “must_not”: { “match”: {“authors”: “radu gheorge” }}<br>        }<br>    }<br>}’</p>
+<p>六、Fuzzy Queries（模糊查询）<br>模糊查询可以在Match和 Multi-Match查询中使用以便解决拼写的错误，模糊度是基于Levenshtein distance计算与原单词的距离。使用如下：<br>curl -XGET ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;</a> -d ‘<br>{<br>    “query”: {<br>        “multi_match” : {<br>            “query” : “comprihensiv guide”,<br>            “fields”: [“title”, “summary”],<br>            “fuzziness”: “AUTO”<br>        }<br>    },<br>    “_source”: [“title”, “summary”, “publish_date”],<br>    “size”: 1<br>}’</p>
+<p>需要注意：上面我们将fuzziness的值指定为AUTO，其在term的长度大于5的时候相当于指定值为2。然而80%的人拼写错误的编辑距离(edit distance)为1，所有如果你将fuzziness设置为1可能会提高你的搜索性能。</p>
+<p>七、Wildcard Query(通配符查询)<br>通配符查询允许我们指定一个模式来匹配，而不需要指定完整的term。?将会匹配一个字符；<em>将会匹配零个或者多个字符。比如我们想查找所有作者名字中以t字符开始的记录，我们可以如下使用：<br>curl -XGET ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;</a> -d ‘<br>{<br>    “query”: {<br>        “wildcard” : {      #wildcard是通配符意思<br>            “authors” : “t</em>“<br>        }<br>    },<br>    “_source”: [“title”, “authors”],<br>    “highlight”: {<br>        “fields” : {<br>            “authors” : {}<br>        }<br>    }<br>}’</p>
+<p>八、Regexp Query(正则表达式查询)<br>ElasticSearch还支持正则表达式查询，此方式提供了比通配符查询更加复杂的模式。比如我们先查找作者名字以t字符开头，中间是若干个a-z之间的字符，并且以字符y结束的记录，可以如下查询：</p>
+<p>curl -XGET ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;</a> -d ‘<br>{<br>    “query”: {<br>        “regexp” : {<br>            “authors” : “t[a-z]*y”<br>        }<br>    },<br>    “_source”: [“title”, “authors”],<br>    “highlight”: {<br>        “fields” : {<br>            “authors” : {}<br>        }<br>    }<br>}’</p>
+<p>九、Match Phrase Query(匹配短语查询)<br>匹配短语查询要求查询字符串中的trems要么都出现Document中、要么trems按照输入顺序依次出现在结果中。在默认情况下，查询输入的trems必须在搜索字符串紧挨着出现，否则将查询不到。不过我们可以指定slop参数，来控制输入的trems之间有多少个单词仍然能够搜索到，如下所示：<br>curl -XGET ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;</a> -d ‘<br>{<br>    “query”: {<br>        “multi_match”: {<br>            “query”: “search engine”,<br>            “fields”: [<br>                “title”,<br>                “summary”<br>            ],<br>            “type”: “phrase”,<br>            “slop”: 3<br>        }<br>    },<br>    “_source”: [<br>        “title”,<br>        “summary”,<br>        “publish_date”<br>    ]<br>}’</p>
+<p>从上面的例子可以看出，id为4的document被搜索（summary字段里面精确匹配到了search engine），并且分数比较高；而id为1的document也被搜索到了，虽然其summary中的search和engine单词并不是紧挨着的，但是我们指定了slop属性，所以被搜索到了。如果我们将”slop”: 3条件删除，那么id为1的文档将不会被搜索到，如下：</p>
+<p>十、Simple Query String(简单查询字符串)<br>simple_query_string是query_string的另一种版本，其更适合为用户提供一个搜索框中，因为其使用+/|/- 分别替换AND/OR/NOT，如果用输入了错误的查询，其直接忽略这种情况而不是抛出异常。使用如下：(注意是POST)<br>curl POST <a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search</a><br>{<br>    “query”: {<br>        “simple_query_string” : {<br>            “query”: “(saerch~1 algorithm~1) + (grant ingersoll)  | (tom morton)”,<br>            “fields”: [“_all”, “summary^2”]<br>        }<br>    },<br>    “_source”: [ “title”, “summary”, “authors” ],<br>    “highlight”: {<br>        “fields” : {<br>            “summary” : {}<br>        }<br>    }<br>}</p>
+<p>十一、Term/Terms Query<br>前面的例子中我们已经介绍了全文搜索(full-text search)，但有时候我们对结构化搜索中能够精确匹配并返回搜索结果更感兴趣。这种情况下我们可以使用term和terms查询。在下面例子中，我们想搜索所有曼宁出版社(Manning Publications)出版的图书：</p>
+<p>curl POST <a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search</a> -d ‘<br>{<br>    “query”: {<br>        “term” : {<br>            “publisher”: “manning”<br>        }<br>    },<br>    “_source” : [“title”,”publish_date”,”publisher”]<br>}’</p>
+<p>还可以使用terms关键字来指定多个terms，如下：</p>
+<p>{<br>    “query”: {<br>        “terms” : {<br>            “publisher”: [“oreilly”, “packt”]<br>        }<br>    }<br>}</p>
+<p>十二、Term Query - Sorted<br>词查询结果和其他查询结果一样可以很容易地对其进行排序，而且我们可以对输出结果按照多层进行排序：<br>curl POST <a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search</a><br>{<br>    “query”: {<br>        “term” : {<br>            “publisher”: “manning”<br>        }<br>    },<br>    “_source” : [“title”,”publish_date”,”publisher”],<br>    “sort”: [<br>        { “publish_date”: {“order”:”desc”}},<br>        { “title”: { “order”: “desc” }}<br>    ]<br>}</p>
+<p>执行提示：<br>Fielddata is disabled on text fields by default. Set fielddata=true on [title] in order to load fielddata in memory by uninverting the inverted index</p>
+<p>应该是5.x后对排序，聚合这些操作用单独的数据结构(fielddata)缓存到内存里了，需要单独开启</p>
+<p>PUT /iteblog_book_index/_mapping/book<br>{<br>  “properties”: {<br>    “title”: {<br>      “type”: “text”,<br>      “fielddata”: true<br>    }<br>  }<br>}</p>
+<p>再次执行：</p>
+<p>十三、Range Query(范围查询)<br>另一种结构化查询就是范围查询。在下面例子中，我们搜索所有发行年份为2015的图书：<br>curl POST <a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search</a><br>{<br>    “query”: {<br>        “range” : {<br>            “publish_date”: {<br>                “gte”: “2015-01-01”,<br>                “lte”: “2015-12-31”<br>            }<br>        }<br>    },<br>    “_source” : [“title”,”publish_date”,”publisher”]<br>}</p>
+<p>十四、Filtered Query(过滤查询)<br>过滤查询允许我们对查询结果进行筛选。比如：我们查询标题和摘要中包含Elasticsearch关键字的图书，但是我们想过滤出评论大于20的结果，可以如下使用：</p>
+<p>curl POST <a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search</a><br>{<br>    “query”: {<br>        “filtered”: {<br>            “query” : {<br>                “multi_match”: {<br>                    “query”: “elasticsearch”,<br>                    “fields”: [“title”,”summary”]<br>                }<br>            },<br>            “filter”: {<br>                “range” : {<br>                    “num_reviews”: {<br>                        “gte”: 20<br>                    }<br>                }<br>            }<br>        }<br>    },<br>    “_source” : [“title”,”summary”,”publisher”, “num_reviews”]<br>}</p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果文章对您有用请随意打赏，谢谢支持！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Martin Lei 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Martin Lei 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Martin Lei
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://www.leiyawu.com/2018/04/02/asd/" title="23种非常有用的ElasticSearch查询例子">http://www.leiyawu.com/2018/04/02/asd/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/19/hexo使用进阶/" rel="next" title="hexo使用进阶">
+                <i class="fa fa-chevron-left"></i> hexo使用进阶
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/03/elk/" rel="prev" title="ELK的一次吞吐量优化">
+                ELK的一次吞吐量优化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -360,6 +541,15 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDM4OS8xMDkyNg=="></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -643,6 +833,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -671,6 +865,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 
