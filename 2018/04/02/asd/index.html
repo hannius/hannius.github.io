@@ -81,17 +81,17 @@
 
 
 
-<meta name="description" content="一、新建索引为了展示Elasticsearch中不同查询的用法，先在Elasticsearch里面创建了book相关的documents，每本书主要涉及以下字段： title, authors, summary, publish_date(发行日期),publisher以及评论条数。操作如下： curl -XPUT ‘https://www.iteblog.com:9200/iteblog_boo">
+<meta name="description" content="一、新建索引为了展示Elasticsearch中不同查询的用法，先在Elasticsearch里面创建了book相关的documents，每本书主要涉及以下字段： title, authors, summary, publish_date(发行日期),publisher以及评论条数。 操作如下：123456789101112curl -XPUT &amp;apos;https://www.iteblog.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="23种非常有用的ElasticSearch查询例子">
 <meta property="og:url" content="http://www.leiyawu.com/2018/04/02/asd/index.html">
 <meta property="og:site_name" content="让一切随风">
-<meta property="og:description" content="一、新建索引为了展示Elasticsearch中不同查询的用法，先在Elasticsearch里面创建了book相关的documents，每本书主要涉及以下字段： title, authors, summary, publish_date(发行日期),publisher以及评论条数。操作如下： curl -XPUT ‘https://www.iteblog.com:9200/iteblog_boo">
+<meta property="og:description" content="一、新建索引为了展示Elasticsearch中不同查询的用法，先在Elasticsearch里面创建了book相关的documents，每本书主要涉及以下字段： title, authors, summary, publish_date(发行日期),publisher以及评论条数。 操作如下：123456789101112curl -XPUT &amp;apos;https://www.iteblog.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-02T06:35:11.801Z">
+<meta property="og:updated_time" content="2018-04-08T07:35:21.039Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="23种非常有用的ElasticSearch查询例子">
-<meta name="twitter:description" content="一、新建索引为了展示Elasticsearch中不同查询的用法，先在Elasticsearch里面创建了book相关的documents，每本书主要涉及以下字段： title, authors, summary, publish_date(发行日期),publisher以及评论条数。操作如下： curl -XPUT ‘https://www.iteblog.com:9200/iteblog_boo">
+<meta name="twitter:description" content="一、新建索引为了展示Elasticsearch中不同查询的用法，先在Elasticsearch里面创建了book相关的documents，每本书主要涉及以下字段： title, authors, summary, publish_date(发行日期),publisher以及评论条数。 操作如下：123456789101112curl -XPUT &amp;apos;https://www.iteblog.">
 
 
 
@@ -387,11 +387,10 @@
       
 
       
-        <p>一、新建索引<br>为了展示Elasticsearch中不同查询的用法，先在Elasticsearch里面创建了book相关的documents，每本书主要涉及以下字段： title, authors, summary, publish_date(发行日期),publisher以及评论条数。操作如下：</p>
-<p>curl -XPUT ‘<a href="https://www.iteblog.com:9200/iteblog_book_index&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index&#39;</a> -d ‘{ “settings”: { “number_of_shards”: 1 }}’</p>
-<p>curl -XPOST ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_bulk&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_bulk&#39;</a> -d ‘<br>{ “index”: { “_id”: 1 }}<br>{ “title”: “Elasticsearch: The Definitive Guide”, “authors”: [“clinton gormley”, “zachary tong”], “summary” : “A distibuted real-time search and analytics engine”, “publish_date” : “2015-02-07”, “num_reviews”: 20, “publisher”: “oreilly” }<br>{ “index”: { “_id”: 2 }}<br>{ “title”: “Taming Text: How to Find, Organize, and Manipulate It”, “authors”: [“grant ingersoll”, “thomas morton”, “drew farris”], “summary” : “organize text using approaches such as full-text search, proper name recognition, clustering, tagging, information extraction, and summarization”, “publish_date” : “2013-01-24”, “num_reviews”: 12, “publisher”: “manning” }<br>{ “index”: { “_id”: 3 }}<br>{ “title”: “Elasticsearch in Action”, “authors”: [“radu gheorge”, “matthew lee hinman”, “roy russo”], “summary” : “build scalable search applications using Elasticsearch without having to do complex low-level programming or understand advanced data science algorithms”, “publish_date” : “2015-12-03”, “num_reviews”: 18, “publisher”: “manning” }<br>{ “index”: { “_id”: 4 }}<br>{ “title”: “Solr in Action”, “authors”: [“trey grainger”, “timothy potter”], “summary” : “Comprehensive guide to implementing a scalable search engine using Apache Solr”, “publish_date” : “2014-04-05”, “num_reviews”: 23, “publisher”: “manning” }<br>‘</p>
-<p>通过dev tools来模拟则为：</p>
-<p>POST /iteblog_book_index/book/_bulk<br>{ “index”: { “_id”: 1 }}<br>{ “title”: “Elasticsearch: The Definitive Guide”, “authors”: [“clinton gormley”, “zachary tong”], “summary” : “A distibuted real-time search and analytics engine”, “publish_date” : “2015-02-07”, “num_reviews”: 20, “publisher”: “oreilly” }<br>{ “index”: { “_id”: 2 }}<br>{ “title”: “Taming Text: How to Find, Organize, and Manipulate It”, “authors”: [“grant ingersoll”, “thomas morton”, “drew farris”], “summary” : “organize text using approaches such as full-text search, proper name recognition, clustering, tagging, information extraction, and summarization”, “publish_date” : “2013-01-24”, “num_reviews”: 12, “publisher”: “manning” }<br>{ “index”: { “_id”: 3 }}<br>{ “title”: “Elasticsearch in Action”, “authors”: [“radu gheorge”, “matthew lee hinman”, “roy russo”], “summary” : “build scalable search applications using Elasticsearch without having to do complex low-level programming or understand advanced data science algorithms”, “publish_date” : “2015-12-03”, “num_reviews”: 18, “publisher”: “manning” }<br>{ “index”: { “_id”: 4 }}<br>{ “title”: “Solr in Action”, “authors”: [“trey grainger”, “timothy potter”], “summary” : “Comprehensive guide to implementing a scalable search engine using Apache Solr”, “publish_date” : “2014-04-05”, “num_reviews”: 23, “publisher”: “manning” }</p>
+        <h2 id="一、新建索引"><a href="#一、新建索引" class="headerlink" title="一、新建索引"></a>一、新建索引</h2><p>为了展示Elasticsearch中不同查询的用法，先在Elasticsearch里面创建了book相关的documents，每本书主要涉及以下字段： title, authors, summary, publish_date(发行日期),publisher以及评论条数。</p>
+<p>操作如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">curl -XPUT &apos;https://www.iteblog.com:9200/iteblog_book_index&apos; -d &apos;&#123; &quot;settings&quot;: &#123; &quot;number_of_shards&quot;: 1 &#125;&#125;&apos;</span><br><span class="line"></span><br><span class="line">curl -XPOST &apos;https://www.iteblog.com:9200/iteblog_book_index/book/_bulk&apos; -d &apos;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 1 &#125;&#125;</span><br><span class="line">&#123; &quot;title&quot;: &quot;Elasticsearch: The Definitive Guide&quot;, &quot;authors&quot;: [&quot;clinton gormley&quot;, &quot;zachary tong&quot;], &quot;summary&quot; : &quot;A distibuted real-time search and analytics engine&quot;, &quot;publish_date&quot; : &quot;2015-02-07&quot;, &quot;num_reviews&quot;: 20, &quot;publisher&quot;: &quot;oreilly&quot; &#125;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 2 &#125;&#125;</span><br><span class="line">&#123; &quot;title&quot;: &quot;Taming Text: How to Find, Organize, and Manipulate It&quot;, &quot;authors&quot;: [&quot;grant ingersoll&quot;, &quot;thomas morton&quot;, &quot;drew farris&quot;], &quot;summary&quot; : &quot;organize text using approaches such as full-text search, proper name recognition, clustering, tagging, information extraction, and summarization&quot;, &quot;publish_date&quot; : &quot;2013-01-24&quot;, &quot;num_reviews&quot;: 12, &quot;publisher&quot;: &quot;manning&quot; &#125;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 3 &#125;&#125;</span><br><span class="line">&#123; &quot;title&quot;: &quot;Elasticsearch in Action&quot;, &quot;authors&quot;: [&quot;radu gheorge&quot;, &quot;matthew lee hinman&quot;, &quot;roy russo&quot;], &quot;summary&quot; : &quot;build scalable search applications using Elasticsearch without having to do complex low-level programming or understand advanced data science algorithms&quot;, &quot;publish_date&quot; : &quot;2015-12-03&quot;, &quot;num_reviews&quot;: 18, &quot;publisher&quot;: &quot;manning&quot; &#125;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 4 &#125;&#125;</span><br><span class="line">&#123; &quot;title&quot;: &quot;Solr in Action&quot;, &quot;authors&quot;: [&quot;trey grainger&quot;, &quot;timothy potter&quot;], &quot;summary&quot; : &quot;Comprehensive guide to implementing a scalable search engine using Apache Solr&quot;, &quot;publish_date&quot; : &quot;2014-04-05&quot;, &quot;num_reviews&quot;: 23, &quot;publisher&quot;: &quot;manning&quot; &#125;</span><br><span class="line">&apos;</span><br></pre></td></tr></table></figure></p>
+<p>通过dev tools来模拟则为：<br><a href="http://cos.leiyawu.com/img/elk_index_check_1.png" target="_blank" rel="noopener">http://cos.leiyawu.com/img/elk_index_check_1.png</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">POST /iteblog_book_index/book/_bulk</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 1 &#125;&#125;</span><br><span class="line">&#123; &quot;title&quot;: &quot;Elasticsearch: The Definitive Guide&quot;, &quot;authors&quot;: [&quot;clinton gormley&quot;, &quot;zachary tong&quot;], &quot;summary&quot; : &quot;A distibuted real-time search and analytics engine&quot;, &quot;publish_date&quot; : &quot;2015-02-07&quot;, &quot;num_reviews&quot;: 20, &quot;publisher&quot;: &quot;oreilly&quot; &#125;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 2 &#125;&#125;</span><br><span class="line">&#123; &quot;title&quot;: &quot;Taming Text: How to Find, Organize, and Manipulate It&quot;, &quot;authors&quot;: [&quot;grant ingersoll&quot;, &quot;thomas morton&quot;, &quot;drew farris&quot;], &quot;summary&quot; : &quot;organize text using approaches such as full-text search, proper name recognition, clustering, tagging, information extraction, and summarization&quot;, &quot;publish_date&quot; : &quot;2013-01-24&quot;, &quot;num_reviews&quot;: 12, &quot;publisher&quot;: &quot;manning&quot; &#125;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 3 &#125;&#125;</span><br><span class="line">&#123; &quot;title&quot;: &quot;Elasticsearch in Action&quot;, &quot;authors&quot;: [&quot;radu gheorge&quot;, &quot;matthew lee hinman&quot;, &quot;roy russo&quot;], &quot;summary&quot; : &quot;build scalable search applications using Elasticsearch without having to do complex low-level programming or understand advanced data science algorithms&quot;, &quot;publish_date&quot; : &quot;2015-12-03&quot;, &quot;num_reviews&quot;: 18, &quot;publisher&quot;: &quot;manning&quot; &#125;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 4 &#125;&#125;</span><br><span class="line">&#123; &quot;title&quot;: &quot;Solr in Action&quot;, &quot;authors&quot;: [&quot;trey grainger&quot;, &quot;timothy potter&quot;], &quot;summary&quot; : &quot;Comprehensive guide to implementing a scalable search engine using Apache Solr&quot;, &quot;publish_date&quot; : &quot;2014-04-05&quot;, &quot;num_reviews&quot;: 23, &quot;publisher&quot;: &quot;manning&quot; &#125;</span><br></pre></td></tr></table></figure>
 <p>ES中的查询请求有两种方式，一种是简易版的查询，另外一种是使用JSON完整的请求体，叫做结构化查询（DSL）。<br>由于DSL查询更为直观也更为简易，所以大都使用这种方式。<br>DSL查询是POST过去一个json，由于post的请求是json格式的，所以存在很多灵活性，也有很多形式。</p>
 <p>基本匹配查询主要形式：<br>（1）、使用Search Lite API，并将所有的搜索参数都通过URL传递<br>（2）、使用Elasticsearch DSL，其可以通过传递一个JSON请求来获取结果。Curl方式与其类似，只是提交方式不是POST，而是XGET，提交参数与DSL提交一致</p>
 <p>二、基本匹配查询(Basic Match Query)<br>1、在所有的字段中搜索带有”guide”的结果：<br>通过dev tools:<br>GET /iteblog_book_index/book/_search?q=guide</p>
@@ -570,8 +569,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -684,6 +692,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、新建索引"><span class="nav-number">1.</span> <span class="nav-text">一、新建索引</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
