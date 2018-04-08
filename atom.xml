@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.leiyawu.com/"/>
-  <updated>2018-04-04T09:06:11.069Z</updated>
+  <updated>2018-04-08T03:34:18.106Z</updated>
   <id>http://www.leiyawu.com/</id>
   
   <author>
@@ -21,15 +21,15 @@
     <link href="http://www.leiyawu.com/2018/04/03/ELK%E7%B4%A2%E5%BC%95/"/>
     <id>http://www.leiyawu.com/2018/04/03/ELK索引/</id>
     <published>2018-04-03T04:03:00.000Z</published>
-    <updated>2018-04-04T09:06:11.069Z</updated>
+    <updated>2018-04-08T03:34:18.106Z</updated>
     
-    <content type="html"><![CDATA[<p><img src="[link](http://cos.leiyawu.com/img/elk_index_check_10.png" alt="图片1"></p>]]></content>
+    <content type="html"><![CDATA[<p><img src="http://cos.leiyawu.com/img/elk_index_check_10.png" alt="图片1"></p>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;p&gt;&lt;img src=&quot;[link](http://cos.leiyawu.com/img/elk_index_check_10.png&quot; alt=&quot;图片1&quot;&gt;&lt;/p&gt;
+        &lt;p&gt;&lt;img src=&quot;http://cos.leiyawu.com/img/elk_index_check_10.png&quot; alt=&quot;图片1&quot;&gt;&lt;/p&gt;
 
       
     
