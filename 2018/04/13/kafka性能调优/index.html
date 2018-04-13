@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Kafka," />
 
 
 
@@ -81,16 +81,18 @@
 
 
 
-<meta name="description" content="Still Waters Run Deep">
-<meta property="og:type" content="website">
-<meta property="og:title" content="让一切随风">
-<meta property="og:url" content="http://www.leiyawu.com/tags/ELK/index.html">
+<meta name="description" content="Kafka的配置详尽、复杂，想要进行全面的性能调优需要掌握大量信息，这里只记录一下我在日常工作使用中走过的坑和经验来对kafka集群进行优化常用的几点。1.JVM的优化java相关系统自然离不开JVM的优化。首先想到的肯定是Heap Size的调整。 vim bin/kafka-server-start.sh    调整KAFKA_HEAP_OPTS=”-Xmx16G -Xms16G”的值推荐配置">
+<meta name="keywords" content="Kafka">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kafka性能调优">
+<meta property="og:url" content="http://www.leiyawu.com/2018/04/13/kafka性能调优/index.html">
 <meta property="og:site_name" content="让一切随风">
-<meta property="og:description" content="Still Waters Run Deep">
+<meta property="og:description" content="Kafka的配置详尽、复杂，想要进行全面的性能调优需要掌握大量信息，这里只记录一下我在日常工作使用中走过的坑和经验来对kafka集群进行优化常用的几点。1.JVM的优化java相关系统自然离不开JVM的优化。首先想到的肯定是Heap Size的调整。 vim bin/kafka-server-start.sh    调整KAFKA_HEAP_OPTS=”-Xmx16G -Xms16G”的值推荐配置">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-13T08:47:49.115Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="让一切随风">
-<meta name="twitter:description" content="Still Waters Run Deep">
+<meta name="twitter:title" content="kafka性能调优">
+<meta name="twitter:description" content="Kafka的配置详尽、复杂，想要进行全面的性能调优需要掌握大量信息，这里只记录一下我在日常工作使用中走过的坑和经验来对kafka集群进行优化常用的几点。1.JVM的优化java相关系统自然离不开JVM的优化。首先想到的肯定是Heap Size的调整。 vim bin/kafka-server-start.sh    调整KAFKA_HEAP_OPTS=”-Xmx16G -Xms16G”的值推荐配置">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://www.leiyawu.com/tags/ELK/"/>
+  <link rel="canonical" href="http://www.leiyawu.com/2018/04/13/kafka性能调优/"/>
 
 
 
 
 
-  <title>标签: ELK | 让一切随风</title>
+  <title>kafka性能调优 | 让一切随风</title>
   
 
 
@@ -155,7 +157,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
  
   <a href="https://github.com/hannius"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
@@ -305,82 +307,243 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>ELK<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/04/13/kafka性能调优/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin Lei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="让一切随风">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/04/03/ELK索引/" itemprop="url">
-              
-                <span itemprop="name">ElasticSearch 索引查询使用指南</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">kafka性能调优</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-04-03T12:03:00+08:00"
-              content="2018-04-03" >
-          04-03
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-13T16:38:00+08:00">
+                2018-04-13
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Kafka/" itemprop="url" rel="index">
+                    <span itemprop="name">Kafka</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
+      
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/02/26/name/" itemprop="url">
-              
-                <span itemprop="name">ELK x-pack 详细说明</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-02-26T16:35:00+08:00"
-              content="2018-02-26" >
-          02-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+      
+        <h2 id="Kafka的配置详尽、复杂，想要进行全面的性能调优需要掌握大量信息，这里只记录一下我在日常工作使用中走过的坑和经验来对kafka集群进行优化常用的几点。"><a href="#Kafka的配置详尽、复杂，想要进行全面的性能调优需要掌握大量信息，这里只记录一下我在日常工作使用中走过的坑和经验来对kafka集群进行优化常用的几点。" class="headerlink" title="Kafka的配置详尽、复杂，想要进行全面的性能调优需要掌握大量信息，这里只记录一下我在日常工作使用中走过的坑和经验来对kafka集群进行优化常用的几点。"></a>Kafka的配置详尽、复杂，想要进行全面的性能调优需要掌握大量信息，这里只记录一下我在日常工作使用中走过的坑和经验来对kafka集群进行优化常用的几点。</h2><h3 id="1-JVM的优化"><a href="#1-JVM的优化" class="headerlink" title="1.JVM的优化"></a>1.JVM的优化</h3><p>java相关系统自然离不开JVM的优化。首先想到的肯定是Heap Size的调整。</p>
+<p>vim bin/kafka-server-start.sh   </p>
+<p>调整KAFKA_HEAP_OPTS=”-Xmx16G -Xms16G”的值<br>推荐配置：一般HEAP SIZE的大小不超过主机内存的50%。</p>
+<h3 id="2-网络和ios操作线程配置优化："><a href="#2-网络和ios操作线程配置优化：" class="headerlink" title="2.网络和ios操作线程配置优化："></a>2.网络和ios操作线程配置优化：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># broker处理消息的最大线程数</span><br><span class="line">num.network.threads=9</span><br><span class="line"># broker处理磁盘IO的线程数</span><br><span class="line">num.io.threads=16</span><br></pre></td></tr></table></figure>
+<p>推荐配置：<br>num.network.threads主要处理网络io，读写缓冲区数据，基本没有io等待，配置线程数量为cpu核数加1。</p>
+<p>num.io.threads主要进行磁盘io操作，高峰期可能有些io等待，因此配置需要大些。配置线程数量为cpu核数2倍，最大不超过3倍。</p>
+<h3 id="3-socket-server可接受数据大小-防止OOM异常-："><a href="#3-socket-server可接受数据大小-防止OOM异常-：" class="headerlink" title="3.socket server可接受数据大小(防止OOM异常)："></a>3.socket server可接受数据大小(防止OOM异常)：</h3><p>socket.request.max.bytes=2147483600</p>
+<p>推荐配置：</p>
+<p>根据自己业务数据包的大小适当调大。这里取值是int类型的，而受限于java int类型的取值范围又不能太大：</p>
+<p>java int的取值范围为（-2147483648~2147483647），占用4个字节（-2的31次方到2的31次方-1，不能超出，超出之后报错：org.apache.kafka.common.config.ConfigException: Invalid value 8589934592 for configuration socket.request.max.bytes: Not a number of type INT。</p>
+<h3 id="4-log数据文件刷盘策略"><a href="#4-log数据文件刷盘策略" class="headerlink" title="4.log数据文件刷盘策略"></a>4.log数据文件刷盘策略</h3><p>—每当producer写入10000条消息时，刷数据到磁盘—<br>log.flush.interval.messages=10000</p>
+<p>—每间隔1秒钟时间，刷数据到磁盘—<br>log.flush.interval.ms=1000</p>
+<p>推荐配置：</p>
+<p>为了大幅度提高producer写入吞吐量，需要定期批量写文件。一般无需改动，如果topic的数据量较小可以考虑减少log.flush.interval.ms和log.flush.interval.messages来强制刷写数据，减少可能由于缓存数据未写盘带来的不一致。推荐配置分别message 10000，间隔1s。</p>
+<h3 id="5-日志保留策略配置"><a href="#5-日志保留策略配置" class="headerlink" title="5.日志保留策略配置"></a>5.日志保留策略配置</h3><p>—日志保留时长—<br>log.retention.hours=72</p>
+<p>—段文件配置—<br>log.segment.bytes=1073741824</p>
+<p>推荐配置：</p>
+<p>日志建议保留三天，也可以更短；段文件配置1GB，有利于快速回收磁盘空间，重启kafka加载也会加快（kafka启动时是单线程扫描目录(log.dir)下所有数据文件）。如果文件过小，则文件数量比较多。</p>
+<h3 id="6-replica复制配置"><a href="#6-replica复制配置" class="headerlink" title="6.replica复制配置"></a>6.replica复制配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">num.replica.fetchers=3</span><br><span class="line">replica.fetch.min.bytes=1</span><br><span class="line">replica.fetch.max.bytes=5242880</span><br></pre></td></tr></table></figure>
+<p>推荐配置：</p>
+<p>每个follow从leader拉取消息进行同步数据，follow同步性能由这几个参数决定，分别为:</p>
+<p>拉取线程数(num.replica.fetchers):fetcher配置多可以提高follower的I/O并发度，单位时间内leader持有更多请求，相应负载会增大，需要根据机器硬件资源做权衡，建议适当调大；</p>
+<p>最小字节数(replica.fetch.min.bytes):一般无需更改，默认值即可；</p>
+<p>最大字节数(replica.fetch.max.bytes)：默认为1MB，这个值太小，推荐5M，根据业务情况调整</p>
+<p>最大等待时间(replica.fetch.wait.max.ms):follow拉取频率，频率过高，leader会积压大量无效请求情况，无法进行数据同步，导致cpu飙升。配置时谨慎使用，建议默认值，无需配置。</p>
+<h3 id="7-分区数量配置"><a href="#7-分区数量配置" class="headerlink" title="7.分区数量配置"></a>7.分区数量配置</h3><p>num.partitions=5</p>
+<p>推荐配置：</p>
+<p>默认partition数量1，如果topic在创建时没有指定partition数量，默认使用此值。Partition的数量选取也会直接影响到Kafka集群的吞吐性能，配置过小会影响消费性能，建议改为5。</p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果文章对您有用请随意打赏，谢谢支持！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Martin Lei 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Martin Lei 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Martin Lei
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://www.leiyawu.com/2018/04/13/kafka性能调优/" title="kafka性能调优">http://www.leiyawu.com/2018/04/13/kafka性能调优/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Kafka/" rel="tag"># Kafka</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/03/ELK索引/" rel="next" title="ElasticSearch 索引查询使用指南">
+                <i class="fa fa-chevron-left"></i> ElasticSearch 索引查询使用指南
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -388,6 +551,15 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDM4OS8xMDkyNg=="></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -408,8 +580,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -522,6 +703,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka的配置详尽、复杂，想要进行全面的性能调优需要掌握大量信息，这里只记录一下我在日常工作使用中走过的坑和经验来对kafka集群进行优化常用的几点。"><span class="nav-number">1.</span> <span class="nav-text">Kafka的配置详尽、复杂，想要进行全面的性能调优需要掌握大量信息，这里只记录一下我在日常工作使用中走过的坑和经验来对kafka集群进行优化常用的几点。</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-JVM的优化"><span class="nav-number">1.1.</span> <span class="nav-text">1.JVM的优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-网络和ios操作线程配置优化："><span class="nav-number">1.2.</span> <span class="nav-text">2.网络和ios操作线程配置优化：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-socket-server可接受数据大小-防止OOM异常-："><span class="nav-number">1.3.</span> <span class="nav-text">3.socket server可接受数据大小(防止OOM异常)：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-log数据文件刷盘策略"><span class="nav-number">1.4.</span> <span class="nav-text">4.log数据文件刷盘策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-日志保留策略配置"><span class="nav-number">1.5.</span> <span class="nav-text">5.日志保留策略配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-replica复制配置"><span class="nav-number">1.6.</span> <span class="nav-text">6.replica复制配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-分区数量配置"><span class="nav-number">1.7.</span> <span class="nav-text">7.分区数量配置</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -671,6 +868,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -699,6 +900,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 
