@@ -320,6 +320,163 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/05/21/ELK-Sentinl/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin Lei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="让一切随风">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/21/ELK-Sentinl/" itemprop="url">ELK Sentinl</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-21T10:06:00+08:00">
+                2018-05-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ELK/" itemprop="url" rel="index">
+                    <span itemprop="name">ELK</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="Sentinl简介"><a href="#Sentinl简介" class="headerlink" title="Sentinl简介"></a>Sentinl简介</h3><p>Sentinl 5扩展自Kibi / Kibana 5，具有警报和报告功能，可使用标准查询，可编程验证器和各种可配置操作来监控，通知和报告数据系列更改 - 将其视为一个独立的“观察者” “报告”功能（PNG / PDFs快照）。</p>
+<p>SENTINEL还旨在通过直接在Kibana UI中整合来简化在Kibi / Kibana中创建和管理警报和报告的过程。</p>
+<h3 id="功能模块"><a href="#功能模块" class="headerlink" title="功能模块"></a>功能模块</h3><p>Watchers<br>Alarms<br>Reports<br>Watchers是Sentinl核心，主要由 input,Condition,Transform,Actions几大块组成，可以和X-Pack一一对应，部分文档可参考X-Pack，但需要注意的是它和X-Pack还有一些区别，主要体现在input只实现了search，其他并未实现，Actions也并未都实现</p>
+<h3 id="安装与配置"><a href="#安装与配置" class="headerlink" title="安装与配置"></a>安装与配置</h3><ul>
+<li>安装</li>
+</ul>
+<p>/usr/share/kibana/bin/kibana-plugin install <a href="https://github.com/sirensolutions/sentinl/releases/download/tag-5.5/sentinl-v5.6.5.zip" target="_blank" rel="noopener">https://github.com/sirensolutions/sentinl/releases/download/tag-5.5/sentinl-v5.6.5.zip</a></p>
+<ul>
+<li>config</li>
+</ul>
+<p>kibana.yml config:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">sentinl:</span><br><span class="line">  es:</span><br><span class="line">    timefield: &apos;@timestamp&apos;</span><br><span class="line">    default_index: watcher</span><br><span class="line">    type: watch</span><br><span class="line">    alarm_index: watcher_alarms</span><br><span class="line">  sentinl:</span><br><span class="line">    history: 20</span><br><span class="line">    results: 50</span><br><span class="line">  settings:</span><br><span class="line">    email:</span><br><span class="line">      active: false</span><br><span class="line">      user: username</span><br><span class="line">      password: password</span><br><span class="line">      host: smtp.server.com</span><br><span class="line">      ssl: true</span><br><span class="line">      timeout: 10000  # mail server connection timeout</span><br><span class="line">    slack:</span><br><span class="line">      active: false</span><br><span class="line">      username: username</span><br><span class="line">      hook: &apos;https://hooks.slack.com/services/&lt;token&gt;&apos;</span><br><span class="line">      channel: &apos;#channel&apos;</span><br><span class="line">    report:</span><br><span class="line">      active: false</span><br><span class="line">      tmp_path: /tmp/</span><br><span class="line">    pushapps:</span><br><span class="line">      active: false</span><br><span class="line">      api_key: &apos;&lt;pushapps API Key&gt;&apos;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>raw</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">&quot;input&quot;: &#123;</span><br><span class="line">      &quot;search&quot;: &#123;</span><br><span class="line">        &quot;request&quot;: &#123;</span><br><span class="line">          &quot;index&quot;: [</span><br><span class="line">            &quot;&lt;xxx-&#123;now/d&#125;&gt;&quot;</span><br><span class="line">          ],</span><br><span class="line">          &quot;body&quot;: &#123;</span><br><span class="line">            &quot;query&quot;: &#123;</span><br><span class="line">              &quot;bool&quot;: &#123;</span><br><span class="line">                &quot;should&quot;: [</span><br><span class="line">                  &#123;</span><br><span class="line">                    &quot;match&quot;: &#123;</span><br><span class="line">                      &quot;status&quot;: &quot;502&quot;</span><br><span class="line">                    &#125;</span><br><span class="line">                  &#125;,</span><br><span class="line">                  &#123;</span><br><span class="line">                    &quot;match&quot;: &#123;</span><br><span class="line">                      &quot;status&quot;: &quot;404&quot;</span><br><span class="line">                    &#125;</span><br><span class="line">                  &#125;</span><br><span class="line">                ],</span><br><span class="line">                &quot;minimum_should_match&quot;: 1,  #must setup</span><br><span class="line">                &quot;filter&quot;: &#123;</span><br><span class="line">                  &quot;range&quot;: &#123;</span><br><span class="line">                    &quot;@timestamp&quot;: &#123;</span><br><span class="line">                      &quot;gte&quot;: &quot;now-60s&quot;,</span><br><span class="line">                      &quot;lte&quot;: &quot;now&quot;</span><br><span class="line">                    &#125;</span><br><span class="line">                  &#125;</span><br><span class="line">                &#125;</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;condition&quot;: &#123;</span><br><span class="line">      &quot;script&quot;: &#123;</span><br><span class="line">        &quot;script&quot;: &quot;payload.hits.total &gt; 30&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/05/07/es/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1834,143 +1991,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/03/19/hexo使用进阶/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Martin Lei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="让一切随风">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/19/hexo使用进阶/" itemprop="url">hexo使用进阶</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-19T11:09:47+08:00">
-                2018-03-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>hexo</p>
-<p>一、后端管理插件hexo-admin<br>插件可以直接在网页端创建、编辑markdown文章内容，并将内容发布到_posts里。<br>另外，对我而言，最方便的是可以很方便的给文章加标题、分类、打标签。</p>
-<p>参见：</p>
-<p>An Admin Interface for Hexo<br>hexo-admin in github</p>
-<p>1.安装</p>
-<p>(1)npm install –save hexo-admin </p>
-<p>(2)hexo server -d </p>
-<p>(3)open <a href="http://localhost:4000/admin/" target="_blank" rel="noopener">http://localhost:4000/admin/</a></p>
-<p>2.配置</p>
-<p>在_config.yml最后添加类似如下内容：</p>
-<pre><code>admin:
-      username: myfavoritename
-      password_hash: be121740bf988b2225a313fa1f107ca1
-      secret: a secret something
-</code></pre><p>username：后端登录用户名</p>
-<p>password_hash：后端登录用户密码对应的md5 hash值</p>
-<p>secret：用于保证cookie安全</p>
-<p>3.预览</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2025,7 +2045,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
