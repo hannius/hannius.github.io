@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.leiyawu.com/2018/05/24/crontab%E5%92%8Canacron%E5%92%8Clogrotate-relation/</loc>
+    
+    <lastmod>2018-05-24T08:34:45.378Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.leiyawu.com/2018/05/21/ELK-Sentinl/</loc>
     
     <lastmod>2018-05-21T02:14:12.992Z</lastmod>

@@ -320,6 +320,202 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/05/24/crontab和anacron和logrotate-relation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin Lei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="让一切随风">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/24/crontab和anacron和logrotate-relation/" itemprop="url">crontab、anacron、logrotate relationship</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-24T16:33:00+08:00">
+                2018-05-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Logrotate/" itemprop="url" rel="index">
+                    <span itemprop="name">Logrotate</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>服务器上的nginx使用logrotate来分割日志，设置为每天分割。但是logrotate似乎没有工作，日志并没有分割。服务器是CentOS 6。</p>
+<p>为了找到原因，分析可能出错的地方。<br>如果是logrotate未执行，可能是crond没有启动，因为logrotate被/etc/cron.daily/logrotate脚本所启动，可以查看其中代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@test ~]# cat /etc/cron.daily/logrotate</span><br><span class="line">#!/bin/sh</span><br><span class="line"></span><br><span class="line">/usr/sbin/logrotate /etc/logrotate.conf</span><br><span class="line">EXITVALUE=$?</span><br><span class="line">if [ $EXITVALUE != 0 ]; then</span><br><span class="line">    /usr/bin/logger -t logrotate &quot;ALERT exited abnormally with [$EXITVALUE]&quot;</span><br><span class="line">fi</span><br><span class="line">exit 0</span><br></pre></td></tr></table></figure>
+<p>可以看到logrotate运行时加载配置文件logrotate.conf，而这个配置文件除了设定一些分割日志相关的选项，还包含分割日志的配置文件目录/etc/logrotate.d。</p>
+<p>nginx的日志分割配置文件就保存在logrotate.d目录：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@test ~]# cat !$</span><br><span class="line">cat /etc/logrotate.d/nginx</span><br><span class="line">/root/*.log &#123;</span><br><span class="line">    Daily</span><br><span class="line">    Missingok</span><br><span class="line">    rotate 52</span><br><span class="line">    compress</span><br><span class="line">    delaycompress</span><br><span class="line">    notifempty</span><br><span class="line">    dateext</span><br><span class="line">    create 644 nobody nobody</span><br><span class="line">    sharedscripts</span><br><span class="line">    postrotate</span><br><span class="line">    [ -f /usr/local/nginx/logs/nginx.pid ] &amp;&amp; kill -USR1 `cat /usr/local/nginx/logs/nginx.pid`</span><br><span class="line">    endscript</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>/root/*.log就是需要被分割的日志的目录，通配符*表示目录内的所有log文件都被分割，分割的规则就是{…}中的内容。这里把/root/*.log当做nginx日志只是为了测试。<br>在启动crond服务后，发现日志还是没有分割，于是想到会不会是/etc/logrotate.d/nginx配置文件的语法有问题，使用以下命令调试这个文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logrotate -vfd /etc/logrotate.d/nginx  # -vfd 三个选项分别表示显示详情，强制分割日志，只是调试配置文件而不是真的分割日志</span><br></pre></td></tr></table></figure>
+<p>输出结果表明有语法错误，Daily，Missingok 都应该是小写。改成daily，missingok。再次调试配置文件，可以正确分割日志：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@test ~]# ls -1 /root/</span><br><span class="line">install-2017-5-14.log</span><br><span class="line">install-2017-5-14.log-20170521  #logrotate归档的日志</span><br></pre></td></tr></table></figure>
+<p>上面猜测是crond执行/etc/cron.daily/内的脚本，实现定时执行计划任务，包括执行logrotate日志分割。<br>为了验证是否正确，网上搜索一番后找到了答案。如果没有crontab命令，先安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum install crontabs  #安装crond，crond实际上来自cronie包，这个包作为crontabs包的依赖被安装</span><br><span class="line">chkconfig --add crond #添加到开机启动列表</span><br><span class="line">chkconfig crond on    #开机启动crond服务</span><br><span class="line">/etc/init.d/crond     #立即启动crond</span><br></pre></td></tr></table></figure>
+<p>以下文件或目录的作用：<br>cron计划任务有两种类型：</p>
+<ul>
+<li>1）系统cron任务：由crond服务执行，/etc/crontab配置系统级别的任务</li>
+<li>2）用户cron任务：由crond服务执行，用crontab命令编辑用户级别的任务</li>
+</ul>
+<font color="#DC143C" size="3">属于系统cron任务的文件或目录：</font>
+
+<ul>
+<li>/etc/cron.d             #系统的任务脚本。执行 rpm -ql cronie 可以看到该目录被cronie包安装</li>
+<li>/etc/cron.hourly     #每小时执行其内脚本。其中的0anacron文件调用anacron来执行任务，它被包cronie-anacron安装</li>
+<li>/etc/cron.daily        #每天执行其内脚本。也被anacron执行其内脚本，logrotate调用脚本就在该目录内</li>
+<li>/etc/cron.weekly     #每周执行其内脚本。</li>
+<li>/etc/cron.monthly   #每月执行其内脚本。</li>
+</ul>
+<p><font color="#DC143C" size="3">控制用户cron任务的执行：</font></p>
+<ul>
+<li>/etc/cron.allow   #默认不存在，如果这个文件存在，只有用户在这个文件中才能使用crontab命令</li>
+<li>/etc/cron.deny    #将不可以使用crontab命令的用户写入其中</li>
+</ul>
+<p>注意：cron.allow和cron.deny就是用户名的列表，每行一个用户名。比如 cron.deny中有一行jason，效果是如果当前登录用户是jason，执行 crontab -e会提示不允许使用crontab命令。</p>
+<p>以下三个目录的作用：</p>
+<p>/var/spool/cron/USER_NAME</p>
+<p>#这个文件才是跟crontab -e/-l 关联的，这个文件保存了crontab -e编辑的任务内容</p>
+<p>#比如执行 crontab -u root -e，编辑保存后，就会有/var/spool/cron/root 这个文件</p>
+<p>/var/spool/anacron/{cron.daily,cron.monthly,cron.weekly}</p>
+<p>#这三个文件记录了anacron上一次执行的时间（上一天，上一周或上一月）</p>
+<p>#anacron任务执行时，对照这里的时间，决定是否执行anacron任务</p>
+<p>/var/lib/logrotate.status</p>
+<p>#这个文件记录logrotate执行情况，logrotate参考这个文件来决定是否需要rotate日志</p>
+<p>crontab和anacron和logrotate的关系：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@test ~]# cat /etc/cron.d/0hourly     #这个文件指定每小时的01分执行/etc/cron.hourly内的所有脚本</span><br><span class="line">SHELL=/bin/bash</span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</span><br><span class="line">MAILTO=root</span><br><span class="line">HOME=/</span><br><span class="line">01 * * * * root run-parts /etc/cron.hourly  #这里的root指定执行任务的用户，run-parts其实是一个可执行脚本，在/usr/bin/run-parts，用来执行cron.hourly目录内的所有脚本</span><br></pre></td></tr></table></figure>
+<p>说明：用crontab -e命令每次编辑完某个用户的cron设置后，cron自动在/var/spool/cron下生成一个与此用户同名的文件，此用户的cron信息都记录在这个文件中。cron启动后每过一份钟读一次这个文件，检查是否要执行里面的命令。因此此文件修改后不需要重新启动cron服务。cron服务每分钟不仅要读一次/var/spool/cron内的所有文件，还需要读一次/etc/crontab，因此我们配置这个文件也能运用cron服务做一些事情。用crontab命令配置是针对某个用户的，而编辑/etc/crontab是针对系统的任务。此文件的文件格式是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SHELL=/bin/bash</span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin     #可执行文件查找路径</span><br><span class="line">MAILTO=root      #如果出现错误，或者有数据输出，数据作为邮件发给这个帐号</span><br><span class="line">HOME=/           #使用者运行的路径，这里是根目录</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@test ~]# cat /etc/cron.hourly/0anacron   #cron.hourly目录下的脚本，根据条件执行anacron命令</span><br><span class="line">#!/bin/bash</span><br><span class="line"># Skip excecution unless the date has changed from the previous run</span><br><span class="line">if test -r /var/spool/anacron/cron.daily; then</span><br><span class="line">    day=`cat /var/spool/anacron/cron.daily`</span><br><span class="line">fi</span><br><span class="line">if [ `date +%Y%m%d` = &quot;$day&quot; ]; then</span><br><span class="line">    exit 0;</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"># Skip excecution unless AC powered</span><br><span class="line">if test -x /usr/bin/on_ac_power; then</span><br><span class="line">    /usr/bin/on_ac_power &amp;&gt; /dev/null</span><br><span class="line">    if test $? -eq 1; then</span><br><span class="line">    exit 0</span><br><span class="line">    fi</span><br><span class="line">fi</span><br><span class="line">/usr/sbin/anacron -s</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@test ~]# cat /etc/anacrontab   #如果执行anacron命令，那么接着查看anacron的配置文件</span><br><span class="line"># /etc/anacrontab: configuration file for anacron</span><br><span class="line"></span><br><span class="line"># See anacron(8) and anacrontab(5) for details.</span><br><span class="line"></span><br><span class="line">SHELL=/bin/sh</span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</span><br><span class="line">MAILTO=root</span><br><span class="line"># the maximal random delay added to the base delay of the jobs</span><br><span class="line">RANDOM_DELAY=45     #最大延迟时间</span><br><span class="line"># the jobs will be started during the following hours only</span><br><span class="line">START_HOURS_RANGE=3-22     #只有在3-22点之间执行任务</span><br><span class="line"></span><br><span class="line">#period in days   delay in minutes   job-identifier   command</span><br><span class="line">1    5    cron.daily        nice run-parts /etc/cron.daily</span><br><span class="line">7    25    cron.weekly        nice run-parts /etc/cron.weekly</span><br><span class="line">@monthly 45    cron.monthly        nice run-parts /etc/cron.monthly</span><br></pre></td></tr></table></figure>
+<p>以上anacrontab配置文件最重要的是最后一部分，以这行为例：</p>
+<p>1    5    cron.daily        nice run-parts /etc/cron.daily</p>
+<p>表示每天都执行/etc/cront.daily/目录下的脚本文件，真实的延迟是RANDOM_DELAY+delay。这里的延迟是5分钟，加上上面的RANDOM_DELAY，所以实际的延迟时间是5-50之间，开始时间为03-22点，如果机器没关，那么一般就是在03:05-03:50之间执行。<font color="#DC143C" size="3">nice命令将该进程设置为nice=10，默认为0，即低优先级进程。</font>如果RANDOM_DELAY=0，那么表示准确延迟5min，即03:05执行cron.daily内的脚本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@test ~]# cat /etc/cron.daily/logrotate  #最后在cron.daily内有logrotate的调用脚本</span><br><span class="line">#!/bin/sh</span><br><span class="line"></span><br><span class="line">/usr/sbin/logrotate /etc/logrotate.conf       #logrotate将会读取配置文件，最终会读取到/etc/logrotate.d/nginx</span><br><span class="line">EXITVALUE=$?</span><br><span class="line">if [ $EXITVALUE != 0 ]; then</span><br><span class="line">    /usr/bin/logger -t logrotate &quot;ALERT exited abnormally with [$EXITVALUE]&quot;</span><br><span class="line">fi</span><br><span class="line">exit 0</span><br></pre></td></tr></table></figure>
+<p>当logrotate命令加载了/etc/logrotate.d/nginx配置文件时，还要比较nginx日志的归档日期：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@test ~]# cat /var/lib/logrotate.status | grep /root</span><br><span class="line">&quot;/root/install-2017-5-14.log&quot; 2017-5-21   #如果今天是2017-5-21，这个文件里也是2017-5-21，说明今天已经归档过了，否则就会归档（分割）nginx日志</span><br></pre></td></tr></table></figure>
+<p>综上，整个逻辑流程为：</p>
+<p>crond服务加载/etc/cron.d/0hourly —&gt;在每小时的01分执行/etc/cront.hourly/0anacron —&gt;执行anacron —&gt;根据/etc/anacrontab的配置执行/etc/cron.daily，/etc/cron.weekly，/etc/cron.monthly —&gt;执行/etc/cron.daily/下的logrotate脚本 —&gt;执行logrotate —&gt;根据/etc/logrotate.conf配置执行脚本/etc/logrotate.d/nginx —&gt;分割nginx日志成功</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/05/21/ELK-Sentinl/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1830,167 +2026,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/04/02/asd/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Martin Lei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="让一切随风">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/02/asd/" itemprop="url">23种非常有用的ElasticSearch查询例子</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-02T14:34:36+08:00">
-                2018-04-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="一、新建索引"><a href="#一、新建索引" class="headerlink" title="一、新建索引"></a>一、新建索引</h2><p>为了展示Elasticsearch中不同查询的用法，先在Elasticsearch里面创建了book相关的documents，每本书主要涉及以下字段： title, authors, summary, publish_date(发行日期),publisher以及评论条数。</p>
-<p>操作如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">curl -XPUT &apos;https://www.iteblog.com:9200/iteblog_book_index&apos; -d &apos;&#123; &quot;settings&quot;: &#123; &quot;number_of_shards&quot;: 1 &#125;&#125;&apos;</span><br><span class="line"></span><br><span class="line">curl -XPOST &apos;https://www.iteblog.com:9200/iteblog_book_index/book/_bulk&apos; -d &apos;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 1 &#125;&#125;</span><br><span class="line">&#123; &quot;title&quot;: &quot;Elasticsearch: The Definitive Guide&quot;, &quot;authors&quot;: [&quot;clinton gormley&quot;, &quot;zachary tong&quot;], &quot;summary&quot; : &quot;A distibuted real-time search and analytics engine&quot;, &quot;publish_date&quot; : &quot;2015-02-07&quot;, &quot;num_reviews&quot;: 20, &quot;publisher&quot;: &quot;oreilly&quot; &#125;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 2 &#125;&#125;</span><br><span class="line">&#123; &quot;title&quot;: &quot;Taming Text: How to Find, Organize, and Manipulate It&quot;, &quot;authors&quot;: [&quot;grant ingersoll&quot;, &quot;thomas morton&quot;, &quot;drew farris&quot;], &quot;summary&quot; : &quot;organize text using approaches such as full-text search, proper name recognition, clustering, tagging, information extraction, and summarization&quot;, &quot;publish_date&quot; : &quot;2013-01-24&quot;, &quot;num_reviews&quot;: 12, &quot;publisher&quot;: &quot;manning&quot; &#125;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 3 &#125;&#125;</span><br><span class="line">&#123; &quot;title&quot;: &quot;Elasticsearch in Action&quot;, &quot;authors&quot;: [&quot;radu gheorge&quot;, &quot;matthew lee hinman&quot;, &quot;roy russo&quot;], &quot;summary&quot; : &quot;build scalable search applications using Elasticsearch without having to do complex low-level programming or understand advanced data science algorithms&quot;, &quot;publish_date&quot; : &quot;2015-12-03&quot;, &quot;num_reviews&quot;: 18, &quot;publisher&quot;: &quot;manning&quot; &#125;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 4 &#125;&#125;</span><br><span class="line">&#123; &quot;title&quot;: &quot;Solr in Action&quot;, &quot;authors&quot;: [&quot;trey grainger&quot;, &quot;timothy potter&quot;], &quot;summary&quot; : &quot;Comprehensive guide to implementing a scalable search engine using Apache Solr&quot;, &quot;publish_date&quot; : &quot;2014-04-05&quot;, &quot;num_reviews&quot;: 23, &quot;publisher&quot;: &quot;manning&quot; &#125;</span><br><span class="line">&apos;</span><br></pre></td></tr></table></figure></p>
-<p>通过dev tools来模拟则为：<br><a href="http://cos.leiyawu.com/img/elk_index_check_1.png" target="_blank" rel="noopener">http://cos.leiyawu.com/img/elk_index_check_1.png</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">POST /iteblog_book_index/book/_bulk</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 1 &#125;&#125;</span><br><span class="line">&#123; &quot;title&quot;: &quot;Elasticsearch: The Definitive Guide&quot;, &quot;authors&quot;: [&quot;clinton gormley&quot;, &quot;zachary tong&quot;], &quot;summary&quot; : &quot;A distibuted real-time search and analytics engine&quot;, &quot;publish_date&quot; : &quot;2015-02-07&quot;, &quot;num_reviews&quot;: 20, &quot;publisher&quot;: &quot;oreilly&quot; &#125;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 2 &#125;&#125;</span><br><span class="line">&#123; &quot;title&quot;: &quot;Taming Text: How to Find, Organize, and Manipulate It&quot;, &quot;authors&quot;: [&quot;grant ingersoll&quot;, &quot;thomas morton&quot;, &quot;drew farris&quot;], &quot;summary&quot; : &quot;organize text using approaches such as full-text search, proper name recognition, clustering, tagging, information extraction, and summarization&quot;, &quot;publish_date&quot; : &quot;2013-01-24&quot;, &quot;num_reviews&quot;: 12, &quot;publisher&quot;: &quot;manning&quot; &#125;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 3 &#125;&#125;</span><br><span class="line">&#123; &quot;title&quot;: &quot;Elasticsearch in Action&quot;, &quot;authors&quot;: [&quot;radu gheorge&quot;, &quot;matthew lee hinman&quot;, &quot;roy russo&quot;], &quot;summary&quot; : &quot;build scalable search applications using Elasticsearch without having to do complex low-level programming or understand advanced data science algorithms&quot;, &quot;publish_date&quot; : &quot;2015-12-03&quot;, &quot;num_reviews&quot;: 18, &quot;publisher&quot;: &quot;manning&quot; &#125;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 4 &#125;&#125;</span><br><span class="line">&#123; &quot;title&quot;: &quot;Solr in Action&quot;, &quot;authors&quot;: [&quot;trey grainger&quot;, &quot;timothy potter&quot;], &quot;summary&quot; : &quot;Comprehensive guide to implementing a scalable search engine using Apache Solr&quot;, &quot;publish_date&quot; : &quot;2014-04-05&quot;, &quot;num_reviews&quot;: 23, &quot;publisher&quot;: &quot;manning&quot; &#125;</span><br></pre></td></tr></table></figure>
-<p>ES中的查询请求有两种方式，一种是简易版的查询，另外一种是使用JSON完整的请求体，叫做结构化查询（DSL）。<br>由于DSL查询更为直观也更为简易，所以大都使用这种方式。<br>DSL查询是POST过去一个json，由于post的请求是json格式的，所以存在很多灵活性，也有很多形式。</p>
-<p>基本匹配查询主要形式：<br>（1）、使用Search Lite API，并将所有的搜索参数都通过URL传递<br>（2）、使用Elasticsearch DSL，其可以通过传递一个JSON请求来获取结果。Curl方式与其类似，只是提交方式不是POST，而是XGET，提交参数与DSL提交一致</p>
-<p>二、基本匹配查询(Basic Match Query)<br>1、在所有的字段中搜索带有”guide”的结果：<br>通过dev tools:<br>GET /iteblog_book_index/book/_search?q=guide</p>
-<p>通过curl方式：<br>curl -u elastic “<a href="http://10.104.37.115:9281/iteblog_book_index/book/_search?pretty&quot;" target="_blank" rel="noopener">http://10.104.37.115:9281/iteblog_book_index/book/_search?pretty&quot;</a> -d ‘<br>{<br>    “query”: {<br>        “multi_match” : {<br>            “query” : “guide”,<br>            “fields” : [“_all”]<br>        }<br>    }<br>}’</p>
-<p>通过DSL：(POST json方式)</p>
-<p>其输出和上面使用/iteblog_book_index/book/_search?q=guide的输出一样。上面的multi_match关键字通常在查询多个fields的时候作为match关键字的简写方式。fields属性指定需要查询的字段，如果我们想查询所有的字段，这时候可以使用_all关键字，正如上面的一样。</p>
-<p>如果只是查询summary字段，则为：</p>
-<p>title的Guide则不会显示。</p>
-<p>2、以上两种方式都允许我们指定查询哪些字段。比如，我们想查询title中出现in Action的图书，那么我们可以这么查询：</p>
-<p>GET /iteblog_book_index/book/_search?q=title:in%20action</p>
-<p>然而，DSL方式提供了更加灵活的方式来构建更加复杂的查询（我们将在后面看到），甚至指定你想要的返回结果。下面的例子中，我将指定需要返回结果的数量，开始的偏移量（这在分页的情况下非常有用），需要返回document中的哪些字段以及高亮关键字：</p>
-<p>curl -XGET ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;</a> -d ‘<br>{<br>    “query”: {<br>        “match” : {<br>            “title” : “in action”<br>        }<br>    },<br>    “size”: 2,   #返回结果的数量<br>    “from”: 0,  #开始的偏移量<br>    “_source”: [ “title”, “summary”, “publish_date” ],<br>    “highlight”: {<br>        “fields” : {<br>            “title” : {}<br>        }<br>    }<br>}’</p>
-<p>三、Multi-field Search<br>正如我们之前所看到的，想在一个搜索中查询多个 document field （比如使用同一个查询关键字同时在title和summary中查询），你可以使用multi_match查询，使用如下：<br>curl -XGET ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;</a> -d ‘<br>{<br>    “query”: {<br>        “multi_match” : {<br>            “query” : “elasticsearch guide”,<br>            “fields”: [“title”, “summary”]<br>        }<br>    }<br>}’</p>
-<p>四、Boosting<br>上面使用同一个搜索请求在多个field中查询，你也许想提高某个field的查询权重。在下面的例子中，我们把summary field的权重调成3，这样就提高了其在结果中的权重，这样把_id=4的文档相关性大大提高了，如下：</p>
-<p>curl -XGET ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;</a> -d ‘<br>{<br>    “query”: {<br>        “multi_match” : {<br>            “query” : “elasticsearch guide”,<br>            “fields”: [“title”, “summary^3”]<br>        }<br>    },<br>    “_source”: [“title”, “summary”, “publish_date”]<br>}’</p>
-<p>需要注意的是：Boosting不仅仅意味着计算出来的分数(calculated score)直接乘以boost factor，最终的boost value会经过归一化以及其他一些内部的优化</p>
-<p>五、Bool Query<br>在查询条件中使用AND/OR/NOT操作符，这就是布尔查询(Bool Query)。布尔查询可以接受一个must参数(等价于AND)，一个must_not参数(等价于NOT)，以及一个should参数(等价于OR)。比如，我想查询title中出现Elasticsearch或者Solr关键字的图书，图书的作者是clinton gormley，但没有radu gheorge，可以这么来查询：</p>
-<p>curl -XGET ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;</a> -d ‘<br>{<br>    “query”: {<br>        “bool”: {<br>            “must”: {<br>                “bool” : { “should”: [<br>                      { “match”: { “title”: “Elasticsearch” }},<br>                      { “match”: { “title”: “Solr” }} ] }<br>            },<br>            “must”: { “match”: { “authors”: “clinton gormely” }},<br>            “must_not”: { “match”: {“authors”: “radu gheorge” }}<br>        }<br>    }<br>}’</p>
-<p>六、Fuzzy Queries（模糊查询）<br>模糊查询可以在Match和 Multi-Match查询中使用以便解决拼写的错误，模糊度是基于Levenshtein distance计算与原单词的距离。使用如下：<br>curl -XGET ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;</a> -d ‘<br>{<br>    “query”: {<br>        “multi_match” : {<br>            “query” : “comprihensiv guide”,<br>            “fields”: [“title”, “summary”],<br>            “fuzziness”: “AUTO”<br>        }<br>    },<br>    “_source”: [“title”, “summary”, “publish_date”],<br>    “size”: 1<br>}’</p>
-<p>需要注意：上面我们将fuzziness的值指定为AUTO，其在term的长度大于5的时候相当于指定值为2。然而80%的人拼写错误的编辑距离(edit distance)为1，所有如果你将fuzziness设置为1可能会提高你的搜索性能。</p>
-<p>七、Wildcard Query(通配符查询)<br>通配符查询允许我们指定一个模式来匹配，而不需要指定完整的term。?将会匹配一个字符；<em>将会匹配零个或者多个字符。比如我们想查找所有作者名字中以t字符开始的记录，我们可以如下使用：<br>curl -XGET ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;</a> -d ‘<br>{<br>    “query”: {<br>        “wildcard” : {      #wildcard是通配符意思<br>            “authors” : “t</em>“<br>        }<br>    },<br>    “_source”: [“title”, “authors”],<br>    “highlight”: {<br>        “fields” : {<br>            “authors” : {}<br>        }<br>    }<br>}’</p>
-<p>八、Regexp Query(正则表达式查询)<br>ElasticSearch还支持正则表达式查询，此方式提供了比通配符查询更加复杂的模式。比如我们先查找作者名字以t字符开头，中间是若干个a-z之间的字符，并且以字符y结束的记录，可以如下查询：</p>
-<p>curl -XGET ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;</a> -d ‘<br>{<br>    “query”: {<br>        “regexp” : {<br>            “authors” : “t[a-z]*y”<br>        }<br>    },<br>    “_source”: [“title”, “authors”],<br>    “highlight”: {<br>        “fields” : {<br>            “authors” : {}<br>        }<br>    }<br>}’</p>
-<p>九、Match Phrase Query(匹配短语查询)<br>匹配短语查询要求查询字符串中的trems要么都出现Document中、要么trems按照输入顺序依次出现在结果中。在默认情况下，查询输入的trems必须在搜索字符串紧挨着出现，否则将查询不到。不过我们可以指定slop参数，来控制输入的trems之间有多少个单词仍然能够搜索到，如下所示：<br>curl -XGET ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;</a> -d ‘<br>{<br>    “query”: {<br>        “multi_match”: {<br>            “query”: “search engine”,<br>            “fields”: [<br>                “title”,<br>                “summary”<br>            ],<br>            “type”: “phrase”,<br>            “slop”: 3<br>        }<br>    },<br>    “_source”: [<br>        “title”,<br>        “summary”,<br>        “publish_date”<br>    ]<br>}’</p>
-<p>从上面的例子可以看出，id为4的document被搜索（summary字段里面精确匹配到了search engine），并且分数比较高；而id为1的document也被搜索到了，虽然其summary中的search和engine单词并不是紧挨着的，但是我们指定了slop属性，所以被搜索到了。如果我们将”slop”: 3条件删除，那么id为1的文档将不会被搜索到，如下：</p>
-<p>十、Simple Query String(简单查询字符串)<br>simple_query_string是query_string的另一种版本，其更适合为用户提供一个搜索框中，因为其使用+/|/- 分别替换AND/OR/NOT，如果用输入了错误的查询，其直接忽略这种情况而不是抛出异常。使用如下：(注意是POST)<br>curl POST <a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search</a><br>{<br>    “query”: {<br>        “simple_query_string” : {<br>            “query”: “(saerch~1 algorithm~1) + (grant ingersoll)  | (tom morton)”,<br>            “fields”: [“_all”, “summary^2”]<br>        }<br>    },<br>    “_source”: [ “title”, “summary”, “authors” ],<br>    “highlight”: {<br>        “fields” : {<br>            “summary” : {}<br>        }<br>    }<br>}</p>
-<p>十一、Term/Terms Query<br>前面的例子中我们已经介绍了全文搜索(full-text search)，但有时候我们对结构化搜索中能够精确匹配并返回搜索结果更感兴趣。这种情况下我们可以使用term和terms查询。在下面例子中，我们想搜索所有曼宁出版社(Manning Publications)出版的图书：</p>
-<p>curl POST <a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search</a> -d ‘<br>{<br>    “query”: {<br>        “term” : {<br>            “publisher”: “manning”<br>        }<br>    },<br>    “_source” : [“title”,”publish_date”,”publisher”]<br>}’</p>
-<p>还可以使用terms关键字来指定多个terms，如下：</p>
-<p>{<br>    “query”: {<br>        “terms” : {<br>            “publisher”: [“oreilly”, “packt”]<br>        }<br>    }<br>}</p>
-<p>十二、Term Query - Sorted<br>词查询结果和其他查询结果一样可以很容易地对其进行排序，而且我们可以对输出结果按照多层进行排序：<br>curl POST <a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search</a><br>{<br>    “query”: {<br>        “term” : {<br>            “publisher”: “manning”<br>        }<br>    },<br>    “_source” : [“title”,”publish_date”,”publisher”],<br>    “sort”: [<br>        { “publish_date”: {“order”:”desc”}},<br>        { “title”: { “order”: “desc” }}<br>    ]<br>}</p>
-<p>执行提示：<br>Fielddata is disabled on text fields by default. Set fielddata=true on [title] in order to load fielddata in memory by uninverting the inverted index</p>
-<p>应该是5.x后对排序，聚合这些操作用单独的数据结构(fielddata)缓存到内存里了，需要单独开启</p>
-<p>PUT /iteblog_book_index/_mapping/book<br>{<br>  “properties”: {<br>    “title”: {<br>      “type”: “text”,<br>      “fielddata”: true<br>    }<br>  }<br>}</p>
-<p>再次执行：</p>
-<p>十三、Range Query(范围查询)<br>另一种结构化查询就是范围查询。在下面例子中，我们搜索所有发行年份为2015的图书：<br>curl POST <a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search</a><br>{<br>    “query”: {<br>        “range” : {<br>            “publish_date”: {<br>                “gte”: “2015-01-01”,<br>                “lte”: “2015-12-31”<br>            }<br>        }<br>    },<br>    “_source” : [“title”,”publish_date”,”publisher”]<br>}</p>
-<p>十四、Filtered Query(过滤查询)<br>过滤查询允许我们对查询结果进行筛选。比如：我们查询标题和摘要中包含Elasticsearch关键字的图书，但是我们想过滤出评论大于20的结果，可以如下使用：</p>
-<p>curl POST <a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search</a><br>{<br>    “query”: {<br>        “filtered”: {<br>            “query” : {<br>                “multi_match”: {<br>                    “query”: “elasticsearch”,<br>                    “fields”: [“title”,”summary”]<br>                }<br>            },<br>            “filter”: {<br>                “range” : {<br>                    “num_reviews”: {<br>                        “gte”: 20<br>                    }<br>                }<br>            }<br>        }<br>    },<br>    “_source” : [“title”,”summary”,”publisher”, “num_reviews”]<br>}</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2045,7 +2080,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2056,7 +2091,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2067,7 +2102,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
