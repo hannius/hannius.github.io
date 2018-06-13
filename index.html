@@ -320,6 +320,173 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/06/13/Pause容器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin Lei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="让一切随风">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/13/Pause容器/" itemprop="url">Pause容器</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-13T16:50:00+08:00">
+                2018-06-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/K8s/" itemprop="url" rel="index">
+                    <span itemprop="name">K8s</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Pause容器定义"><a href="#Pause容器定义" class="headerlink" title="Pause容器定义"></a>Pause容器定义</h2><p>Pause容器，又叫Infra容器，本文将探究该容器的作用与原理。</p>
+<p>在kubelet的配置中有这样一个参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">KUBELET_POD_INFRA_CONTAINER=--pod-infra-container-image=registry.access.redhat.com/rhel7/pod-infrastructure:latest</span><br></pre></td></tr></table></figure>
+<p>上面是openshift中的配置参数，kubernetes中默认的配置参数是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">KUBELET_POD_INFRA_CONTAINER=--pod-infra-container-image=gcr.io/google_containers/pause-amd64:3.0</span><br></pre></td></tr></table></figure>
+<p>Pause容器，是可以自己来定义，官方使用的gcr.io/google_containers/pause-amd64:3.0容器的代码见Github，使用C语言编写。</p>
+<h2 id="Pause容器的作用"><a href="#Pause容器的作用" class="headerlink" title="Pause容器的作用"></a>Pause容器的作用</h2><p>检查nod节点的时候会发现每个node上都运行了很多的pause容器，例如如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@elk-02 bin]# docker ps</span><br><span class="line">CONTAINER ID        IMAGE                                               COMMAND                  CREATED             STATUS              PORTS               NAMES</span><br><span class="line">576c56bd6065        mirrorgooglecontainers/kubernetes-dashboard-amd64   &quot;/dashboard --inse...&quot;   2 hours ago         Up 2 hours                              k8s_kubernetes-dashboard_kubernetes-dashboard-66c9d98865-jdbg8_kube-system_d2406f4f-6de3-11e8-8760-5254004f2222_0</span><br><span class="line">c4985381c2b7        d4b7466213fe                                        &quot;/coredns -conf /e...&quot;   2 hours ago         Up 2 hours                              k8s_coredns_coredns-77c989547b-xq4dr_kube-system_d23ef2c4-6de3-11e8-8760-5254004f2222_1</span><br><span class="line">ba2fef1cbf00        mirrorgooglecontainers/pause-amd64:3.0              &quot;/pause&quot;                 2 hours ago         Up 2 hours                              k8s_POD_coredns-77c989547b-xq4dr_kube-system_d23ef2c4-6de3-11e8-8760-5254004f2222_1</span><br><span class="line">ea6c2994b397        d4b7466213fe                                        &quot;/coredns -conf /e...&quot;   2 hours ago         Up 2 hours                              k8s_coredns_coredns-77c989547b-lcbfw_kube-system_0696926b-6d79-11e8-8760-5254004f2222_1</span><br><span class="line">f61476c51230        mirrorgooglecontainers/pause-amd64:3.0              &quot;/pause&quot;                 2 hours ago         Up 2 hours                              k8s_POD_kubernetes-dashboard-66c9d98865-jdbg8_kube-system_d2406f4f-6de3-11e8-8760-5254004f2222_0</span><br><span class="line">b6f61200d5ea        mirrorgooglecontainers/pause-amd64:3.0              &quot;/pause&quot;                 2 hours ago         Up 2 hours                              k8s_POD_coredns-77c989547b-lcbfw_kube-system_0696926b-6d79-11e8-8760-5254004f2222_1</span><br></pre></td></tr></table></figure>
+<p>kubernetes中的pause容器主要为每个业务容器提供以下功能：</p>
+<ul>
+<li>在pod中担任Linux命名空间共享的基础；</li>
+<li>启用pid命名空间，开启init进程。</li>
+</ul>
+<p>pause容器的作用可以从这个例子中看出，首先见下图：</p>
+<h2 id="Pause容器测试"><a href="#Pause容器测试" class="headerlink" title="Pause容器测试"></a>Pause容器测试</h2><p>首先在节点上运行一个pause容器。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name pause -p 8880:80 martin/pause-amd64:3.0</span><br></pre></td></tr></table></figure>
+<p>然后再运行一个nginx容器，nginx将为localhost:2398创建一个代理。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ cat &lt;&lt;EOF &gt;&gt; nginx.conff</span><br><span class="line">error_log stderr;</span><br><span class="line">events &#123; worker_connections  1024; &#125;</span><br><span class="line">http &#123;</span><br><span class="line">    access_log /dev/stdout combined;</span><br><span class="line">    server &#123;</span><br><span class="line">        listen 80 default_server;</span><br><span class="line">        server_name example.com www.example.com;</span><br><span class="line">        location / &#123;</span><br><span class="line">            proxy_pass http://127.0.0.1:2398;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">$ docker run -d --name nginx -v `pwd`/nginx.conf:/etc/nginx/nginx.conf --net=container:pause --ipc=container:pause --pid=container:pause nginx</span><br></pre></td></tr></table></figure>
+<p>然后再为ghost创建一个应用容器，这是一款博客软件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d --name ghost --net=container:pause --ipc=container:pause --pid=container:pause ghost</span><br></pre></td></tr></table></figure>
+<p>现在访问<a href="http://localhost:8880/就可以看到ghost博客的界面了。" target="_blank" rel="noopener">http://localhost:8880/就可以看到ghost博客的界面了。</a></p>
+<h2 id="Pause容器解析"><a href="#Pause容器解析" class="headerlink" title="Pause容器解析"></a>Pause容器解析</h2><p>pause容器将内部的80端口映射到宿主机的8880端口，pause容器在宿主机上设置好了网络namespace后，nginx容器加入到该网络namespace中，我们看到nginx容器启动的时候指定了–net=container:pause，ghost容器同样加入到了该网络namespace中，这样三个容器就共享了网络，互相之间就可以使用localhost直接通信，–ipc=contianer:pause –pid=container:pause就是三个容器处于同一个namespace中，init进程为pause，这时我们进入到ghost容器中查看进程情况。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># ps aux</span><br><span class="line">USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND</span><br><span class="line">root         1  0.0  0.0   1024     4 ?        Ss   13:49   0:00 /pause</span><br><span class="line">root         5  0.0  0.1  32432  5736 ?        Ss   13:51   0:00 nginx: master p</span><br><span class="line">systemd+     9  0.0  0.0  32980  3304 ?        S    13:51   0:00 nginx: worker p</span><br><span class="line">node        10  0.3  2.0 1254200 83788 ?       Ssl  13:53   0:03 node current/in</span><br><span class="line">root        79  0.1  0.0   4336   812 pts/0    Ss   14:09   0:00 sh</span><br><span class="line">root        87  0.0  0.0  17500  2080 pts/0    R+   14:10   0:00 ps aux</span><br></pre></td></tr></table></figure>
+<p>在ghost容器中同时可以看到pause和nginx容器的进程，并且pause容器的PID是1。而在kubernetes中容器的PID=1的进程即为容器本身的业务进程。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://o-my-chenjian.com/2017/10/17/The-Pause-Container-Of-Kubernetes/" target="_blank" rel="noopener">Kubernetes只Pause容器</a></p>
+<p><a href="https://jimmysong.io/posts/what-is-a-pause-container/" target="_blank" rel="noopener">kubernetes中的infra容器——Pause容器探究</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/05/24/crontab和anacron和logrotate-relation/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1894,138 +2061,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/04/03/elk/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Martin Lei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="让一切随风">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/03/elk/" itemprop="url">ELK的一次吞吐量优化</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-03T11:42:33+08:00">
-                2018-04-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="问题一"><a href="#问题一" class="headerlink" title="问题一"></a>问题一</h2><p>  ● 最近发现kibana的日志传的很慢，常常查不到日志，由于所有的日志收集都只传输到了一个logstash进行收集和过滤，于是怀疑是否是由于logstash的吞吐量存在瓶颈。一看，还真是到了瓶颈。</p>
-<p>  ● 优化过程</p>
-<p>  ● 经过查询logstash完整配置文件，有几个参数需要调整</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># pipeline线程数，官方建议是等于CPU内核数</span><br><span class="line">pipeline.workers: 24</span><br><span class="line"># 实际output时的线程数</span><br><span class="line">pipeline.output.workers: 24</span><br><span class="line"># 每次发送的事件数</span><br><span class="line">pipeline.batch.size: 3000</span><br><span class="line"># 发送延时</span><br><span class="line">pipeline.batch.delay: 5</span><br></pre></td></tr></table></figure>
-<p>PS:由于我们的ES集群数据量较大（&gt;28T），所以具体配置数值视自身生产环境</p>
-<h2 id="问题二"><a href="#问题二" class="headerlink" title="问题二"></a>问题二</h2><p>  ● 在查看logstash日志过程中，我们看到了大量的以下报错<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[2017-03-18T09:46:21,043][INFO ][logstash.outputs.elasticsearch] retrying failed action with response code: 429 (&#123;&quot;type&quot;=&gt;&quot;es_rejected_execution_exception&quot;, &quot;reason&quot;=&gt;&quot;rejected execution of org.elasticsearch.transport.TransportService$6@6918cf2e on EsThreadPoolExecutor[bulk, queue capacity = 50, org.elasticsearch.common.util.concurrent.EsThreadPoolExecutor@55337655[Running, pool size = 24, active threads = 24, queued tasks = 50, completed tasks = 1767887463]]&quot;&#125;)</span><br><span class="line">[2017-03-18T09:46:21,043][ERROR][logstash.outputs.elasticsearch] Retrying individual actions</span><br></pre></td></tr></table></figure></p>
-<p>  ● 查询官网，确认为时ES的写入遇到了瓶颈</p>
-<p>  ● Make sure to watch for TOO_MANY_REQUESTS (429) response codes (EsRejectedExecutionException with the Java client), which is the way that Elasticsearch tells you that it cannot keep up with the current indexing rate. When it happens, you should pause indexing a bit before trying again, ideally with randomized exponential backoff.</p>
-<p>我们首先想到的是来调整ES的线程数，但是官网写到”Don’t Touch There Settings!”, 那怎么办？于是乎官方建议我们修改logstash的参数pipeline.batch.size</p>
-<p>  ● 在ES5.0以后，es将bulk、flush、get、index、search等线程池完全分离，自身的写入不会影响其他功能的性能。<br>来查询一下ES当前的线程情况：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">GET _nodes/stats/thread_pool?pretty</span><br><span class="line"></span><br><span class="line">可以看到：</span><br><span class="line">&#123;</span><br><span class="line">  &quot;_nodes&quot;: &#123;</span><br><span class="line">    &quot;total&quot;: 6,</span><br><span class="line">    &quot;successful&quot;: 6,</span><br><span class="line">    &quot;failed&quot;: 0</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;cluster_name&quot;: &quot;dev-elasticstack5.0&quot;,</span><br><span class="line">  &quot;nodes&quot;: &#123;</span><br><span class="line">    &quot;nnfCv8FrSh-p223gsbJVMA&quot;: &#123;</span><br><span class="line">      &quot;timestamp&quot;: 1489804973926,</span><br><span class="line">      &quot;name&quot;: &quot;node-3&quot;,</span><br><span class="line">      &quot;transport_address&quot;: &quot;192.168.3.***:9301&quot;,</span><br><span class="line">      &quot;host&quot;: &quot;192.168.3.***&quot;,</span><br><span class="line">      &quot;ip&quot;: &quot;192.168.3.***:9301&quot;,</span><br><span class="line">      &quot;roles&quot;: [</span><br><span class="line">        &quot;master&quot;,</span><br><span class="line">        &quot;data&quot;,</span><br><span class="line">        &quot;ingest&quot;</span><br><span class="line">      ],</span><br><span class="line">      &quot;attributes&quot;: &#123;</span><br><span class="line">        &quot;rack&quot;: &quot;r1&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;thread_pool&quot;: &#123;</span><br><span class="line">        &quot;bulk&quot;: &#123;</span><br><span class="line">          &quot;threads&quot;: 24,</span><br><span class="line">          &quot;queue&quot;: 214,</span><br><span class="line">          &quot;active&quot;: 24,</span><br><span class="line">          &quot;rejected&quot;: 30804543,</span><br><span class="line">          &quot;largest&quot;: 24,</span><br><span class="line">          &quot;completed&quot;: 1047606679</span><br><span class="line">        &#125;,</span><br><span class="line"></span><br><span class="line">        ......</span><br><span class="line"></span><br><span class="line">        &quot;watcher&quot;: &#123;</span><br><span class="line">  &quot;threads&quot;: 0,</span><br><span class="line">  &quot;queue&quot;: 0,</span><br><span class="line">  &quot;active&quot;: 0,</span><br><span class="line">  &quot;rejected&quot;: 0,</span><br><span class="line">  &quot;largest&quot;: 0,</span><br><span class="line">  &quot;completed&quot;: 0</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>其中：”bulk”模板的线程数24，当前活跃的线程数24，证明所有的线程是busy的状态，queue队列214，rejected为30804543。那么问题就找到了，所有的线程都在忙，队列堵满后再有进程写入就会被拒绝，而当前拒绝数为30804543。<br>优化方案<br>问题找到了，如何优化呢。官方的建议是提高每次批处理的数量，调节传输间歇时间。当batch.size增大，es处理的事件数就会变少，写入也就愉快了。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/logstash/logstash.yml</span><br><span class="line">#</span><br><span class="line">pipeline.workers: 24</span><br><span class="line">pipeline.output.workers: 24</span><br><span class="line">pipeline.batch.size: 10000</span><br><span class="line">pipeline.batch.delay: 10</span><br></pre></td></tr></table></figure>
-<p>具体的worker/output.workers数量建议等于CPU数，batch.size/batch.delay根据实际的数据量逐渐增大来测试最优值。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2080,7 +2115,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2091,7 +2126,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2102,7 +2137,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
