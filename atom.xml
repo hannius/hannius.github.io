@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.leiyawu.com/"/>
-  <updated>2018-06-13T09:17:59.395Z</updated>
+  <updated>2018-06-14T09:25:31.599Z</updated>
   <id>http://www.leiyawu.com/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>kubernetes-jenkins-ci-cd</title>
+    <link href="http://www.leiyawu.com/2018/06/14/kubernetes-jenkins-ci-cd/"/>
+    <id>http://www.leiyawu.com/2018/06/14/kubernetes-jenkins-ci-cd/</id>
+    <published>2018-06-14T09:22:00.000Z</published>
+    <updated>2018-06-14T09:25:31.599Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="流程图："><a href="#流程图：" class="headerlink" title="流程图："></a>流程图：</h3><p>基于Jenkins的CI/CD流程如下所示:<br><img src="http://cos.leiyawu.com/docker/k8s/kubernetes-jenkins-ci-cd.png" alt="kubernetes-jenkins-ci-cd"></p><h3 id="流程说明："><a href="#流程说明：" class="headerlink" title="流程说明："></a>流程说明：</h3><ol><li>用户向Gitlab提交代码，代码中必须包含Dockerfile</li><li>将代码提交到远程仓库</li><li>用户在发布应用时需要填写git仓库地址和分支、服务类型、服务名称、资源数量、实例个数，确定后触发Jenkins自动构建</li><li>Jenkins的CI流水线自动编译代码并打包成docker镜像推送到Harbor镜像仓库</li><li>Jenkins的CI流水线中包括了自定义脚本，根据我们已准备好的kubernetes的YAML模板，将其中的变量替换成用户输入的选项</li><li>生成应用的kubernetes YAML配置文件</li><li>更新Ingress的配置，根据新部署的应用的名称，在ingress的配置文件中增加一条路由信息</li><li>更新PowerDNS，向其中插入一条DNS记录，IP地址是边缘节点的IP地址。关于边缘节点，请查看<a href="https://jimmysong.io/kubernetes-handbook/practice/edge-node-configuration.html" target="_blank" rel="noopener">边缘节点配置</a></li><li>Jenkins调用kubernetes的API，部署应用</li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h3 id=&quot;流程图：&quot;&gt;&lt;a href=&quot;#流程图：&quot; class=&quot;headerlink&quot; title=&quot;流程图：&quot;&gt;&lt;/a&gt;流程图：&lt;/h3&gt;&lt;p&gt;基于Jenkins的CI/CD流程如下所示:&lt;br&gt;&lt;img src=&quot;http://cos.leiyawu.com/doc
+      
+    
+    </summary>
+    
+      <category term="K8s" scheme="http://www.leiyawu.com/categories/K8s/"/>
+    
+    
+      <category term="K8s" scheme="http://www.leiyawu.com/tags/K8s/"/>
+    
+  </entry>
   
   <entry>
     <title>Pause容器</title>
