@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Kafka," />
+  <meta name="keywords" content="K8s," />
 
 
 
@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="Kafka的配置详尽、复杂，想要进行全面的性能调优需要掌握大量信息，这里只记录一下我在日常工作使用中走过的坑和经验来对kafka集群进行优化常用的几点。1.JVM的优化java相关系统自然离不开JVM的优化。首先想到的肯定是Heap Size的调整。 vim bin/kafka-server-start.sh    调整KAFKA_HEAP_OPTS=”-Xmx16G -Xms16G”的值推荐配置">
-<meta name="keywords" content="Kafka">
+<meta name="description" content="配置nexus从官网下载了nexus之后还需要进行一些配置。编辑bin/nexus.vmoptions 调整后的如下： 12345678910111213141516-Xms600M-Xmx600M-XX:MaxDirectMemorySize=1G-XX:+UnlockDiagnosticVMOptions-XX:+UnsyncloadClass-XX:+LogVMOutput-XX:LogFi">
+<meta name="keywords" content="K8s">
 <meta property="og:type" content="article">
-<meta property="og:title" content="kafka性能调优">
-<meta property="og:url" content="http://www.leiyawu.com/2018/04/13/kafka性能调优/index.html">
+<meta property="og:title" content="基于k8s 动态配置及扩容maven nexus私服">
+<meta property="og:url" content="http://www.leiyawu.com/2018/06/22/qwe/index.html">
 <meta property="og:site_name" content="让一切随风">
-<meta property="og:description" content="Kafka的配置详尽、复杂，想要进行全面的性能调优需要掌握大量信息，这里只记录一下我在日常工作使用中走过的坑和经验来对kafka集群进行优化常用的几点。1.JVM的优化java相关系统自然离不开JVM的优化。首先想到的肯定是Heap Size的调整。 vim bin/kafka-server-start.sh    调整KAFKA_HEAP_OPTS=”-Xmx16G -Xms16G”的值推荐配置">
+<meta property="og:description" content="配置nexus从官网下载了nexus之后还需要进行一些配置。编辑bin/nexus.vmoptions 调整后的如下： 12345678910111213141516-Xms600M-Xmx600M-XX:MaxDirectMemorySize=1G-XX:+UnlockDiagnosticVMOptions-XX:+UnsyncloadClass-XX:+LogVMOutput-XX:LogFi">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-13T08:47:49.115Z">
+<meta property="og:updated_time" content="2018-06-22T02:37:21.838Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="kafka性能调优">
-<meta name="twitter:description" content="Kafka的配置详尽、复杂，想要进行全面的性能调优需要掌握大量信息，这里只记录一下我在日常工作使用中走过的坑和经验来对kafka集群进行优化常用的几点。1.JVM的优化java相关系统自然离不开JVM的优化。首先想到的肯定是Heap Size的调整。 vim bin/kafka-server-start.sh    调整KAFKA_HEAP_OPTS=”-Xmx16G -Xms16G”的值推荐配置">
+<meta name="twitter:title" content="基于k8s 动态配置及扩容maven nexus私服">
+<meta name="twitter:description" content="配置nexus从官网下载了nexus之后还需要进行一些配置。编辑bin/nexus.vmoptions 调整后的如下： 12345678910111213141516-Xms600M-Xmx600M-XX:MaxDirectMemorySize=1G-XX:+UnlockDiagnosticVMOptions-XX:+UnsyncloadClass-XX:+LogVMOutput-XX:LogFi">
 
 
 
@@ -122,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://www.leiyawu.com/2018/04/13/kafka性能调优/"/>
+  <link rel="canonical" href="http://www.leiyawu.com/2018/06/22/qwe/"/>
 
 
 
 
 
-  <title>kafka性能调优 | 让一切随风</title>
+  <title>基于k8s 动态配置及扩容maven nexus私服 | 让一切随风</title>
   
 
 
@@ -321,7 +321,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/04/13/kafka性能调优/">
+    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/06/22/qwe/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Martin Lei">
@@ -338,7 +338,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">kafka性能调优</h1>
+          <h1 class="post-title" itemprop="name headline">基于k8s 动态配置及扩容maven nexus私服</h1>
         
 
         <div class="post-meta">
@@ -350,8 +350,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-13T16:38:00+08:00">
-                2018-04-13
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-22T10:36:00+08:00">
+                2018-06-22
               </time>
             
 
@@ -373,8 +373,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Kafka/" itemprop="url" rel="index">
-                    <span itemprop="name">Kafka</span>
+                  <a href="/categories/K8s/" itemprop="url" rel="index">
+                    <span itemprop="name">K8s</span>
                   </a>
                 </span>
 
@@ -410,34 +410,74 @@
       
 
       
-        <h2 id="Kafka的配置详尽、复杂，想要进行全面的性能调优需要掌握大量信息，这里只记录一下我在日常工作使用中走过的坑和经验来对kafka集群进行优化常用的几点。"><a href="#Kafka的配置详尽、复杂，想要进行全面的性能调优需要掌握大量信息，这里只记录一下我在日常工作使用中走过的坑和经验来对kafka集群进行优化常用的几点。" class="headerlink" title="Kafka的配置详尽、复杂，想要进行全面的性能调优需要掌握大量信息，这里只记录一下我在日常工作使用中走过的坑和经验来对kafka集群进行优化常用的几点。"></a>Kafka的配置详尽、复杂，想要进行全面的性能调优需要掌握大量信息，这里只记录一下我在日常工作使用中走过的坑和经验来对kafka集群进行优化常用的几点。</h2><h3 id="1-JVM的优化"><a href="#1-JVM的优化" class="headerlink" title="1.JVM的优化"></a>1.JVM的优化</h3><p>java相关系统自然离不开JVM的优化。首先想到的肯定是Heap Size的调整。</p>
-<p>vim bin/kafka-server-start.sh   </p>
-<p>调整KAFKA_HEAP_OPTS=”-Xmx16G -Xms16G”的值<br>推荐配置：一般HEAP SIZE的大小不超过主机内存的50%。</p>
-<h3 id="2-网络和ios操作线程配置优化："><a href="#2-网络和ios操作线程配置优化：" class="headerlink" title="2.网络和ios操作线程配置优化："></a>2.网络和ios操作线程配置优化：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># broker处理消息的最大线程数</span><br><span class="line">num.network.threads=9</span><br><span class="line"># broker处理磁盘IO的线程数</span><br><span class="line">num.io.threads=16</span><br></pre></td></tr></table></figure>
-<p>推荐配置：<br>num.network.threads主要处理网络io，读写缓冲区数据，基本没有io等待，配置线程数量为cpu核数加1。</p>
-<p>num.io.threads主要进行磁盘io操作，高峰期可能有些io等待，因此配置需要大些。配置线程数量为cpu核数2倍，最大不超过3倍。</p>
-<h3 id="3-socket-server可接受数据大小-防止OOM异常-："><a href="#3-socket-server可接受数据大小-防止OOM异常-：" class="headerlink" title="3.socket server可接受数据大小(防止OOM异常)："></a>3.socket server可接受数据大小(防止OOM异常)：</h3><p>socket.request.max.bytes=2147483600</p>
-<p>推荐配置：</p>
-<p>根据自己业务数据包的大小适当调大。这里取值是int类型的，而受限于java int类型的取值范围又不能太大：</p>
-<p>java int的取值范围为（-2147483648~2147483647），占用4个字节（-2的31次方到2的31次方-1，不能超出，超出之后报错：org.apache.kafka.common.config.ConfigException: Invalid value 8589934592 for configuration socket.request.max.bytes: Not a number of type INT。</p>
-<h3 id="4-log数据文件刷盘策略"><a href="#4-log数据文件刷盘策略" class="headerlink" title="4.log数据文件刷盘策略"></a>4.log数据文件刷盘策略</h3><p>—每当producer写入10000条消息时，刷数据到磁盘—<br>log.flush.interval.messages=10000</p>
-<p>—每间隔1秒钟时间，刷数据到磁盘—<br>log.flush.interval.ms=1000</p>
-<p>推荐配置：</p>
-<p>为了大幅度提高producer写入吞吐量，需要定期批量写文件。一般无需改动，如果topic的数据量较小可以考虑减少log.flush.interval.ms和log.flush.interval.messages来强制刷写数据，减少可能由于缓存数据未写盘带来的不一致。推荐配置分别message 10000，间隔1s。</p>
-<h3 id="5-日志保留策略配置"><a href="#5-日志保留策略配置" class="headerlink" title="5.日志保留策略配置"></a>5.日志保留策略配置</h3><p>—日志保留时长—<br>log.retention.hours=72</p>
-<p>—段文件配置—<br>log.segment.bytes=1073741824</p>
-<p>推荐配置：</p>
-<p>日志建议保留三天，也可以更短；段文件配置1GB，有利于快速回收磁盘空间，重启kafka加载也会加快（kafka启动时是单线程扫描目录(log.dir)下所有数据文件）。如果文件过小，则文件数量比较多。</p>
-<h3 id="6-replica复制配置"><a href="#6-replica复制配置" class="headerlink" title="6.replica复制配置"></a>6.replica复制配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">num.replica.fetchers=3</span><br><span class="line">replica.fetch.min.bytes=1</span><br><span class="line">replica.fetch.max.bytes=5242880</span><br></pre></td></tr></table></figure>
-<p>推荐配置：</p>
-<p>每个follow从leader拉取消息进行同步数据，follow同步性能由这几个参数决定，分别为:</p>
-<p>拉取线程数(num.replica.fetchers):fetcher配置多可以提高follower的I/O并发度，单位时间内leader持有更多请求，相应负载会增大，需要根据机器硬件资源做权衡，建议适当调大；</p>
-<p>最小字节数(replica.fetch.min.bytes):一般无需更改，默认值即可；</p>
-<p>最大字节数(replica.fetch.max.bytes)：默认为1MB，这个值太小，推荐5M，根据业务情况调整</p>
-<p>最大等待时间(replica.fetch.wait.max.ms):follow拉取频率，频率过高，leader会积压大量无效请求情况，无法进行数据同步，导致cpu飙升。配置时谨慎使用，建议默认值，无需配置。</p>
-<h3 id="7-分区数量配置"><a href="#7-分区数量配置" class="headerlink" title="7.分区数量配置"></a>7.分区数量配置</h3><p>num.partitions=5</p>
-<p>推荐配置：</p>
-<p>默认partition数量1，如果topic在创建时没有指定partition数量，默认使用此值。Partition的数量选取也会直接影响到Kafka集群的吞吐性能，配置过小会影响消费性能，建议改为5。</p>
+        <h3 id="配置nexus"><a href="#配置nexus" class="headerlink" title="配置nexus"></a>配置nexus</h3><p>从官网下载了nexus之后还需要进行一些配置。<br>编辑bin/nexus.vmoptions 调整后的如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">-Xms600M</span><br><span class="line">-Xmx600M</span><br><span class="line">-XX:MaxDirectMemorySize=1G</span><br><span class="line">-XX:+UnlockDiagnosticVMOptions</span><br><span class="line">-XX:+UnsyncloadClass</span><br><span class="line">-XX:+LogVMOutput</span><br><span class="line">-XX:LogFile=/data/docker/soft/nexus/log/jvm.log</span><br><span class="line">-XX:-OmitStackTraceInFastThrow</span><br><span class="line">-Djava.net.preferIPv4Stack=true</span><br><span class="line">-Dkaraf.home=.</span><br><span class="line">-Dkaraf.base=.</span><br><span class="line">-Dkaraf.etc=etc/karaf</span><br><span class="line">-Djava.util.logging.config.file=etc/karaf/java.util.logging.properties</span><br><span class="line">-Dkaraf.data=/data/docker/soft/nexus/data</span><br><span class="line">-Djava.io.tmpdir=/data/docker/soft/nexus/tmp</span><br><span class="line">-Dkaraf.startLocalConsole=false</span><br></pre></td></tr></table></figure>
+<p>其中除了1，2行的jvm内存配置之外，最关键的就是，以下几个属性配置：</p>
+<ul>
+<li>-XX:LogFile=/data/docker/soft/nexus/log/jvm.log       # 日志文件生成位置</li>
+<li>-Dkaraf.data=/data/docker/soft/nexus/data             # 仓库数据存放位置(上传的jar包)</li>
+<li>-Djava.io.tmpdir=/data/docker/soft/nexus/tmp          # 临时文件存放位置</li>
+</ul>
+<h3 id="制作Docker镜像"><a href="#制作Docker镜像" class="headerlink" title="制作Docker镜像"></a>制作Docker镜像</h3><p>配置好nexus之后，需要再制作自己的docker镜像，因为k8s就是调度镜像容器的。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@master nexus]# pwd</span><br><span class="line">/data/docker/dockerfile/nexus</span><br><span class="line">[root@master nexus]# ls -lth </span><br><span class="line">total 223M</span><br><span class="line">-rw-r--r-- 1 root root  146 Jun 21 16:06 Dockerfile</span><br><span class="line">-rw-r--r-- 1 root root 108M Jun 21 16:02 nexus3.tar.gz</span><br><span class="line">drwxr-xr-x 3 root root 4.0K Jun 21 15:53 sonatype-work</span><br><span class="line">drwxr-xr-x 9 root root 4.0K Jun 21 15:53 nexus-3.12.1-01</span><br><span class="line">-rw-r--r-- 1 root root 115M Jun 21 15:36 nexus-3.12.1-01-unix.tar.gz.org</span><br></pre></td></tr></table></figure>
+<p>docker镜像的制作很简单，新建一个Dockerfile文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@master nexus]# cat Dockerfile </span><br><span class="line">FROM registry.cn-hangzhou.aliyuncs.com/luhaoyuan/oracle-jdk8:latest</span><br><span class="line"></span><br><span class="line">ADD nexus3.tar.gz /opt</span><br><span class="line"></span><br><span class="line">ENTRYPOINT [&quot;/opt/nexus-3.12.1-01/bin/nexus&quot;, &quot;run&quot;]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>第一行：nexus的运行是依赖JDK环境的，所以我们这里就使用jdk作为基础镜像；(镜像是基于centos7，比较大，后续可以考虑修改为alpine_3.6)</li>
+<li>第二行：将我们配置过后的nexus(nexus-3.12.1-01)再重新打包一下，添加到容器中； </li>
+<li>第三行：启动容器时，执行的命令，nexus的启动命令有start和run，由于start默认是启动在后台进程的，这样容器一启动就退出了。所以这里必须要使用run命令启动了。</li>
+</ul>
+<p>最后构建Docker镜像：<br>docker build -t registry.martin.com:5000/tools/nexus:3.12.1 .<br>registry.martin.com:5000为我registry地址,构建之后将改image push到私库,当然也可以用harbor<br>如果有做ca校验，需要将证书拷贝到指定的:/etc/docker/certs.d/xxx/ca.crt,然后docker login校验<br>再docker push registry.martin.com:5000/tools/nexus:3.12.1，不然会提示x509认证失败</p>
+<h3 id="配置k8s-PV-PVC"><a href="#配置k8s-PV-PVC" class="headerlink" title="配置k8s PV-PVC"></a>配置k8s PV-PVC</h3><p>为了避免容器重启数据丢失，需要挂载主机的卷空间。<br>在k8s中，pod挂载主机的存储卷，就需要使用到了PV（PersistentVolume）和PVC（PersistentVolumeClaim）。<br>新建nexus3-pv-pvc.yaml文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">[root@master nexus]# pwd</span><br><span class="line">/data/k8s/nexus</span><br><span class="line">[root@master  nexus]# ls -lth</span><br><span class="line">total 12K</span><br><span class="line">-rw-r--r-- 1 root root 777 Jun 21 18:49 nexus3-deployment.yaml</span><br><span class="line">-rw-r--r-- 1 root root 370 Jun 21 17:12 nexus3-service.yaml</span><br><span class="line">-rw-r--r-- 1 root root 525 Jun 21 16:49 nexus3-pv-pvc.yaml</span><br><span class="line">[root@master  nexus]# cat nexus3-pv-pvc.yaml </span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: PersistentVolume</span><br><span class="line">metadata:</span><br><span class="line">  name: nexus3-data-pv</span><br><span class="line">  labels:</span><br><span class="line">    app: nexus3-data-pv</span><br><span class="line">spec:</span><br><span class="line">  capacity:</span><br><span class="line">    storage: 500Gi</span><br><span class="line">  accessModes:</span><br><span class="line">    - ReadWriteOnce</span><br><span class="line">  persistentVolumeReclaimPolicy: Recycle</span><br><span class="line">  hostPath:</span><br><span class="line">    path: /data/docker/soft/nexus</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: PersistentVolumeClaim</span><br><span class="line">metadata:</span><br><span class="line">  name: nexus3-data-pvc</span><br><span class="line">  labels:</span><br><span class="line">    app: nexus3-data-pvc</span><br><span class="line">spec:</span><br><span class="line">  accessModes:</span><br><span class="line">    - ReadWriteOnce</span><br><span class="line">  resources:</span><br><span class="line">    requests:</span><br><span class="line">      storage: 500Gi</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: nexus3-data-pv</span><br><span class="line">[root@master  nexus]#</span><br></pre></td></tr></table></figure>
+<p>==注意：PV中的hostPath，指定了宿主主机上的挂载路径(node节点最好全部先创建好)==</p>
+<h3 id="配置k8s-Deployment"><a href="#配置k8s-Deployment" class="headerlink" title="配置k8s Deployment"></a>配置k8s Deployment</h3><p>在k8s早期更多的是使用ReplicationController (RC)来控制保障pod，不过后来又出现了Deployment。<br>Deployment不仅包含了RC的所有功能，还具有：版本记录、回滚、暂停和启动等多种额外的强大功能。<br>所以可以尽量都使用Deployment,新建nexus3-deployment.yaml文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">[root@master nexus]# cat nexus3-deployment.yaml </span><br><span class="line">kind: Deployment</span><br><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    app: nexus3</span><br><span class="line">  name: nexus3</span><br><span class="line">spec:</span><br><span class="line">  replicas: 1</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: nexus3</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: nexus3</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">        - name: nexus3</span><br><span class="line">          image: registry.martin.com:5000/tools/nexus:3.12.1</span><br><span class="line">          imagePullPolicy: IfNotPresent</span><br><span class="line">          ports:</span><br><span class="line">          - containerPort: 9193</span><br><span class="line">            protocol: TCP</span><br><span class="line">          volumeMounts:</span><br><span class="line">          - name: nexus-data</span><br><span class="line">            mountPath: /data/docker/soft/nexus</span><br><span class="line">      volumes:</span><br><span class="line">        - name: nexus-data</span><br><span class="line">          persistentVolumeClaim:</span><br><span class="line">            claimName: nexus3-data-pvc</span><br><span class="line">      nodeSelector:</span><br><span class="line">        kubernetes.io/hostname: 192.168.0.15</span><br></pre></td></tr></table></figure>
+<p>需要在volumes结点上引用之前创建的PVC：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">volumes:</span><br><span class="line">  - name: nexus-data</span><br><span class="line">    persistentVolumeClaim:</span><br><span class="line">      claimName: nexus3-data-pvc</span><br></pre></td></tr></table></figure>
+<p>在volumeMounts结点上，配置了挂载到容器中的路径：/data/docker/soft/nexus(node节点最好全部先创建好)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">volumeMounts:</span><br><span class="line">  - name: nexus-data</span><br><span class="line">    mountPath: /data/docker/soft/nexus</span><br></pre></td></tr></table></figure>
+<p>最后的nodeSelector表示pod只在某个主机上运行,可以通过在k8s的master上使用:kubectl get nodes查看</p>
+<h3 id="配置k8s-Service"><a href="#配置k8s-Service" class="headerlink" title="配置k8s Service"></a>配置k8s Service</h3><p>k8s中的pod的访问是不可靠的，随时可能发生pod停止-漂移-创建的过程。<br>所以要想能够稳定的访问，就必须要创建Service进行服务发现了，在Service中是根据selector来寻找pod的。<br>最后k8s上的Service只能在集群节点上访问，如果我们想要在集群外部进行访问的话，只有三种方式：</p>
+<ul>
+<li>NodePort、</li>
+<li>LoadBalancer、</li>
+<li>Ingress。 </li>
+</ul>
+<p>这里使用NodePort，绑定宿主机的端口来进行暴露服务。跟docker run -p 看上去效果相似。<br>新建nexus3-service.yaml文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[root@master nexus]# cat nexus3-service.yaml </span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    app: nexus3</span><br><span class="line">  name: nexus3</span><br><span class="line">spec:</span><br><span class="line">  type: NodePort</span><br><span class="line">  ports:</span><br><span class="line">  - port: 8081</span><br><span class="line">    targetPort: 8081</span><br><span class="line">    nodePort: 30031</span><br><span class="line">    name: web-ui</span><br><span class="line">  - port: 5000</span><br><span class="line">    targetPort: 5000</span><br><span class="line">    nodePort: 30032</span><br><span class="line">    name: docker-group</span><br><span class="line">  - port: 8889</span><br><span class="line">    targetPort: 8889</span><br><span class="line">    nodePort: 30033</span><br><span class="line">    name: docker-push</span><br><span class="line">  selector:</span><br><span class="line">    app: nexus3</span><br><span class="line">[root@master nexus]#</span><br></pre></td></tr></table></figure></p>
+<p>其中关键的地方就是spec.type节点配置NodePort类型了。<br>说明下的ports 端口的配置：</p>
+<ul>
+<li>port 属性定义了Service的虚端口；</li>
+<li>targetPort 属性指定了后面pod上提供的端口，如果没有指定则默认与port相同(这里我们显视的指定了)；</li>
+<li>nodePort 属性指定了绑定在宿主机(物理机)上的端口号，我们可以通过宿主机IP + 端口的形式访问到后方pod中的服。</li>
+<li>name 如果有多个port配置的话，必须要为每个port指定一个名称。</li>
+</ul>
+<h3 id="k8s部署访问"><a href="#k8s部署访问" class="headerlink" title="k8s部署访问"></a>k8s部署访问</h3><h4 id="创建-PV-PVC"><a href="#创建-PV-PVC" class="headerlink" title="创建 PV-PVC"></a>创建 PV-PVC</h4><p>根据配置文件，创建PV-PVC：</p>
+<p>kubectl create -f nexus3-pv-pvc.yaml</p>
+<p>创建完成后，查看一下状态，是否正常： </p>
+<p>kubectl get pv</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NAME             CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS    CLAIM                     STORAGECLASS   REASON    AGE</span><br><span class="line">nexus3-data-pv   500Gi      RWO            Recycle          Bound     default/nexus3-data-pvc                            17h</span><br></pre></td></tr></table></figure>
+<h4 id="创建Deployment"><a href="#创建Deployment" class="headerlink" title="创建Deployment"></a>创建Deployment</h4><p>继续创建Deployment，创建完后会自动创建pod的，并维护pod数量始终为1。 </p>
+<p>kubectl create -f nexus3-deployment.yaml </p>
+<p>稍等几秒钟，查看pod状态： </p>
+<p>kubectl get pod -o wide</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NAME                      READY     STATUS    RESTARTS   AGE       IP           NODE</span><br><span class="line">nexus3-68f55d9746-vfnf8   1/1       Running   0          12h       10.20.7.12   192.168.0.15</span><br></pre></td></tr></table></figure>
+<p>==注意：默认不用-n指定namespace的都是用的default，-o wide可以看到详细的IP及node信息==</p>
+<h4 id="创建Service"><a href="#创建Service" class="headerlink" title="创建Service"></a>创建Service</h4><p>创建Service，暴露服务：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl create -f nexus3-service.yaml</span><br></pre></td></tr></table></figure>
+<p>查看状态：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> kubectl get svc</span><br><span class="line">NAME            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                                        AGE</span><br><span class="line">kubernetes      ClusterIP   10.10.0.1       &lt;none&gt;        443/TCP                                        13d</span><br><span class="line">nexus3          NodePort    10.10.165.3     &lt;none&gt;        8081:30031/TCP,5000:30032/TCP,8889:30033/TCP   12h</span><br><span class="line">nginx-service   ClusterIP   10.10.147.216   &lt;none&gt;        80/TCP                                         10d</span><br></pre></td></tr></table></figure>
+<p>==注意这里的访问，是访问宿主机的IP+端口，至于CLUSTER-IP这些都是虚拟的IP，无法在外部进行访问的==。</p>
+<h3 id="访问Nexus"><a href="#访问Nexus" class="headerlink" title="访问Nexus"></a>访问Nexus</h3><p><a href="http://192.168.1.2:30031" target="_blank" rel="noopener">http://192.168.1.2:30031</a> (pod内container端口为：8081)</p>
+<h3 id="升级"><a href="#升级" class="headerlink" title="升级"></a>升级</h3><p>借用k8s Deployment的升级方式:</p>
+<ol>
+<li>从官网下载最新的nexus安装包；</li>
+<li>修改nexus配置文件，将上面旧版本的配置覆盖过来就行了；</li>
+<li>修改Dockerfile文件，构建新的Docker镜像，将新打包的nexus放入镜像中。<br>如：docker build -t registry.martin.com:5000/tools/nexus:3.12.2 .<br>Ps: 不要忘记启动命令路径也要调整!</li>
+<li>使用k8s命令升级Deployment：<br>如：kubectl set image deployment/nexus3 nexus3=registry.martin.com:5000/tools/nexus:3.12.2</li>
+<li>回滚升级，如果发现升级了的不好用，或者出现问题，也可以回滚：<br>如：kubectl rollout undo deployment/nexus3</li>
+</ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>其实这个过程中里复杂了一部分，也简化了一部分。<br>复杂了pv-pvc过程，pv-pvc不用创建直接在Deployment中挂载hostPath也是可以的。<br>简化了Deployment，其实应该还需要加上cpu、内存等资源限制的。<br>这里只是在nexus配置文件中做了限制，如果出现内存泄漏问题，还是没办法解决!</p>
 
       
     </div>
@@ -487,7 +527,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://www.leiyawu.com/2018/04/13/kafka性能调优/" title="kafka性能调优">http://www.leiyawu.com/2018/04/13/kafka性能调优/</a>
+    <a href="http://www.leiyawu.com/2018/06/22/qwe/" title="基于k8s 动态配置及扩容maven nexus私服">http://www.leiyawu.com/2018/06/22/qwe/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -502,7 +542,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Kafka/" rel="tag"># Kafka</a>
+            <a href="/tags/K8s/" rel="tag"># K8s</a>
           
         </div>
       
@@ -515,8 +555,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/03/ELK索引/" rel="next" title="ElasticSearch 索引查询使用指南">
-                <i class="fa fa-chevron-left"></i> ElasticSearch 索引查询使用指南
+              <a href="/2018/06/14/kubernetes-jenkins-ci-cd/" rel="next" title="kubernetes-jenkins-ci-cd">
+                <i class="fa fa-chevron-left"></i> kubernetes-jenkins-ci-cd
               </a>
             
           </div>
@@ -524,10 +564,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/04/13/logstash优化/" rel="prev" title="logstash吞吐率优化">
-                logstash吞吐率优化 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -725,7 +761,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka的配置详尽、复杂，想要进行全面的性能调优需要掌握大量信息，这里只记录一下我在日常工作使用中走过的坑和经验来对kafka集群进行优化常用的几点。"><span class="nav-number">1.</span> <span class="nav-text">Kafka的配置详尽、复杂，想要进行全面的性能调优需要掌握大量信息，这里只记录一下我在日常工作使用中走过的坑和经验来对kafka集群进行优化常用的几点。</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-JVM的优化"><span class="nav-number">1.1.</span> <span class="nav-text">1.JVM的优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-网络和ios操作线程配置优化："><span class="nav-number">1.2.</span> <span class="nav-text">2.网络和ios操作线程配置优化：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-socket-server可接受数据大小-防止OOM异常-："><span class="nav-number">1.3.</span> <span class="nav-text">3.socket server可接受数据大小(防止OOM异常)：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-log数据文件刷盘策略"><span class="nav-number">1.4.</span> <span class="nav-text">4.log数据文件刷盘策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-日志保留策略配置"><span class="nav-number">1.5.</span> <span class="nav-text">5.日志保留策略配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-replica复制配置"><span class="nav-number">1.6.</span> <span class="nav-text">6.replica复制配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-分区数量配置"><span class="nav-number">1.7.</span> <span class="nav-text">7.分区数量配置</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置nexus"><span class="nav-number">1.</span> <span class="nav-text">配置nexus</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#制作Docker镜像"><span class="nav-number">2.</span> <span class="nav-text">制作Docker镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置k8s-PV-PVC"><span class="nav-number">3.</span> <span class="nav-text">配置k8s PV-PVC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置k8s-Deployment"><span class="nav-number">4.</span> <span class="nav-text">配置k8s Deployment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置k8s-Service"><span class="nav-number">5.</span> <span class="nav-text">配置k8s Service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#k8s部署访问"><span class="nav-number">6.</span> <span class="nav-text">k8s部署访问</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建-PV-PVC"><span class="nav-number">6.1.</span> <span class="nav-text">创建 PV-PVC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建Deployment"><span class="nav-number">6.2.</span> <span class="nav-text">创建Deployment</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建Service"><span class="nav-number">6.3.</span> <span class="nav-text">创建Service</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问Nexus"><span class="nav-number">7.</span> <span class="nav-text">访问Nexus</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#升级"><span class="nav-number">8.</span> <span class="nav-text">升级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">9.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
