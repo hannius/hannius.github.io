@@ -999,7 +999,7 @@
       
         
           
-            <h3 id="流程图："><a href="#流程图：" class="headerlink" title="流程图："></a>流程图：</h3><p>基于Jenkins的CI/CD流程如下所示:<br><img src="http://cos.leiyawu.com/docker/k8s/kubernetes-jenkins-ci-cd.png" alt="kubernetes-jenkins-ci-cd"></p>
+            <h3 id="流程图："><a href="#流程图：" class="headerlink" title="流程图："></a>流程图：</h3><p>基于Jenkins的CI/CD流程如下所示:<br><img src="https://cos.leiyawu.com/docker/k8s/kubernetes-jenkins-ci-cd.png" alt="kubernetes-jenkins-ci-cd"></p>
 <h3 id="流程说明："><a href="#流程说明：" class="headerlink" title="流程说明："></a>流程说明：</h3><ol>
 <li>用户向Gitlab提交代码，代码中必须包含Dockerfile</li>
 <li>将代码提交到远程仓库</li>
@@ -1165,7 +1165,7 @@
 <li>在pod中担任Linux命名空间共享的基础；</li>
 <li>启用pid命名空间，开启init进程。</li>
 </ul>
-<p>pause容器的作用可以从这个例子中看出，首先见下图：<br><img src="http://cos.leiyawu.com/docker/k8s/pause-container.png" alt="map"></p>
+<p>pause容器的作用可以从这个例子中看出，首先见下图：<br><img src="https://cos.leiyawu.com/docker/k8s/pause-container.png" alt="map"></p>
 <h2 id="Pause容器测试"><a href="#Pause容器测试" class="headerlink" title="Pause容器测试"></a>Pause容器测试</h2><p>首先在节点上运行一个pause容器。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name pause -p 8880:80 martin/pause-amd64:3.0</span><br></pre></td></tr></table></figure>
 <p>然后再运行一个nginx容器，nginx将为localhost:2398创建一个代理。</p>
@@ -1678,7 +1678,7 @@
 <li>账户logstash_system用于logstash服务获取elasticsearch的监控数据</li>
 <li>注意：此步骤需先启动elasticsearch服务</li>
 </ul>
-<p><img src="http://cos.leiyawu.com/img/elk/es_user.png" alt="es_user"></p>
+<p><img src="https://cos.leiyawu.com/img/elk/es_user.png" alt="es_user"></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[elasticsearch@elasticsearch elasticsearch-6.0.0]$ ./bin/x-pack/setup-passwords interactive</span><br><span class="line">Initiating the setup of reserved user elastic,kibana,logstash_system passwords.</span><br><span class="line">You will be prompted to enter passwords as the process progresses.</span><br><span class="line">Please confirm that you would like to continue [y/N]y</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Enter password for [elastic]: </span><br><span class="line">Reenter password for [elastic]: </span><br><span class="line">Enter password for [kibana]: </span><br><span class="line">Reenter password for [kibana]: </span><br><span class="line">Enter password for [logstash_system]: </span><br><span class="line">Reenter password for [logstash_system]: </span><br><span class="line">Changed password for user [kibana]</span><br><span class="line">Changed password for user [logstash_system]</span><br><span class="line">Changed password for user [elastic]</span><br><span class="line">[elasticsearch@elasticsearch elasticsearch-6.0.0]$</span><br></pre></td></tr></table></figure>
 <h2 id="验证内置账户访问"><a href="#验证内置账户访问" class="headerlink" title="验证内置账户访问"></a>验证内置账户访问</h2><ul>
 <li>若不提供用户名密码则返回401</li>
@@ -1918,7 +1918,7 @@
 <p>这里的document的可以理解为一个JSON序列对象。每个document可包含多个field。再来说说Shard，每个Index（对应Database）包含多个Shard，默认是5个，分散在不同的Node上，但不会存在两个相同的Shard存在一个Node上，这样就没有备份的意义了。Shard是一个最小的Lucene索引单元。当来一个document的时候，Elasticsearch通过对docid进行hash来确定其放在哪个shard上面，然后在shard上面进行索引存储。replicas就是备份，Elasticsearch采用的是Push Replication模式，当你往 master主分片上面索引一个文档，该分片会复制该文档(document)到剩下的所有 replica副本分片中，这些分片也会索引这个文档。</p>
 <p>当进行查询时，如果提供了查询的DocID，Elasticsearch通过hash就知道Doc存在哪个shard上面，再通过routing table查询就知道再哪个node上面，让后去node上面去取就好了。如果不提供DocID,那么Elasticsearch会在该Index（indics）shards所在的所有node上执行搜索预警，然后返回搜索结果，由coordinating node gather之后返回给用户。</p>
 <p>集群信息说明图如下：</p>
-<p><img src="http://cos.leiyawu.com/img/elk/es_cluster_map.jpg" alt="map"></p>
+<p><img src="https://cos.leiyawu.com/img/elk/es_cluster_map.jpg" alt="map"></p>
 
           
         
@@ -2229,7 +2229,7 @@
 <li>镜像下载至执行机器</li>
 <li>镜像运行</li>
 </ol>
-<p>其基本拓扑结构如下所示：<br><img src="http://cos.leiyawu.com/docker/img/docker1.png" alt="图1"></p>
+<p>其基本拓扑结构如下所示：<br><img src="https://cos.leiyawu.com/docker/img/docker1.png" alt="图1"></p>
 <p>熟悉Docker的都知道，Docker以的启动是非常快的，可以说是秒启。在上述的五步中，1 和 5 的耗时是比较短的，整个持续集成主要耗时集中在中间的3个步骤，也就是 Docker build，Docker push ，Docekr pull 的时间消耗.</p>
 <p>Docker Registry升级到 v2 后加入了很多安全相关检查，在v2中的镜像的存储格式变成了gzip ，镜像在压缩过程中占用的时间也是比较多的。</p>
 <p>Docker pull 镜像的速度对服务的启动速度至关重要，好在 Registry v2 后可以并行 pull 了，速度有了很大的改善。但是依然有一些小的问题影响了启动的速度：</p>
@@ -2238,7 +2238,7 @@
 <li>串行解压，由于 v2 都是 gzip,要解压，尽管并行下载了还是串行解压，内网的话解压时间比网络传输都要长；</li>
 <li>和 Registry 通信， Registry 在 pull的过程中并不提供下载内容只是提供下载URL和鉴权，这一部分加长网络传输而且一些 Metadata还是要去后端存储获取，延时还是有一些的。</li>
 </ul>
-<p>整个持续集成平台架构演进到如下图所示：<br><img src="http://cos.leiyawu.com/docker/img/docker2.png" alt="图2"></p>
+<p>整个持续集成平台架构演进到如下图所示：<br><img src="https://cos.leiyawu.com/docker/img/docker2.png" alt="图2"></p>
 
           
         

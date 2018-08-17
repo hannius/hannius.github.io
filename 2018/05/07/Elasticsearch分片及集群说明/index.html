@@ -89,12 +89,12 @@
 <meta property="og:site_name" content="让一切随风">
 <meta property="og:description" content="replica的作用主要包括： a.容灾:primary分片丢失，replica分片就会被顶上去成为新的主分片，同时根据这个新的主分片创建新的replica,集群数据安然无恙；  b.提高查询性能：replica和primary分片的数据是相同的，所以对于一个query既可以查主分片也可以查备分片，在合适的范围内多个replica性能会更优(但要考虑资源占用也会提升[cpu/disk/heap])">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://cos.leiyawu.com/img/elk/es_cluster_map.jpg">
-<meta property="og:updated_time" content="2018-05-07T06:49:02.230Z">
+<meta property="og:image" content="https://cos.leiyawu.com/img/elk/es_cluster_map.jpg">
+<meta property="og:updated_time" content="2018-08-17T07:56:33.275Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Elasticsearch分片及集群说明">
 <meta name="twitter:description" content="replica的作用主要包括： a.容灾:primary分片丢失，replica分片就会被顶上去成为新的主分片，同时根据这个新的主分片创建新的replica,集群数据安然无恙；  b.提高查询性能：replica和primary分片的数据是相同的，所以对于一个query既可以查主分片也可以查备分片，在合适的范围内多个replica性能会更优(但要考虑资源占用也会提升[cpu/disk/heap])">
-<meta name="twitter:image" content="http://cos.leiyawu.com/img/elk/es_cluster_map.jpg">
+<meta name="twitter:image" content="https://cos.leiyawu.com/img/elk/es_cluster_map.jpg">
 
 
 
@@ -431,7 +431,7 @@
 <p>这里的document的可以理解为一个JSON序列对象。每个document可包含多个field。再来说说Shard，每个Index（对应Database）包含多个Shard，默认是5个，分散在不同的Node上，但不会存在两个相同的Shard存在一个Node上，这样就没有备份的意义了。Shard是一个最小的Lucene索引单元。当来一个document的时候，Elasticsearch通过对docid进行hash来确定其放在哪个shard上面，然后在shard上面进行索引存储。replicas就是备份，Elasticsearch采用的是Push Replication模式，当你往 master主分片上面索引一个文档，该分片会复制该文档(document)到剩下的所有 replica副本分片中，这些分片也会索引这个文档。</p>
 <p>当进行查询时，如果提供了查询的DocID，Elasticsearch通过hash就知道Doc存在哪个shard上面，再通过routing table查询就知道再哪个node上面，让后去node上面去取就好了。如果不提供DocID,那么Elasticsearch会在该Index（indics）shards所在的所有node上执行搜索预警，然后返回搜索结果，由coordinating node gather之后返回给用户。</p>
 <p>集群信息说明图如下：</p>
-<p><img src="http://cos.leiyawu.com/img/elk/es_cluster_map.jpg" alt="map"></p>
+<p><img src="https://cos.leiyawu.com/img/elk/es_cluster_map.jpg" alt="map"></p>
 
       
     </div>

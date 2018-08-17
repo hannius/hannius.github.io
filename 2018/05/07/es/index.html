@@ -89,12 +89,12 @@
 <meta property="og:site_name" content="让一切随风">
 <meta property="og:description" content="自定义内置账号 账户elastic为elasticsearch超级管理员，拥有所有权限 账户kibana用于kibana组件获取相关信息用于web展示 账户logstash_system用于logstash服务获取elasticsearch的监控数据 注意：此步骤需先启动elasticsearch服务   12345678910111213141516[elasticsearch@elastics">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://cos.leiyawu.com/img/elk/es_user.png">
-<meta property="og:updated_time" content="2018-05-07T10:32:22.661Z">
+<meta property="og:image" content="https://cos.leiyawu.com/img/elk/es_user.png">
+<meta property="og:updated_time" content="2018-08-17T07:55:53.221Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ES内置账号密码修改、自定义角色自定义账号、ldap及AD认证">
 <meta name="twitter:description" content="自定义内置账号 账户elastic为elasticsearch超级管理员，拥有所有权限 账户kibana用于kibana组件获取相关信息用于web展示 账户logstash_system用于logstash服务获取elasticsearch的监控数据 注意：此步骤需先启动elasticsearch服务   12345678910111213141516[elasticsearch@elastics">
-<meta name="twitter:image" content="http://cos.leiyawu.com/img/elk/es_user.png">
+<meta name="twitter:image" content="https://cos.leiyawu.com/img/elk/es_user.png">
 
 
 
@@ -418,7 +418,7 @@
 <li>账户logstash_system用于logstash服务获取elasticsearch的监控数据</li>
 <li>注意：此步骤需先启动elasticsearch服务</li>
 </ul>
-<p><img src="http://cos.leiyawu.com/img/elk/es_user.png" alt="es_user"></p>
+<p><img src="https://cos.leiyawu.com/img/elk/es_user.png" alt="es_user"></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[elasticsearch@elasticsearch elasticsearch-6.0.0]$ ./bin/x-pack/setup-passwords interactive</span><br><span class="line">Initiating the setup of reserved user elastic,kibana,logstash_system passwords.</span><br><span class="line">You will be prompted to enter passwords as the process progresses.</span><br><span class="line">Please confirm that you would like to continue [y/N]y</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Enter password for [elastic]: </span><br><span class="line">Reenter password for [elastic]: </span><br><span class="line">Enter password for [kibana]: </span><br><span class="line">Reenter password for [kibana]: </span><br><span class="line">Enter password for [logstash_system]: </span><br><span class="line">Reenter password for [logstash_system]: </span><br><span class="line">Changed password for user [kibana]</span><br><span class="line">Changed password for user [logstash_system]</span><br><span class="line">Changed password for user [elastic]</span><br><span class="line">[elasticsearch@elasticsearch elasticsearch-6.0.0]$</span><br></pre></td></tr></table></figure>
 <h2 id="验证内置账户访问"><a href="#验证内置账户访问" class="headerlink" title="验证内置账户访问"></a>验证内置账户访问</h2><ul>
 <li>若不提供用户名密码则返回401</li>

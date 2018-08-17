@@ -89,13 +89,13 @@
 <meta property="og:site_name" content="让一切随风">
 <meta property="og:description" content="持续集成的概念持续集成，Continuous integration ，简称CI。 首先，解释下集成：所有的项目代码都是托管在SVN或者GIT服务器上（以下简称代码服务器）。每个项目都有若干个单元测试和集成测试。集成测试是单元测试的逻辑扩展：在单元测试的基础上，将所有模块按照设计要求组装成为子系统或系统进行集成测试。实践表明，一些模块虽然能够单独地工作，但并不能保证连接起来也能正常的工作。一些局部">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://cos.leiyawu.com/docker/img/docker1.png">
-<meta property="og:image" content="http://cos.leiyawu.com/docker/img/docker2.png">
-<meta property="og:updated_time" content="2018-04-20T06:37:27.795Z">
+<meta property="og:image" content="https://cos.leiyawu.com/docker/img/docker1.png">
+<meta property="og:image" content="https://cos.leiyawu.com/docker/img/docker2.png">
+<meta property="og:updated_time" content="2018-08-17T07:53:55.482Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker cicd持续集成部署">
 <meta name="twitter:description" content="持续集成的概念持续集成，Continuous integration ，简称CI。 首先，解释下集成：所有的项目代码都是托管在SVN或者GIT服务器上（以下简称代码服务器）。每个项目都有若干个单元测试和集成测试。集成测试是单元测试的逻辑扩展：在单元测试的基础上，将所有模块按照设计要求组装成为子系统或系统进行集成测试。实践表明，一些模块虽然能够单独地工作，但并不能保证连接起来也能正常的工作。一些局部">
-<meta name="twitter:image" content="http://cos.leiyawu.com/docker/img/docker1.png">
+<meta name="twitter:image" content="https://cos.leiyawu.com/docker/img/docker1.png">
 
 
 
@@ -438,7 +438,7 @@
 <li>镜像下载至执行机器</li>
 <li>镜像运行</li>
 </ol>
-<p>其基本拓扑结构如下所示：<br><img src="http://cos.leiyawu.com/docker/img/docker1.png" alt="图1"></p>
+<p>其基本拓扑结构如下所示：<br><img src="https://cos.leiyawu.com/docker/img/docker1.png" alt="图1"></p>
 <p>熟悉Docker的都知道，Docker以的启动是非常快的，可以说是秒启。在上述的五步中，1 和 5 的耗时是比较短的，整个持续集成主要耗时集中在中间的3个步骤，也就是 Docker build，Docker push ，Docekr pull 的时间消耗.</p>
 <p>Docker Registry升级到 v2 后加入了很多安全相关检查，在v2中的镜像的存储格式变成了gzip ，镜像在压缩过程中占用的时间也是比较多的。</p>
 <p>Docker pull 镜像的速度对服务的启动速度至关重要，好在 Registry v2 后可以并行 pull 了，速度有了很大的改善。但是依然有一些小的问题影响了启动的速度：</p>
@@ -447,7 +447,7 @@
 <li>串行解压，由于 v2 都是 gzip,要解压，尽管并行下载了还是串行解压，内网的话解压时间比网络传输都要长；</li>
 <li>和 Registry 通信， Registry 在 pull的过程中并不提供下载内容只是提供下载URL和鉴权，这一部分加长网络传输而且一些 Metadata还是要去后端存储获取，延时还是有一些的。</li>
 </ul>
-<p>整个持续集成平台架构演进到如下图所示：<br><img src="http://cos.leiyawu.com/docker/img/docker2.png" alt="图2"></p>
+<p>整个持续集成平台架构演进到如下图所示：<br><img src="https://cos.leiyawu.com/docker/img/docker2.png" alt="图2"></p>
 
       
     </div>
