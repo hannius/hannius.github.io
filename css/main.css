@@ -1950,7 +1950,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #4fffd4;
+  background: #0e8166;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -3119,7 +3119,6 @@ pre .javascript .function {
   }
 }
 code {
-  color: #ff7600;
-  background: #fbf7f8;
+  background: #000;
   margin: 2px;
 }
