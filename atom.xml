@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.leiyawu.com/"/>
-  <updated>2018-06-28T06:33:07.771Z</updated>
+  <updated>2018-08-19T07:59:01.554Z</updated>
   <id>http://www.leiyawu.com/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>只在移动端网页内显示”Fork me on Github”</title>
+    <link href="http://www.leiyawu.com/2018/08/19/%E5%8F%AA%E5%9C%A8%E7%A7%BB%E5%8A%A8%E7%AB%AF%E7%BD%91%E9%A1%B5%E5%86%85%E6%98%BE%E7%A4%BA%E2%80%9DFork-me-on-Github%E2%80%9D/"/>
+    <id>http://www.leiyawu.com/2018/08/19/只在移动端网页内显示”Fork-me-on-Github”/</id>
+    <published>2018-08-19T07:48:00.000Z</published>
+    <updated>2018-08-19T07:59:01.554Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="1-修改文件hexo博客根目录-themes-next-layout-layout-swig-找到如下代码块"><a href="#1-修改文件hexo博客根目录-themes-next-layout-layout-swig-找到如下代码块" class="headerlink" title="1.修改文件hexo博客根目录\themes\next\layout_layout.swig 找到如下代码块"></a>1.修改文件hexo博客根目录\themes\next\layout_layout.swig 找到如下代码块</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;html class=&quot;&#123;&#123; html_class | lower &#125;&#125;&quot; lang=&quot;&#123;&#123; config.language &#125;&#125;&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">  &#123;% include &apos;_partials/head.swig&apos; %&#125;</span><br><span class="line">  &lt;title&gt;&#123;% block title %&#125;&#123;% endblock %&#125;&lt;/title&gt;</span><br></pre></td></tr></table></figure><h6 id="2-添加代码，结果如下："><a href="#2-添加代码，结果如下：" class="headerlink" title="2.添加代码，结果如下："></a>2.添加代码，结果如下：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;html class=&quot;&#123;&#123; html_class | lower &#125;&#125;&quot; lang=&quot;&#123;&#123; config.language &#125;&#125;&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">  &#123;% include &apos;_partials/head.swig&apos; %&#125;</span><br><span class="line">  &lt;title&gt;&#123;% block title %&#125;&#123;% endblock %&#125;&lt;/title&gt;</span><br><span class="line">  &#123;% include &apos;_third-party/analytics/index.swig&apos; %&#125;</span><br><span class="line">  </span><br><span class="line">  &lt;style&gt;</span><br><span class="line">  .forkMeOnGithub&#123;</span><br><span class="line">  display: none;</span><br><span class="line">  &#125;</span><br><span class="line">  @media (min-width: 768px) &#123;</span><br><span class="line">  .forkMeOnGithub&#123;</span><br><span class="line">   display: inline;</span><br><span class="line">   &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  &lt;/style&gt;</span><br><span class="line">&lt;/head&gt;</span><br></pre></td></tr></table></figure><h6 id="3-最后在之前引用代码块上套上div加上class就行了，代码如下"><a href="#3-最后在之前引用代码块上套上div加上class就行了，代码如下" class="headerlink" title="3.最后在之前引用代码块上套上div加上class就行了，代码如下"></a>3.最后在之前引用代码块上套上div加上class就行了，代码如下</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class=&quot;forkMeOnGithub&quot;&gt;</span><br><span class="line">&lt;a href=&quot;https://github.com/hannius&quot;&gt;&lt;img style=&quot;position........&lt;/a&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;1-修改文件hexo博客根目录-themes-next-layout-layout-swig-找到如下代码块&quot;&gt;&lt;a href=&quot;#1-修改文件hexo博客根目录-themes-next-layout-layout-swig-找到如下代码块&quot; class=&quot;hea
+      
+    
+    </summary>
+    
+      <category term="hexo" scheme="http://www.leiyawu.com/categories/hexo/"/>
+    
+    
+      <category term="hexo" scheme="http://www.leiyawu.com/tags/hexo/"/>
+    
+  </entry>
   
   <entry>
     <title>Kubernetes RBAC  Detailed</title>
