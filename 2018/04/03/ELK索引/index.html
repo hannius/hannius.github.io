@@ -115,7 +115,7 @@
 <meta property="og:image" content="http://cos.leiyawu.com/img/elk_index_check_9.png">
 <meta property="og:image" content="http://cos.leiyawu.com/img/elk_index_check_10.png">
 <meta property="og:image" content="http://cos.leiyawu.com/img/elk_index_check_11.png">
-<meta property="og:updated_time" content="2018-04-08T08:12:24.937Z">
+<meta property="og:updated_time" content="2018-08-19T09:56:47.678Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ElasticSearch 索引查询使用指南">
 <meta name="twitter:description" content="1.我们通常用用_cat API检测集群是否健康。 确保9200端口号可用:curl ‘localhost:9200/_cat/health?v’ 绿色表示一切正常, 黄色表示所有的数据可用但是部分副本还没有分配,红色表示部分数据因为某些原因不可用. 2.通过如下语句，我们可以获取集群的节点列表：curl ‘localhost:9200/_cat/nodes?v’ 3.通过如下语句，列出所有索引：">
@@ -458,7 +458,7 @@
 <p>结果如下：</p>
 <p><img src="http://cos.leiyawu.com/img/elk_index_check_2.png" alt="图2"></p>
 <p><img src="http://cos.leiyawu.com/img/elk_index_check_3.png" alt="图3"></p>
-<p>上图中红框所表示的是：我们有一个叫customer的索引，它有五个私有的分片以及一个副本，在它里面有0个文档。</p>
+<p>上图中红框所表示的是：我们有一个叫customer的索引，它有五个私有的分片以及一个副本，在它里面有0个文档。<br><a id="more"></a></p>
 <p>5.插入和获取<br>现在我么插入一些数据到集群索引。我们必须给ES指定所以的类型。如下语句：”external” type, ID：1:<br>主体为JSON格式的语句： { “name”: “John Doe” }<br><figure class="highlight scilab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl -XPUT <span class="string">'localhost:9200/customer/external/1?pretty'</span> -d <span class="string">'</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">     　　  "</span>name<span class="string">": "</span>John Doe<span class="string">"</span></span><br><span class="line"><span class="string">&#125;'</span></span><br></pre></td></tr></table></figure></p>
 <p>返回结果为：create：true 表示插入成功。<br><img src="http://cos.leiyawu.com/img/elk_index_check_4.png" alt="图4"></p>
 <p>获取GET，语句如下：<br><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -XGET 'localhost:<span class="number">9200</span>/customer/external/1?pretty'</span><br></pre></td></tr></table></figure></p>
@@ -510,8 +510,7 @@
 <p><img src="http://cos.leiyawu.com/img/elk_index_check_10.png" alt="图10"></p>
 <p>上述语句类似于以下SQL语句：<br>SELECT state, COUNT(<em>) FROM bank GROUP BY state ORDER BY COUNT(</em>) DESC</p>
 <p>下面这个实例按照state分组，降序排序，返回balance的平均值：<br><figure class="highlight scilab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">curl -XPOST <span class="string">'localhost:9200/bank/_search?pretty'</span> -d <span class="string">'</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string"> 　"</span><span class="built_in">size</span><span class="string">": 0,</span></span><br><span class="line"><span class="string"> 　"</span>aggs<span class="string">": &#123;</span></span><br><span class="line"><span class="string">  　 "</span>group_by_state<span class="string">": &#123;</span></span><br><span class="line"><span class="string">  　　  "</span>terms<span class="string">": &#123;</span></span><br><span class="line"><span class="string">     　　 "</span>field<span class="string">": "</span>state<span class="string">"</span></span><br><span class="line"><span class="string">   　　 &#125;,</span></span><br><span class="line"><span class="string">  　　  "</span>aggs<span class="string">": &#123;</span></span><br><span class="line"><span class="string">     　　 "</span>average_balance<span class="string">": &#123;</span></span><br><span class="line"><span class="string">      　　  "</span>avg<span class="string">": &#123;</span></span><br><span class="line"><span class="string">       　　   "</span>field<span class="string">": "</span>balance<span class="string">"</span></span><br><span class="line"><span class="string">       　　 &#125;</span></span><br><span class="line"><span class="string">     　　 &#125;</span></span><br><span class="line"><span class="string">   　　 &#125;</span></span><br><span class="line"><span class="string">  　　&#125;</span></span><br><span class="line"><span class="string"> 　&#125;</span></span><br><span class="line"><span class="string">&#125;'</span></span><br></pre></td></tr></table></figure></p>
-<p><img src="http://cos.leiyawu.com/img/elk_index_check_11.png" alt="图11">
- 　　</p>
+<p><img src="http://cos.leiyawu.com/img/elk_index_check_11.png" alt="图11"></p>
 
       
     </div>

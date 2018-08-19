@@ -105,7 +105,7 @@
 <meta property="og:description" content="自定义内置账号 账户elastic为elasticsearch超级管理员，拥有所有权限 账户kibana用于kibana组件获取相关信息用于web展示 账户logstash_system用于logstash服务获取elasticsearch的监控数据 注意：此步骤需先启动elasticsearch服务   12345678910111213141516[elasticsearch@elastics">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://cos.leiyawu.com/img/elk/es_user.png">
-<meta property="og:updated_time" content="2018-08-17T07:55:53.221Z">
+<meta property="og:updated_time" content="2018-08-19T09:55:58.028Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ES内置账号密码修改、自定义角色自定义账号、ldap及AD认证">
 <meta name="twitter:description" content="自定义内置账号 账户elastic为elasticsearch超级管理员，拥有所有权限 账户kibana用于kibana组件获取相关信息用于web展示 账户logstash_system用于logstash服务获取elasticsearch的监控数据 注意：此步骤需先启动elasticsearch服务   12345678910111213141516[elasticsearch@elastics">
@@ -460,6 +460,7 @@
 <li>使用kibana用户访问</li>
 </ul>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[elasticsearch@elasticsearch elasticsearch-<span class="number">6.0</span>.<span class="number">0</span>]$ curl <span class="string">'http://10.59.30.96:9200/_cat/indices?pretty'</span> -u kibana:kibana</span><br><span class="line">yellow open <span class="selector-class">.monitoring-es-6-2018</span>.<span class="number">01.10</span>   nND6-i_rR5iLEYVccBGj8w <span class="number">1</span> <span class="number">1</span>    </span><br><span class="line">yellow open <span class="selector-class">.triggered_watches</span>            BtygGZisSDqiL3Y2TaQGqQ <span class="number">1</span> <span class="number">1</span>    </span><br><span class="line">green  open <span class="selector-class">.security-6</span>                   QVRL1mcFSAilryHGEhen7Q <span class="number">1</span> <span class="number">0</span>    </span><br><span class="line">yellow open <span class="selector-class">.watcher-history-6-2018</span>.<span class="number">01.10</span> SBGiHDAnTPiXFoHU65VY_g <span class="number">1</span> <span class="number">1</span>    </span><br><span class="line">yellow open <span class="selector-class">.watches</span>                      kMzN4j5cQySZQQSDVPww8w <span class="number">1</span> <span class="number">1</span>    </span><br><span class="line">yellow open <span class="selector-class">.monitoring-alerts-6</span>          VygY6VN9R3S0PR_jrGy50Q <span class="number">1</span> <span class="number">1</span>    </span><br><span class="line">[elasticsearch@elasticsearch elasticsearch-<span class="number">6.0</span>.<span class="number">0</span>]$</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <h2 id="添加自定义角色"><a href="#添加自定义角色" class="headerlink" title="添加自定义角色"></a>添加自定义角色</h2><ul>
 <li><p>添加角色接口为 POST /_xpack/security/role/<rolename></rolename></p>
 <p>下述示例为添加超级管理员角色的方法</p>

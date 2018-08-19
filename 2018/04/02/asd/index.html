@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="让一切随风">
 <meta property="og:description" content="一、新建索引为了展示Elasticsearch中不同查询的用法，先在Elasticsearch里面创建了book相关的documents，每本书主要涉及以下字段： title, authors, summary, publish_date(发行日期),publisher以及评论条数。 操作如下：123456789101112curl -XPUT &apos;https://www.iteblog.com:9">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-08T07:35:21.039Z">
+<meta property="og:updated_time" content="2018-08-19T09:57:30.603Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="23种非常有用的ElasticSearch查询例子">
 <meta name="twitter:description" content="一、新建索引为了展示Elasticsearch中不同查询的用法，先在Elasticsearch里面创建了book相关的documents，每本书主要涉及以下字段： title, authors, summary, publish_date(发行日期),publisher以及评论条数。 操作如下：123456789101112curl -XPUT &apos;https://www.iteblog.com:9">
@@ -429,6 +429,7 @@
 <p>GET /iteblog_book_index/book/_search?q=title:in%20action</p>
 <p>然而，DSL方式提供了更加灵活的方式来构建更加复杂的查询（我们将在后面看到），甚至指定你想要的返回结果。下面的例子中，我将指定需要返回结果的数量，开始的偏移量（这在分页的情况下非常有用），需要返回document中的哪些字段以及高亮关键字：</p>
 <p>curl -XGET ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;</a> -d ‘<br>{<br>    “query”: {<br>        “match” : {<br>            “title” : “in action”<br>        }<br>    },<br>    “size”: 2,   #返回结果的数量<br>    “from”: 0,  #开始的偏移量<br>    “_source”: [ “title”, “summary”, “publish_date” ],<br>    “highlight”: {<br>        “fields” : {<br>            “title” : {}<br>        }<br>    }<br>}’</p>
+<a id="more"></a>
 <p>三、Multi-field Search<br>正如我们之前所看到的，想在一个搜索中查询多个 document field （比如使用同一个查询关键字同时在title和summary中查询），你可以使用multi_match查询，使用如下：<br>curl -XGET ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;</a> -d ‘<br>{<br>    “query”: {<br>        “multi_match” : {<br>            “query” : “elasticsearch guide”,<br>            “fields”: [“title”, “summary”]<br>        }<br>    }<br>}’</p>
 <p>四、Boosting<br>上面使用同一个搜索请求在多个field中查询，你也许想提高某个field的查询权重。在下面的例子中，我们把summary field的权重调成3，这样就提高了其在结果中的权重，这样把_id=4的文档相关性大大提高了，如下：</p>
 <p>curl -XGET ‘<a href="https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;" target="_blank" rel="noopener">https://www.iteblog.com:9200/iteblog_book_index/book/_search&#39;</a> -d ‘<br>{<br>    “query”: {<br>        “multi_match” : {<br>            “query” : “elasticsearch guide”,<br>            “fields”: [“title”, “summary^3”]<br>        }<br>    },<br>    “_source”: [“title”, “summary”, “publish_date”]<br>}’</p>

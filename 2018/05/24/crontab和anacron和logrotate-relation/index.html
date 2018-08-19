@@ -104,7 +104,7 @@
 <meta property="og:site_name" content="让一切随风">
 <meta property="og:description" content="服务器上的nginx使用logrotate来分割日志，设置为每天分割。但是logrotate似乎没有工作，日志并没有分割。服务器是CentOS 6。 为了找到原因，分析可能出错的地方。如果是logrotate未执行，可能是crond没有启动，因为logrotate被/etc/cron.daily/logrotate脚本所启动，可以查看其中代码： 123456789[root@test ~]# ca">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-24T08:34:45.378Z">
+<meta property="og:updated_time" content="2018-08-19T09:55:15.193Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="crontab、anacron、logrotate relationship">
 <meta name="twitter:description" content="服务器上的nginx使用logrotate来分割日志，设置为每天分割。但是logrotate似乎没有工作，日志并没有分割。服务器是CentOS 6。 为了找到原因，分析可能出错的地方。如果是logrotate未执行，可能是crond没有启动，因为logrotate被/etc/cron.daily/logrotate脚本所启动，可以查看其中代码： 123456789[root@test ~]# ca">
@@ -448,6 +448,7 @@
 <figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@test ~]# ls <span class="number">-1</span> /root/</span><br><span class="line">install<span class="number">-2017</span><span class="number">-5</span><span class="number">-14.</span>log</span><br><span class="line">install<span class="number">-2017</span><span class="number">-5</span><span class="number">-14.</span>log<span class="number">-20170521</span>  #logrotate归档的日志</span><br></pre></td></tr></table></figure>
 <p>上面猜测是crond执行/etc/cron.daily/内的脚本，实现定时执行计划任务，包括执行logrotate日志分割。<br>为了验证是否正确，网上搜索一番后找到了答案。如果没有crontab命令，先安装：</p>
 <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum install crontabs  <span class="comment">#安装crond，crond实际上来自cronie包，这个包作为crontabs包的依赖被安装</span></span><br><span class="line">chkconfig --<span class="keyword">add</span><span class="bash"> crond <span class="comment">#添加到开机启动列表</span></span></span><br><span class="line"><span class="bash">chkconfig crond on    <span class="comment">#开机启动crond服务</span></span></span><br><span class="line"><span class="bash">/etc/init.d/crond     <span class="comment">#立即启动crond</span></span></span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <p>以下文件或目录的作用：<br>cron计划任务有两种类型：</p>
 <ul>
 <li>1）系统cron任务：由crond服务执行，/etc/crontab配置系统级别的任务</li>
