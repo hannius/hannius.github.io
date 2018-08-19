@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.leiyawu.com/2018/06/27/bernetes-RBAC-Detailed/</loc>
+    
+    <lastmod>2018-08-19T09:51:37.116Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.leiyawu.com/2018/08/19/%E5%8F%AA%E5%9C%A8%E7%A7%BB%E5%8A%A8%E7%AB%AF%E7%BD%91%E9%A1%B5%E5%86%85%E6%98%BE%E7%A4%BA%E2%80%9DFork-me-on-Github%E2%80%9D/</loc>
     
-    <lastmod>2018-08-19T07:59:01.554Z</lastmod>
+    <lastmod>2018-08-19T09:48:41.020Z</lastmod>
     
   </url>
   
@@ -40,13 +47,6 @@
     <loc>http://www.leiyawu.com/2018/06/14/kubernetes-jenkins-ci-cd/</loc>
     
     <lastmod>2018-08-17T07:53:11.216Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.leiyawu.com/2018/06/27/ubernetes-RBAC-Detailed/</loc>
-    
-    <lastmod>2018-06-28T06:33:07.771Z</lastmod>
     
   </url>
   
