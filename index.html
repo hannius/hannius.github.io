@@ -346,6 +346,161 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/08/21/生成k8s证书的三种方式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin Lei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="让一切随风">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/21/生成k8s证书的三种方式/" itemprop="url">生成k8s证书的三种方式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-21T17:53:00+08:00">
+                2018-08-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/K8s/" itemprop="url" rel="index">
+                    <span itemprop="name">K8s</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>根据官方文档，生成k8s秘钥证书及相关管理证书有三种方式，其本质都是通过openssl:</p>
+<ul>
+<li>cfssl</li>
+<li>easyrsa</li>
+<li>openssl</li>
+</ul>
+<p>官方文档：<a href="https://kubernetes.io/docs/concepts/cluster-administration/certificates/" target="_blank" rel="noopener">https://kubernetes.io/docs/concepts/cluster-administration/certificates/</a></p>
+<h5 id="cfssl方式"><a href="#cfssl方式" class="headerlink" title="cfssl方式"></a>cfssl方式</h5><h6 id="1-cfssl下载地址"><a href="#1-cfssl下载地址" class="headerlink" title="1.cfssl下载地址:"></a>1.cfssl下载地址:</h6><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VERSION=R1.<span class="number">2</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> &#123;cfssl,cfssljson,cfssl-certinfo&#125;</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">wget https:<span class="regexp">//</span>pkg.cfssl.org<span class="regexp">/$&#123;VERSION&#125;/</span><span class="variable">$&#123;i&#125;</span>_linux-amd64 -O <span class="regexp">/usr/</span>local<span class="regexp">/bin/</span><span class="variable">$&#123;i&#125;</span></span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<h6 id="2-生成CA配置文件"><a href="#2-生成CA配置文件" class="headerlink" title="2.生成CA配置文件"></a>2.生成CA配置文件</h6><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">mkdir ssl &amp;&amp; cd ssl</span><br><span class="line">cfssl print-defaults<span class="built_in"> config </span>&gt; config.json</span><br><span class="line">cfssl print-defaults csr &gt; csr.json</span><br><span class="line">cat &gt; ca-config.json &lt;&lt;EOF</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"signing"</span>: &#123;</span><br><span class="line">    <span class="string">"default"</span>: &#123;</span><br><span class="line">      <span class="string">"expiry"</span>: <span class="string">"87600h"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"profiles"</span>: &#123;</span><br><span class="line">      <span class="string">"kubernetes"</span>: &#123;</span><br><span class="line">        <span class="string">"usages"</span>: [</span><br><span class="line">            <span class="string">"signing"</span>,</span><br><span class="line">            <span class="string">"key encipherment"</span>,</span><br><span class="line">            <span class="string">"server auth"</span>,</span><br><span class="line">            <span class="string">"client auth"</span></span><br><span class="line">        ],</span><br><span class="line">        <span class="string">"expiry"</span>: <span class="string">"87600h"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<h6 id="3-生成CA签名配置文件"><a href="#3-生成CA签名配置文件" class="headerlink" title="3.生成CA签名配置文件"></a>3.生成CA签名配置文件</h6><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; ca-csr.json &lt;&lt; EOF</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"CN"</span>: <span class="string">"kubernetes"</span>,</span><br><span class="line">  <span class="string">"key"</span>: &#123;</span><br><span class="line">    <span class="string">"algo"</span>: <span class="string">"rsa"</span>,</span><br><span class="line">    <span class="string">"size"</span>: <span class="number">2048</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"names"</span>:[&#123;</span><br><span class="line">    <span class="string">"C"</span>: <span class="string">"CN"</span>,</span><br><span class="line">    <span class="string">"ST"</span>: <span class="string">"Beijing"</span>,</span><br><span class="line">    <span class="string">"L"</span>: <span class="string">"BeiJing"</span>,</span><br><span class="line">    <span class="string">"O"</span>: <span class="string">"k8s"</span>,</span><br><span class="line">    <span class="string">"OU"</span>: <span class="string">"System"</span></span><br><span class="line">  &#125;]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/21/生成k8s证书的三种方式/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/08/19/只在移动端网页内显示”Fork-me-on-Github”/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1782,155 +1937,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/04/20/hexo修改默认端口/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Martin Lei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="让一切随风">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/20/hexo修改默认端口/" itemprop="url">hexo修改默认端口</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-20T16:22:00+08:00">
-                2018-04-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hexo/" itemprop="url" rel="index">
-                    <span itemprop="name">hexo</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>默认使用4000端口，用hexo s -p 80 ，可以暂时修改启动端口。</p>
-<p>但是每次启动都要写”-p 80”才行，过于繁琐。</p>
-<p>修改方法：<br>找到node_modules\hexo-server\index.js文件，可以修改默认的port值！</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1980,7 +1991,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1991,7 +2002,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2002,7 +2013,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
