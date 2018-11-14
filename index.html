@@ -346,6 +346,172 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/11/14/kubernetes之secret/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin Lei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="让一切随风">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/14/kubernetes之secret/" itemprop="url">kubernetes之secret</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-14T15:36:00+08:00">
+                2018-11-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/K8s/" itemprop="url" rel="index">
+                    <span itemprop="name">K8s</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>Secret解决了密码、token、密钥等敏感数据的配置问题，而不需要把这些敏感数据暴露到镜像或者Pod Spec中。Secret可以以Volume或者环境变量的方式使用。</p>
+<h4 id="Secret类型："><a href="#Secret类型：" class="headerlink" title="Secret类型："></a>Secret类型：</h4><ol>
+<li>Opaque：base64编码格式的Secret，用来存储密码、密钥等；但数据也通过base64 –decode解码得到原始数据，所有加密性很弱。</li>
+<li>kubernetes.io/dockerconfigjson：用来存储私有docker registry的认证信息。</li>
+<li>kubernetes.io/service-account-token： 用于被serviceaccount引用。serviceaccout创建时Kubernetes会默认创建对应的secret。Pod如果使用了serviceaccount，对应的secret会自动挂载到Pod目录/run/secrets/kubernetes.io/serviceaccount中。</li>
+</ol>
+<h5 id="1-Opaque-Secret"><a href="#1-Opaque-Secret" class="headerlink" title="1.Opaque Secret"></a>1.Opaque Secret</h5><p>Opaque类型的数据是一个map类型，要求value是base64编码格式： 比如来创建一个用户名为：admin，密码为： 1f2d1e2e67df的Secret 对象，首先把这用户名和密码做base64编码，<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> -n <span class="string">"admin"</span> | base64</span></span><br><span class="line">YWRtaW4=</span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> -n <span class="string">"1f2d1e2e67df"</span> | base64</span></span><br><span class="line">MWYyZDFlMmU2N2Rm</span><br></pre></td></tr></table></figure></p>
+<p>然后就可以利用上面编码过后的数据来编写一个YAML文件：(secrets.yml)<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Secret</span><br><span class="line">metadata:</span><br><span class="line">  name: mysecret</span><br><span class="line">type: Opaque</span><br><span class="line">data:</span><br><span class="line">  password: MWYyZDFlMmU2N2Rm</span><br><span class="line">  username: YWRtaW4=</span><br></pre></td></tr></table></figure></p>
+<p>同样的就可以使用kubectl命令来创建了： 创建secret：kubectl create -f secrets.yml。<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl get secret</span></span><br><span class="line">NAME                 <span class="built_in"> TYPE </span>                                 DATA      AGE</span><br><span class="line">default-token-xxx   kubernetes.io/service-account-token   3         45d</span><br><span class="line">mysecret              Opaque                                2         7s</span><br></pre></td></tr></table></figure></p>
+<p>注意：其中default-token-xxx为创建集群时默认创建的secret，被serviceacount/default引用。 可以使用describe命令查看详情，如果想看到Data里面的详细信息，可以输出成YAML文件进行查看</p>
+<p>如果是从文件创建secret，则可以用更简单的kubectl命令，比如创建tls的secret：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl create<span class="built_in"> secret </span>generic helloworld-tls \</span><br><span class="line">  <span class="attribute">--from-file</span>=key.pem \</span><br><span class="line">  <span class="attribute">--from-file</span>=cert.pem</span><br></pre></td></tr></table></figure></p>
+<h5 id="2-Opaque-Secret的使用"><a href="#2-Opaque-Secret的使用" class="headerlink" title="2.Opaque Secret的使用"></a>2.Opaque Secret的使用</h5><p>创建好secret之后，有两种方式来使用它：</p>
+<ul>
+<li>以Volume方式</li>
+<li>以环境变量方式</li>
+<li>以Volume方式挂载制定的key</li>
+</ul>
+<h6 id="将Secret挂载到Volume中"><a href="#将Secret挂载到Volume中" class="headerlink" title="将Secret挂载到Volume中"></a>将Secret挂载到Volume中</h6><p>用一个Pod来验证下Volume挂载，创建一个Pod文件：(secret2-pod.yaml)<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">apiVersion</span>: v1</span><br><span class="line"><span class="attribute">kind</span>: Pod</span><br><span class="line"><span class="attribute">metadata</span>:</span><br><span class="line">  <span class="attribute">labels</span>:</span><br><span class="line">    <span class="attribute">name</span>: db</span><br><span class="line">  <span class="attribute">name</span>: db</span><br><span class="line"><span class="attribute">spec</span>:</span><br><span class="line">  <span class="attribute">volumes</span>:</span><br><span class="line">  - <span class="attribute">name</span>: secrets</span><br><span class="line">    <span class="attribute">secret</span>:</span><br><span class="line">      <span class="attribute">secretName</span>: mysecret</span><br><span class="line">  <span class="attribute">containers</span>:</span><br><span class="line">  - <span class="attribute">image</span>: registry.martin.<span class="attribute">com</span>:<span class="number">5000</span>/my_project_id/<span class="attribute">pg</span>:v1</span><br><span class="line">    <span class="attribute">name</span>: db</span><br><span class="line">    <span class="attribute">volumeMounts</span>:</span><br><span class="line">    - <span class="attribute">name</span>: secrets</span><br><span class="line">      <span class="attribute">mountPath</span>: <span class="string">"/etc/secrets"</span></span><br><span class="line">      <span class="attribute">readOnly</span>: true</span><br><span class="line">    <span class="attribute">ports</span>:</span><br><span class="line">    - <span class="attribute">name</span>: cp</span><br><span class="line">      <span class="attribute">containerPort</span>: <span class="number">5432</span></span><br><span class="line">      <span class="attribute">hostPort</span>: <span class="number">5432</span></span><br></pre></td></tr></table></figure></p>
+<p>查看Pod中对应的信息：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ls /etc/secrets</span></span><br><span class="line">password  username</span><br><span class="line"><span class="meta">#</span><span class="bash"> cat  /etc/secrets/username</span></span><br><span class="line">admin</span><br><span class="line"><span class="meta">#</span><span class="bash"> cat  /etc/secrets/password</span></span><br><span class="line">1f2d1e2e67df</span><br></pre></td></tr></table></figure></p>
+<p>查看输出日志：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl logs secret2-pod</span></span><br><span class="line">password</span><br><span class="line">username</span><br></pre></td></tr></table></figure></p>
+<p>可以看到secret把两个key挂载成了两个对应的文件。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/11/14/kubernetes之secret/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/08/21/生成k8s证书的三种方式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1776,167 +1942,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/05/07/Elasticsearch分片及集群说明/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Martin Lei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="让一切随风">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/07/Elasticsearch分片及集群说明/" itemprop="url">Elasticsearch分片及集群说明</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-07T14:48:00+08:00">
-                2018-05-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/ELK/" itemprop="url" rel="index">
-                    <span itemprop="name">ELK</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="replica的作用主要包括："><a href="#replica的作用主要包括：" class="headerlink" title="replica的作用主要包括："></a>replica的作用主要包括：</h2><ul>
-<li><p>a.容灾:primary分片丢失，replica分片就会被顶上去成为新的主分片，同时根据这个新的主分片创建新的replica,集群数据安然无恙；</p>
-</li>
-<li><p>b.提高查询性能：replica和primary分片的数据是相同的，所以对于一个query既可以查主分片也可以查备分片，在合适的范围内多个replica性能会更优(但要考虑资源占用也会提升[cpu/disk/heap])，另外index request只能发生在主分片上，replica不能执行index request;</p>
-</li>
-</ul>
-<h2 id="分片数目调整："><a href="#分片数目调整：" class="headerlink" title="分片数目调整："></a>分片数目调整：</h2><p>对于一个索引，除非重建索引否则不能调整分片的数目(主分片数，number_of_shards),但可以随时调整replica数(number_of_replicas)</p>
-<h2 id="ES集群状态有三种："><a href="#ES集群状态有三种：" class="headerlink" title="ES集群状态有三种："></a>ES集群状态有三种：</h2><ul>
-<li><p>Green: 所有主分片和备份分片都准备就绪(分配成功)，即使有一台机器挂了(假设一台机器一个实例)，数据都不会丢失，但会变成YELLOW状态；</p>
-</li>
-<li><p>Yellow: 所有主分片准备就绪，但存在至少一个主分片(假设是A)对应的备份分片没有就绪，此时集群属于告警状态，意味着集群高可用和容灾能力下降，如果刚好A所在的机器挂了，并且你只设置了一个备份(已处于未就绪状态),那么A的数据就会丢失(查询结果不完整)，此时集群进入Red状态；</p>
-</li>
-<li><p>Red: 至少有一个主分片没有就绪(直接原因是找不到对应的备份分片成为新的主分片),此时查询的结果会出现数据丢失(不完整)</p>
-</li>
-</ul>
-<h2 id="Elasticsearch与关系数据的类比对应关系如下："><a href="#Elasticsearch与关系数据的类比对应关系如下：" class="headerlink" title="Elasticsearch与关系数据的类比对应关系如下："></a>Elasticsearch与关系数据的类比对应关系如下：</h2><p>Relational DB  ⇒ Databases ⇒ Tables ⇒ Rows  ⇒ Columns<br>Elasticsearch  ⇒ Indices  ⇒ Types ⇒ Documents ⇒ Fields</p>
-<p>这里的document的可以理解为一个JSON序列对象。每个document可包含多个field。再来说说Shard，每个Index（对应Database）包含多个Shard，默认是5个，分散在不同的Node上，但不会存在两个相同的Shard存在一个Node上，这样就没有备份的意义了。Shard是一个最小的Lucene索引单元。当来一个document的时候，Elasticsearch通过对docid进行hash来确定其放在哪个shard上面，然后在shard上面进行索引存储。replicas就是备份，Elasticsearch采用的是Push Replication模式，当你往 master主分片上面索引一个文档，该分片会复制该文档(document)到剩下的所有 replica副本分片中，这些分片也会索引这个文档。</p>
-<p>当进行查询时，如果提供了查询的DocID，Elasticsearch通过hash就知道Doc存在哪个shard上面，再通过routing table查询就知道再哪个node上面，让后去node上面去取就好了。如果不提供DocID,那么Elasticsearch会在该Index（indics）shards所在的所有node上执行搜索预警，然后返回搜索结果，由coordinating node gather之后返回给用户。</p>
-<p>集群信息说明图如下：</p>
-<p><img src="https://cos.leiyawu.com/img/elk/es_cluster_map.jpg" alt="map"></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1991,7 +1996,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
