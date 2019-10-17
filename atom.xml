@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.leiyawu.com/"/>
-  <updated>2018-11-14T08:06:00.798Z</updated>
+  <updated>2019-10-17T02:36:37.329Z</updated>
   <id>http://www.leiyawu.com/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>bootstrap.memory_lock简要说明</title>
+    <link href="http://www.leiyawu.com/2019/10/17/bootstrap-memory-lock/"/>
+    <id>http://www.leiyawu.com/2019/10/17/bootstrap-memory-lock/</id>
+    <published>2019-10-17T02:30:41.000Z</published>
+    <updated>2019-10-17T02:36:37.329Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-configuration-memory.html#mlockall" target="_blank" rel="noopener">https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-configuration-memory.html#mlockall</a></p><h5 id="bootstrap-memory-lock"><a href="#bootstrap-memory-lock" class="headerlink" title="bootstrap.memory_lock"></a>bootstrap.memory_lock</h5><p>由于当jvm开始swapping时es的效率会降低，所以要保证它不swap，这对节点健康极其重要。实现这一目标的一种方法是将 bootstrap.memory_lock 设置为true。<br>要使此设置有效，首先需要配置其他系统设置。有关如何正确设置内存锁定的更多详细信息，请参阅启用bootstrap.memory_lock。</p><p>bootstrap.memory_lock: 是否锁住内存，避免交换(swapped)带来的性能损失,默认值是: false<br>bootstrap.system_call_filter: 是否支持过滤掉系统调用。elasticsearch 5.2以后引入的功能，在bootstrap的时候check是否支持seccomp。</p><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">检查bootstrap.memory_lock设置是否生效:</span><br><span class="line">get http://<span class="number">10.127</span>.<span class="number">0</span>.<span class="number">1</span>:<span class="number">9200</span>/_nodes?filter_path=**.mlockall</span><br><span class="line">响应：</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"nodes"</span>: &#123;</span><br><span class="line">        <span class="string">"9giihmDNRdS136KT52Gl5g"</span>: &#123;</span><br><span class="line">            <span class="string">"process"</span>: &#123;</span><br><span class="line">                <span class="string">"mlockall"</span>: true</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"X0zQESeeT8uJ9kVXvHpl-w"</span>: &#123;</span><br><span class="line">            <span class="string">"process"</span>: &#123;</span><br><span class="line">                <span class="string">"mlockall"</span>: true</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"w4hYw86rQhqL1ayGyUK1Kw"</span>: &#123;</span><br><span class="line">            <span class="string">"process"</span>: &#123;</span><br><span class="line">                <span class="string">"mlockall"</span>: true</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>如果看到mlockall为false，则表示mlockall请求失败。还将在日志中看到一行”Unable to lock JVM Memory”。</p><h5 id="elasticsearch报错之-memory-locking-requested-for-elasticsearch-process-but-memory-is-not-locked"><a href="#elasticsearch报错之-memory-locking-requested-for-elasticsearch-process-but-memory-is-not-locked" class="headerlink" title="elasticsearch报错之 memory locking requested for elasticsearch process but memory is not locked:"></a>elasticsearch报错之 memory locking requested for elasticsearch process but memory is not locked:</h5><p>安装elasticsearch报错如下：<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">2019-01-14T03:57:16,453</span>][<span class="symbol">ERROR</span>][<span class="string">o.e.b.Bootstrap          </span>] [ip-172-31-30-62.ec2.internal] node validation exception</span><br><span class="line">[1] bootstrap checks failed</span><br><span class="line">[<span class="symbol">1</span>]: <span class="link">memory locking requested for elasticsearch process but memory is not locked</span></span><br></pre></td></tr></table></figure></p><p>网上查找资料，发现都不是适应自己的环境。最后在官网找到了方法：</p><p>不过先跟大家声明一点就是：环境不一样解决的方法也不一样，这里是Centos7.5版本的系统，所有的服务都由systemd来管理。elasticsearch是6.5.4版本，使用RPM包的方式安装的。</p><p>现在我们开始解决问题：</p><h6 id="1、修改-etc-sysconfig-elasticsearch文件调整JVM内存大小"><a href="#1、修改-etc-sysconfig-elasticsearch文件调整JVM内存大小" class="headerlink" title="1、修改/etc/sysconfig/elasticsearch文件调整JVM内存大小"></a>1、修改/etc/sysconfig/elasticsearch文件调整JVM内存大小</h6><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#ES_JAVA_OPTS="-Xms16g -Xmx16g" (内存大小也可以在/etc/elasticsearch/jvm.options配置文件中定义，或者ES_HEAP_SIZE=16g)</span></span><br><span class="line"><span class="attr">JAVA_HOME</span>=/usr/java/jdk1.<span class="number">8.0</span>_51</span><br><span class="line"><span class="attr">ES_HEAP_SIZE</span>=<span class="number">16</span>g</span><br><span class="line"><span class="attr">MAX_OPEN_FILES</span>=<span class="number">655350</span></span><br><span class="line"><span class="attr">MAX_LOCKED_MEMORY</span>=unlimited</span><br></pre></td></tr></table></figure><p>替换16g为总内存的一半（Elasticsearch官方建议是主机总内存的一半）</p><h6 id="2、修改-etc-security-limits-conf文件内容"><a href="#2、修改-etc-security-limits-conf文件内容" class="headerlink" title="2、修改/etc/security/limits.conf文件内容"></a>2、修改/etc/security/limits.conf文件内容</h6><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">elasticsearch <span class="keyword">soft</span> memlock unlimited</span><br><span class="line">elasticsearch hard memlock unlimited</span><br></pre></td></tr></table></figure><p>需要将elasticsearch替换为运行Elasticsearch程序的用户,使用root执行：service elasticsearch start实际上是以elasticsearch用户来执行</p><h6 id="3、在-etc-systemd-system-elasticsearch-service-d目录下创建一个文件override-conf，并添加下列内容"><a href="#3、在-etc-systemd-system-elasticsearch-service-d目录下创建一个文件override-conf，并添加下列内容" class="headerlink" title="3、在/etc/systemd/system/elasticsearch.service.d目录下创建一个文件override.conf，并添加下列内容"></a>3、在/etc/systemd/system/elasticsearch.service.d目录下创建一个文件override.conf，并添加下列内容</h6><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[Service]</span><br><span class="line">LimitMEMLOCK=infinity</span><br><span class="line">详情可以参考：https:<span class="regexp">//</span>www.elastic.co<span class="regexp">/guide/</span>en<span class="regexp">/elasticsearch/</span>reference<span class="regexp">/current/</span>setting-system-settings.html<span class="comment">#systemd</span></span><br></pre></td></tr></table></figure><h6 id="4、最后重新载入配置文件更新服务"><a href="#4、最后重新载入配置文件更新服务" class="headerlink" title="4、最后重新载入配置文件更新服务"></a>4、最后重新载入配置文件更新服务</h6><p>systemctl daemon-reload</p><h6 id="5、重启elasticsearch"><a href="#5、重启elasticsearch" class="headerlink" title="5、重启elasticsearch"></a>5、重启elasticsearch</h6><p>service elasticsearch restart</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-configuration-memory.html#mlockall&quot; target=&quot;_blank&quot; rel=&quot;n
+      
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>kubernetes之secret</title>
@@ -598,33 +619,6 @@
     
     </summary>
     
-    
-  </entry>
-  
-  <entry>
-    <title>hexo fs.SyncWriteStream is deprecated</title>
-    <link href="http://www.leiyawu.com/2018/02/28/hexo-fs-SyncWriteStream-is-deprecated/"/>
-    <id>http://www.leiyawu.com/2018/02/28/hexo-fs-SyncWriteStream-is-deprecated/</id>
-    <published>2018-02-28T06:59:00.000Z</published>
-    <updated>2018-02-28T07:18:16.608Z</updated>
-    
-    <content type="html"><![CDATA[<p>fs.SyncWriteStream is deprecated<br>出现这个错误需要更新hexo-fs插件</p><p>使用<br>npm install hexo-fs –save</p><p>在执行hexo命令的时候，总会显示如下报错：<br>(node:7048) [DEP0061] DeprecationWarning: fs.SyncWriteStream is deprecated.</p><p>从报错信息来看是因为fs.SyncWriteStream is deprecated，node.js从8.0开始已经弃用了fs.SyncWriteStream方法，所以是因为我们node_modules中某个插件调用了这个方法，通过查看Hexo作者GitHub对应的项目，在issue中看到有人提到这个问题，在hexo项目中其中有一个hexo-fs的插件调用了这个方法，所以需要更新hexo-fs插件，更新方法如下：</p><p>npm install hexo-fs –save</p><p>更新插件后问题依然无法解决。</p><p>通过–debug来查看：<br>[root@server init]# hexo –debug<br>06:55:32.711 DEBUG Hexo version: 3.5.0<br>06:55:32.714 DEBUG Working directory: /data/wwwroot/init/<br>06:55:32.787 DEBUG Config loaded: /data/wwwroot/init/_config.yml<br>06:55:32.832 DEBUG Plugin loaded: hexo-admin<br>(node:25414) [DEP0061] DeprecationWarning: fs.SyncWriteStream is deprecated.</p><p>问题出在：hexo-admin的hexo-fs<br>因hexo-admin作为后台管理，无法npm uninstall hexo-admin卸载,则找到对应文件，注释：</p><p>[root@server init]# grep -irn “SyncWriteStream” ./node_modules/hexo-admin/<br>./node_modules/hexo-admin/node_modules/hexo-fs/lib/fs.js:718:exports.SyncWriteStream = fs.SyncWriteStream;<br>[root@lywserver init]# </p><p>将对应的exports.SyncWriteStream = fs.SyncWriteStream;注释(前面 //)即可！</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;fs.SyncWriteStream is deprecated&lt;br&gt;出现这个错误需要更新hexo-fs插件&lt;/p&gt;
-&lt;p&gt;使用&lt;br&gt;npm install hexo-fs –save&lt;/p&gt;
-&lt;p&gt;在执行hexo命令的时候，总会显示如下报错：&lt;br&gt;(node:704
-      
-    
-    </summary>
-    
-      <category term="hexo" scheme="http://www.leiyawu.com/categories/hexo/"/>
-    
-    
-      <category term="SyncWriteStream " scheme="http://www.leiyawu.com/tags/SyncWriteStream/"/>
     
   </entry>
   
