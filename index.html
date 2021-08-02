@@ -1,0 +1,2600 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 2px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="让一切随风" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Still Waters Run Deep">
+<meta property="og:type" content="website">
+<meta property="og:title" content="让一切随风">
+<meta property="og:url" content="http://www.leiyawu.com/index.html">
+<meta property="og:site_name" content="让一切随风">
+<meta property="og:description" content="Still Waters Run Deep">
+<meta property="og:locale" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="让一切随风">
+<meta name="twitter:description" content="Still Waters Run Deep">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.leiyawu.com/"/>
+
+
+
+
+
+  <title>让一切随风</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?818040458700af5a2881ef01ecd8fd0a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  
+  <style>
+  .forkMeOnGithub{
+  display: none;
+  }
+  @media (min-width: 768px) {
+  .forkMeOnGithub{
+   display: inline;
+   }
+  }  
+  </style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left 
+  page-home">
+    <div class="headband"></div>
+  <div class="forkMeOnGithub">
+  <a href="https://github.com/hannius"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+  </div>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">让一切随风</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Martin's Blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-message">
+          <a href="/message" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-external-link"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2019/10/17/bootstrap-memory-lock/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin Lei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="让一切随风">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/17/bootstrap-memory-lock/" itemprop="url">bootstrap.memory_lock简要说明</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-17T10:30:41+08:00">
+                2019-10-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-configuration-memory.html#mlockall" target="_blank" rel="noopener">https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-configuration-memory.html#mlockall</a></p>
+<h5 id="bootstrap-memory-lock"><a href="#bootstrap-memory-lock" class="headerlink" title="bootstrap.memory_lock"></a>bootstrap.memory_lock</h5><p>由于当jvm开始swapping时es的效率会降低，所以要保证它不swap，这对节点健康极其重要。实现这一目标的一种方法是将 bootstrap.memory_lock 设置为true。<br>要使此设置有效，首先需要配置其他系统设置。有关如何正确设置内存锁定的更多详细信息，请参阅启用bootstrap.memory_lock。</p>
+<p>bootstrap.memory_lock: 是否锁住内存，避免交换(swapped)带来的性能损失,默认值是: false<br>bootstrap.system_call_filter: 是否支持过滤掉系统调用。elasticsearch 5.2以后引入的功能，在bootstrap的时候check是否支持seccomp。</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">检查bootstrap.memory_lock设置是否生效:</span><br><span class="line">get http://<span class="number">10.127</span>.<span class="number">0</span>.<span class="number">1</span>:<span class="number">9200</span>/_nodes?filter_path=**.mlockall</span><br><span class="line">响应：</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"nodes"</span>: &#123;</span><br><span class="line">        <span class="string">"9giihmDNRdS136KT52Gl5g"</span>: &#123;</span><br><span class="line">            <span class="string">"process"</span>: &#123;</span><br><span class="line">                <span class="string">"mlockall"</span>: true</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"X0zQESeeT8uJ9kVXvHpl-w"</span>: &#123;</span><br><span class="line">            <span class="string">"process"</span>: &#123;</span><br><span class="line">                <span class="string">"mlockall"</span>: true</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"w4hYw86rQhqL1ayGyUK1Kw"</span>: &#123;</span><br><span class="line">            <span class="string">"process"</span>: &#123;</span><br><span class="line">                <span class="string">"mlockall"</span>: true</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果看到mlockall为false，则表示mlockall请求失败。还将在日志中看到一行”Unable to lock JVM Memory”。</p>
+<h5 id="elasticsearch报错之-memory-locking-requested-for-elasticsearch-process-but-memory-is-not-locked"><a href="#elasticsearch报错之-memory-locking-requested-for-elasticsearch-process-but-memory-is-not-locked" class="headerlink" title="elasticsearch报错之 memory locking requested for elasticsearch process but memory is not locked:"></a>elasticsearch报错之 memory locking requested for elasticsearch process but memory is not locked:</h5><p>安装elasticsearch报错如下：<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">2019-01-14T03:57:16,453</span>][<span class="symbol">ERROR</span>][<span class="string">o.e.b.Bootstrap          </span>] [ip-172-31-30-62.ec2.internal] node validation exception</span><br><span class="line">[1] bootstrap checks failed</span><br><span class="line">[<span class="symbol">1</span>]: <span class="link">memory locking requested for elasticsearch process but memory is not locked</span></span><br></pre></td></tr></table></figure></p>
+<p>网上查找资料，发现都不是适应自己的环境。最后在官网找到了方法：</p>
+<p>不过先跟大家声明一点就是：环境不一样解决的方法也不一样，这里是Centos7.5版本的系统，所有的服务都由systemd来管理。elasticsearch是6.5.4版本，使用RPM包的方式安装的。</p>
+<p>现在我们开始解决问题：</p>
+<h6 id="1、修改-etc-sysconfig-elasticsearch文件调整JVM内存大小"><a href="#1、修改-etc-sysconfig-elasticsearch文件调整JVM内存大小" class="headerlink" title="1、修改/etc/sysconfig/elasticsearch文件调整JVM内存大小"></a>1、修改/etc/sysconfig/elasticsearch文件调整JVM内存大小</h6><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#ES_JAVA_OPTS="-Xms16g -Xmx16g" (内存大小也可以在/etc/elasticsearch/jvm.options配置文件中定义，或者ES_HEAP_SIZE=16g)</span></span><br><span class="line"><span class="attr">JAVA_HOME</span>=/usr/java/jdk1.<span class="number">8.0</span>_51</span><br><span class="line"><span class="attr">ES_HEAP_SIZE</span>=<span class="number">16</span>g</span><br><span class="line"><span class="attr">MAX_OPEN_FILES</span>=<span class="number">655350</span></span><br><span class="line"><span class="attr">MAX_LOCKED_MEMORY</span>=unlimited</span><br></pre></td></tr></table></figure>
+<p>替换16g为总内存的一半（Elasticsearch官方建议是主机总内存的一半）</p>
+<h6 id="2、修改-etc-security-limits-conf文件内容"><a href="#2、修改-etc-security-limits-conf文件内容" class="headerlink" title="2、修改/etc/security/limits.conf文件内容"></a>2、修改/etc/security/limits.conf文件内容</h6><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">elasticsearch <span class="keyword">soft</span> memlock unlimited</span><br><span class="line">elasticsearch hard memlock unlimited</span><br></pre></td></tr></table></figure>
+<p>需要将elasticsearch替换为运行Elasticsearch程序的用户,使用root执行：service elasticsearch start实际上是以elasticsearch用户来执行</p>
+<h6 id="3、在-etc-systemd-system-elasticsearch-service-d目录下创建一个文件override-conf，并添加下列内容"><a href="#3、在-etc-systemd-system-elasticsearch-service-d目录下创建一个文件override-conf，并添加下列内容" class="headerlink" title="3、在/etc/systemd/system/elasticsearch.service.d目录下创建一个文件override.conf，并添加下列内容"></a>3、在/etc/systemd/system/elasticsearch.service.d目录下创建一个文件override.conf，并添加下列内容</h6><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[Service]</span><br><span class="line">LimitMEMLOCK=infinity</span><br><span class="line">详情可以参考：https:<span class="regexp">//</span>www.elastic.co<span class="regexp">/guide/</span>en<span class="regexp">/elasticsearch/</span>reference<span class="regexp">/current/</span>setting-system-settings.html<span class="comment">#systemd</span></span><br></pre></td></tr></table></figure>
+<h6 id="4、最后重新载入配置文件更新服务"><a href="#4、最后重新载入配置文件更新服务" class="headerlink" title="4、最后重新载入配置文件更新服务"></a>4、最后重新载入配置文件更新服务</h6><p>systemctl daemon-reload</p>
+<h6 id="5、重启elasticsearch"><a href="#5、重启elasticsearch" class="headerlink" title="5、重启elasticsearch"></a>5、重启elasticsearch</h6><p>service elasticsearch restart</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/11/14/kubernetes之secret/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin Lei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="让一切随风">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/14/kubernetes之secret/" itemprop="url">kubernetes之secret</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-14T15:36:00+08:00">
+                2018-11-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/K8s/" itemprop="url" rel="index">
+                    <span itemprop="name">K8s</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>Secret解决了密码、token、密钥等敏感数据的配置问题，而不需要把这些敏感数据暴露到镜像或者Pod Spec中。Secret可以以Volume或者环境变量的方式使用。</p>
+<h4 id="Secret类型："><a href="#Secret类型：" class="headerlink" title="Secret类型："></a>Secret类型：</h4><ol>
+<li>Opaque：base64编码格式的Secret，用来存储密码、密钥等；但数据也通过base64 –decode解码得到原始数据，所有加密性很弱。</li>
+<li>kubernetes.io/dockerconfigjson：用来存储私有docker registry的认证信息。</li>
+<li>kubernetes.io/service-account-token： 用于被serviceaccount引用。serviceaccout创建时Kubernetes会默认创建对应的secret。Pod如果使用了serviceaccount，对应的secret会自动挂载到Pod目录/run/secrets/kubernetes.io/serviceaccount中。</li>
+</ol>
+<h5 id="1-Opaque-Secret"><a href="#1-Opaque-Secret" class="headerlink" title="1.Opaque Secret"></a>1.Opaque Secret</h5><p>Opaque类型的数据是一个map类型，要求value是base64编码格式： 比如来创建一个用户名为：admin，密码为： 1f2d1e2e67df的Secret 对象，首先把这用户名和密码做base64编码，<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> -n <span class="string">"admin"</span> | base64</span></span><br><span class="line">YWRtaW4=</span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> -n <span class="string">"1f2d1e2e67df"</span> | base64</span></span><br><span class="line">MWYyZDFlMmU2N2Rm</span><br></pre></td></tr></table></figure></p>
+<p>然后就可以利用上面编码过后的数据来编写一个YAML文件：(secrets.yml)<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Secret</span><br><span class="line">metadata:</span><br><span class="line">  name: mysecret</span><br><span class="line">type: Opaque</span><br><span class="line">data:</span><br><span class="line">  password: MWYyZDFlMmU2N2Rm</span><br><span class="line">  username: YWRtaW4=</span><br></pre></td></tr></table></figure></p>
+<p>同样的就可以使用kubectl命令来创建了： 创建secret：kubectl create -f secrets.yml。<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl get secret</span></span><br><span class="line">NAME                 <span class="built_in"> TYPE </span>                                 DATA      AGE</span><br><span class="line">default-token-xxx   kubernetes.io/service-account-token   3         45d</span><br><span class="line">mysecret              Opaque                                2         7s</span><br></pre></td></tr></table></figure></p>
+<p>注意：其中default-token-xxx为创建集群时默认创建的secret，被serviceacount/default引用。 可以使用describe命令查看详情，如果想看到Data里面的详细信息，可以输出成YAML文件进行查看</p>
+<p>如果是从文件创建secret，则可以用更简单的kubectl命令，比如创建tls的secret：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl create<span class="built_in"> secret </span>generic helloworld-tls \</span><br><span class="line">  <span class="attribute">--from-file</span>=key.pem \</span><br><span class="line">  <span class="attribute">--from-file</span>=cert.pem</span><br></pre></td></tr></table></figure></p>
+<h5 id="2-Opaque-Secret的使用"><a href="#2-Opaque-Secret的使用" class="headerlink" title="2.Opaque Secret的使用"></a>2.Opaque Secret的使用</h5><p>创建好secret之后，有两种方式来使用它：</p>
+<ul>
+<li>以Volume方式</li>
+<li>以环境变量方式</li>
+<li>以Volume方式挂载制定的key</li>
+</ul>
+<h6 id="将Secret挂载到Volume中"><a href="#将Secret挂载到Volume中" class="headerlink" title="将Secret挂载到Volume中"></a>将Secret挂载到Volume中</h6><p>用一个Pod来验证下Volume挂载，创建一个Pod文件：(secret2-pod.yaml)<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">apiVersion</span>: v1</span><br><span class="line"><span class="attribute">kind</span>: Pod</span><br><span class="line"><span class="attribute">metadata</span>:</span><br><span class="line">  <span class="attribute">labels</span>:</span><br><span class="line">    <span class="attribute">name</span>: db</span><br><span class="line">  <span class="attribute">name</span>: db</span><br><span class="line"><span class="attribute">spec</span>:</span><br><span class="line">  <span class="attribute">volumes</span>:</span><br><span class="line">  - <span class="attribute">name</span>: secrets</span><br><span class="line">    <span class="attribute">secret</span>:</span><br><span class="line">      <span class="attribute">secretName</span>: mysecret</span><br><span class="line">  <span class="attribute">containers</span>:</span><br><span class="line">  - <span class="attribute">image</span>: registry.martin.<span class="attribute">com</span>:<span class="number">5000</span>/my_project_id/<span class="attribute">pg</span>:v1</span><br><span class="line">    <span class="attribute">name</span>: db</span><br><span class="line">    <span class="attribute">volumeMounts</span>:</span><br><span class="line">    - <span class="attribute">name</span>: secrets</span><br><span class="line">      <span class="attribute">mountPath</span>: <span class="string">"/etc/secrets"</span></span><br><span class="line">      <span class="attribute">readOnly</span>: true</span><br><span class="line">    <span class="attribute">ports</span>:</span><br><span class="line">    - <span class="attribute">name</span>: cp</span><br><span class="line">      <span class="attribute">containerPort</span>: <span class="number">5432</span></span><br><span class="line">      <span class="attribute">hostPort</span>: <span class="number">5432</span></span><br></pre></td></tr></table></figure></p>
+<p>查看Pod中对应的信息：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ls /etc/secrets</span></span><br><span class="line">password  username</span><br><span class="line"><span class="meta">#</span><span class="bash"> cat  /etc/secrets/username</span></span><br><span class="line">admin</span><br><span class="line"><span class="meta">#</span><span class="bash"> cat  /etc/secrets/password</span></span><br><span class="line">1f2d1e2e67df</span><br></pre></td></tr></table></figure></p>
+<p>查看输出日志：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl logs secret2-pod</span></span><br><span class="line">password</span><br><span class="line">username</span><br></pre></td></tr></table></figure></p>
+<p>可以看到secret把两个key挂载成了两个对应的文件。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/11/14/kubernetes之secret/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/08/21/生成k8s证书的三种方式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin Lei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="让一切随风">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/21/生成k8s证书的三种方式/" itemprop="url">生成k8s证书的三种方式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-21T17:53:00+08:00">
+                2018-08-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/K8s/" itemprop="url" rel="index">
+                    <span itemprop="name">K8s</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>根据官方文档，生成k8s秘钥证书及相关管理证书有三种方式，其本质都是通过openssl:</p>
+<ul>
+<li>cfssl</li>
+<li>easyrsa</li>
+<li>openssl</li>
+</ul>
+<p>官方文档：<a href="https://kubernetes.io/docs/concepts/cluster-administration/certificates/" target="_blank" rel="noopener">https://kubernetes.io/docs/concepts/cluster-administration/certificates/</a></p>
+<h5 id="cfssl方式"><a href="#cfssl方式" class="headerlink" title="cfssl方式"></a>cfssl方式</h5><h6 id="1-cfssl下载地址"><a href="#1-cfssl下载地址" class="headerlink" title="1.cfssl下载地址:"></a>1.cfssl下载地址:</h6><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VERSION=R1.<span class="number">2</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> &#123;cfssl,cfssljson,cfssl-certinfo&#125;</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">wget https:<span class="regexp">//</span>pkg.cfssl.org<span class="regexp">/$&#123;VERSION&#125;/</span><span class="variable">$&#123;i&#125;</span>_linux-amd64 -O <span class="regexp">/usr/</span>local<span class="regexp">/bin/</span><span class="variable">$&#123;i&#125;</span></span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<h6 id="2-生成CA配置文件"><a href="#2-生成CA配置文件" class="headerlink" title="2.生成CA配置文件"></a>2.生成CA配置文件</h6><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">mkdir ssl &amp;&amp; cd ssl</span><br><span class="line">cfssl print-defaults<span class="built_in"> config </span>&gt; config.json</span><br><span class="line">cfssl print-defaults csr &gt; csr.json</span><br><span class="line">cat &gt; ca-config.json &lt;&lt;EOF</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"signing"</span>: &#123;</span><br><span class="line">    <span class="string">"default"</span>: &#123;</span><br><span class="line">      <span class="string">"expiry"</span>: <span class="string">"87600h"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"profiles"</span>: &#123;</span><br><span class="line">      <span class="string">"kubernetes"</span>: &#123;</span><br><span class="line">        <span class="string">"usages"</span>: [</span><br><span class="line">            <span class="string">"signing"</span>,</span><br><span class="line">            <span class="string">"key encipherment"</span>,</span><br><span class="line">            <span class="string">"server auth"</span>,</span><br><span class="line">            <span class="string">"client auth"</span></span><br><span class="line">        ],</span><br><span class="line">        <span class="string">"expiry"</span>: <span class="string">"87600h"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<h6 id="3-生成CA签名配置文件"><a href="#3-生成CA签名配置文件" class="headerlink" title="3.生成CA签名配置文件"></a>3.生成CA签名配置文件</h6><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; ca-csr.json &lt;&lt; EOF</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"CN"</span>: <span class="string">"kubernetes"</span>,</span><br><span class="line">  <span class="string">"key"</span>: &#123;</span><br><span class="line">    <span class="string">"algo"</span>: <span class="string">"rsa"</span>,</span><br><span class="line">    <span class="string">"size"</span>: <span class="number">2048</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"names"</span>:[&#123;</span><br><span class="line">    <span class="string">"C"</span>: <span class="string">"CN"</span>,</span><br><span class="line">    <span class="string">"ST"</span>: <span class="string">"Beijing"</span>,</span><br><span class="line">    <span class="string">"L"</span>: <span class="string">"BeiJing"</span>,</span><br><span class="line">    <span class="string">"O"</span>: <span class="string">"k8s"</span>,</span><br><span class="line">    <span class="string">"OU"</span>: <span class="string">"System"</span></span><br><span class="line">  &#125;]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/21/生成k8s证书的三种方式/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/08/19/只在移动端网页内显示”Fork-me-on-Github”/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin Lei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="让一切随风">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/19/只在移动端网页内显示”Fork-me-on-Github”/" itemprop="url">只在移动端网页内显示”Fork me on Github”</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-19T15:48:00+08:00">
+                2018-08-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hexo/" itemprop="url" rel="index">
+                    <span itemprop="name">hexo</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h5 id="1-修改文件hexo博客根目录-themes-next-layout-layout-swig-找到如下代码块"><a href="#1-修改文件hexo博客根目录-themes-next-layout-layout-swig-找到如下代码块" class="headerlink" title="1.修改文件hexo博客根目录\themes\next\layout_layout.swig 找到如下代码块"></a>1.修改文件hexo博客根目录\themes\next\layout_layout.swig 找到如下代码块</h5><figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">html</span> <span class="attr">class</span>=<span class="string">"</span></span></span><span class="template-variable">&#123;&#123; html_class | lower &#125;&#125;</span><span class="xml"><span class="tag"><span class="string">"</span> <span class="attr">lang</span>=<span class="string">"</span></span></span><span class="template-variable">&#123;&#123; config.language &#125;&#125;</span><span class="xml"><span class="tag"><span class="string">"</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span></span><br><span class="line"><span class="xml">  </span><span class="template-tag">&#123;% <span class="name"><span class="name">include</span></span> '_partials/head.swig' %&#125;</span><span class="xml"></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;<span class="name">title</span>&gt;</span></span><span class="template-tag">&#123;% <span class="name"><span class="name">block</span></span> title %&#125;</span><span class="xml"></span><span class="template-tag">&#123;% <span class="name"><span class="name">endblock</span></span> %&#125;</span><span class="xml"><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<h5 id="2-添加代码，结果如下："><a href="#2-添加代码，结果如下：" class="headerlink" title="2.添加代码，结果如下："></a>2.添加代码，结果如下：</h5><figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">html</span> <span class="attr">class</span>=<span class="string">"</span></span></span><span class="template-variable">&#123;&#123; html_class | lower &#125;&#125;</span><span class="xml"><span class="tag"><span class="string">"</span> <span class="attr">lang</span>=<span class="string">"</span></span></span><span class="template-variable">&#123;&#123; config.language &#125;&#125;</span><span class="xml"><span class="tag"><span class="string">"</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span></span><br><span class="line"><span class="xml">  </span><span class="template-tag">&#123;% <span class="name"><span class="name">include</span></span> '_partials/head.swig' %&#125;</span><span class="xml"></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;<span class="name">title</span>&gt;</span></span><span class="template-tag">&#123;% <span class="name"><span class="name">block</span></span> title %&#125;</span><span class="xml"></span><span class="template-tag">&#123;% <span class="name"><span class="name">endblock</span></span> %&#125;</span><span class="xml"><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span></span><br><span class="line"><span class="xml">  </span><span class="template-tag">&#123;% <span class="name"><span class="name">include</span></span> '_third-party/analytics/index.swig' %&#125;</span><span class="xml"></span></span><br><span class="line"><span class="xml">  </span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="undefined"></span></span></span><br><span class="line"><span class="xml">  .forkMeOnGithub&#123;</span></span><br><span class="line"><span class="xml">  display: none;</span></span><br><span class="line"><span class="xml">  &#125;</span></span><br><span class="line"><span class="xml">  @media (min-width: 768px) &#123;</span></span><br><span class="line"><span class="xml">  .forkMeOnGithub&#123;</span></span><br><span class="line"><span class="xml">   display: inline;</span></span><br><span class="line"><span class="xml">   &#125;</span></span><br><span class="line"><span class="xml">  &#125;</span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;/<span class="name">style</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<h5 id="3-最后在之前引用代码块上套上div加上class就行了，代码如下"><a href="#3-最后在之前引用代码块上套上div加上class就行了，代码如下" class="headerlink" title="3.最后在之前引用代码块上套上div加上class就行了，代码如下"></a>3.最后在之前引用代码块上套上div加上class就行了，代码如下</h5><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div <span class="attribute">class</span>=<span class="string">"forkMeOnGithub"</span>&gt;</span><br><span class="line">&lt;a <span class="attribute">href</span>=<span class="string">"https://github.com/hannius"</span>&gt;&lt;img <span class="attribute">style</span>=<span class="string">"position........&lt;/a&gt;</span></span><br><span class="line"><span class="string">&lt;/div&gt;</span></span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/06/27/bernetes-RBAC-Detailed/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin Lei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="让一切随风">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/27/bernetes-RBAC-Detailed/" itemprop="url">Kubernetes RBAC  Detailed</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-27T18:47:00+08:00">
+                2018-06-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/K8s/" itemprop="url" rel="index">
+                    <span itemprop="name">K8s</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>RBAC - 基于角色的访问控制<br>RBAC使用：rbac.authorization.k8s.io API Group 来实现授权决策，允许管理员通过 Kubernetes API 动态配置策略，要启用RBAC，需要在 apiserver 中添加参数–authorization-mode=RBAC，如果使用的kubeadm安装的集群，1.6 版本以上的都默认开启了RBAC，可以通过查看 Master 节点上 apiserver 的静态Pod定义文件：</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ cat /usr/<span class="class"><span class="keyword">lib</span>/<span class="title">systemd</span>/<span class="title">system</span>/<span class="title">kube</span>-<span class="title">apiserver</span>.<span class="title">service</span></span></span><br><span class="line">或者是：</span><br><span class="line">$ cat /etc/kubernetes/manifests/kube-apiserver.yaml</span><br><span class="line">...</span><br><span class="line">    - --authorization-mode=Node,RBAC</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>如果是二进制的方式搭建的集群，添加这个参数过后，记得要重启 apiserver 服务。</p>
+<hr>
+<h3 id="RBAC-API-对象"><a href="#RBAC-API-对象" class="headerlink" title="RBAC API 对象"></a>RBAC API 对象</h3><p>Kubernetes有一个很基本的特性就是它的所有资源对象都是模型化的 API 对象，允许执行 CRUD(Create、Read、Update、Delete)操作(也就是我们常说的增、删、改、查操作)，比如下面的这下资源：</p>
+<ul>
+<li>Pods</li>
+<li>ConfigMaps</li>
+<li>Deployments</li>
+<li>Nodes</li>
+<li>Secrets</li>
+<li>Namespaces</li>
+</ul>
+<p>上面这些资源对象的可能存在的操作有：</p>
+<ul>
+<li>create</li>
+<li>get</li>
+<li>delete</li>
+<li>list</li>
+<li>update</li>
+<li>edit</li>
+<li>watch</li>
+<li>exec</li>
+</ul>
+<p>在更上层，这些资源和API Group 进行关联，比如Pods属于Core API Group，而Deployements属于 apps API Group，要在Kubernetes中进行RBAC的管理，除了上面的这些资源和操作以外，我们还需要另外的一些对象：</p>
+<ol>
+<li>Rule：规则，规则是一组属于不同API Group 资源上的一组操作的集合</li>
+<li>Role 和 ClusterRole：角色和集群角色，这两个对象都包含上面的Rules 元素，二者的区别在于，在Role 中，定义的规则只适用于单个命名空间，也就是和namespace 关联的，而ClusterRole 是集群范围内的，因此定义的规则不受命名空间的约束。另外Role和 ClusterRole在Kubernetes中都被定义为集群内部的API 资源，和Pod、ConfigMap 这些类似，都是集群的资源对象，所以同样的可以使用kubectl相关的命令来进行操作</li>
+<li>Subject：主题，对应在集群中尝试操作的对象，集群中定义了3种类型的主题资源：<ul>
+<li>User Account：用户，这是有外部独立服务进行管理的，管理员进行私钥的分配，用户可以使用KeyStone或者Goolge 帐号，甚至一个用户名和密码的文件列表也可以。对于用户的管理集群内部没有一个关联的资源对象，所以用户不能通过集群内部的API 来进行管理</li>
+<li>Group：组，这是用来关联多个账户的，集群中有一些默认创建的组，比如cluster-admin</li>
+<li>Service Account：服务帐号，通过Kubernetes API 来管理的一些用户帐号，和namespace 进行关联的，适用于集群内部运行的应用程序，需要通过API 来完成权限认证，所以在集群内部进行权限操作，都需要使用到 ServiceAccount</li>
+</ul>
+</li>
+<li>RoleBinding和 ClusterRoleBinding：角色绑定和集群角色绑定，简单来说就是把声明的Subject和Role 进行绑定的过程(给某个用户绑定上操作的权限)，二者的区别也是作用范围的区别：RoleBinding只会影响到当前namespace 下面的资源操作权限，而ClusterRoleBinding会影响到所有的 namespace。</li>
+</ol>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/27/bernetes-RBAC-Detailed/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/06/22/基于k8s 动态配置及扩容maven nexus私服/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin Lei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="让一切随风">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/22/基于k8s 动态配置及扩容maven nexus私服/" itemprop="url">基于k8s 动态配置及扩容maven nexus私服</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-22T10:36:00+08:00">
+                2018-06-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/K8s/" itemprop="url" rel="index">
+                    <span itemprop="name">K8s</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="配置nexus"><a href="#配置nexus" class="headerlink" title="配置nexus"></a>配置nexus</h3><p>从官网下载了nexus之后还需要进行一些配置。<br>编辑bin/nexus.vmoptions 调整后的如下：</p>
+<figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby">Xms600M</span></span><br><span class="line"><span class="ruby">-Xmx600M</span></span><br><span class="line"><span class="ruby">-<span class="symbol">XX:</span>MaxDirectMemorySize=<span class="number">1</span>G</span></span><br><span class="line"><span class="ruby">-<span class="symbol">XX:</span>+UnlockDiagnosticVMOptions</span></span><br><span class="line"><span class="ruby">-<span class="symbol">XX:</span>+UnsyncloadClass</span></span><br><span class="line"><span class="ruby">-<span class="symbol">XX:</span>+LogVMOutput</span></span><br><span class="line"><span class="ruby">-<span class="symbol">XX:</span>LogFile=<span class="regexp">/data/docker</span><span class="regexp">/soft/nexus</span><span class="regexp">/log/jvm</span>.log</span></span><br><span class="line"><span class="ruby">-<span class="symbol">XX:</span>-OmitStackTraceInFastThrow</span></span><br><span class="line"><span class="ruby">-Djava.net.preferIPv4Stack=<span class="literal">true</span></span></span><br><span class="line"><span class="ruby">-Dkaraf.home=.</span></span><br><span class="line"><span class="ruby">-Dkaraf.base=.</span></span><br><span class="line"><span class="ruby">-Dkaraf.etc=etc/karaf</span></span><br><span class="line"><span class="ruby">-Djava.util.logging.config.file=etc/karaf/java.util.logging.properties</span></span><br><span class="line"><span class="ruby">-Dkaraf.data=<span class="regexp">/data/docker</span><span class="regexp">/soft/nexus</span><span class="regexp">/data</span></span></span><br><span class="line"><span class="ruby">-Djava.io.tmpdir=<span class="regexp">/data/docker</span><span class="regexp">/soft/nexus</span><span class="regexp">/tmp</span></span></span><br><span class="line"><span class="ruby">-Dkaraf.startLocalConsole=<span class="literal">false</span></span></span><br></pre></td></tr></table></figure>
+<p>其中除了1，2行的jvm内存配置之外，最关键的就是，以下几个属性配置：</p>
+<ul>
+<li>-XX:LogFile=/data/docker/soft/nexus/log/jvm.log       # 日志文件生成位置</li>
+<li>-Dkaraf.data=/data/docker/soft/nexus/data             # 仓库数据存放位置(上传的jar包)</li>
+<li>-Djava.io.tmpdir=/data/docker/soft/nexus/tmp          # 临时文件存放位置</li>
+</ul>
+<h3 id="制作Docker镜像"><a href="#制作Docker镜像" class="headerlink" title="制作Docker镜像"></a>制作Docker镜像</h3><p>配置好nexus之后，需要再制作自己的docker镜像，因为k8s就是调度镜像容器的。 </p>
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@master nexus]<span class="comment"># pwd</span></span><br><span class="line">/data/docker/dockerfile/nexus</span><br><span class="line">[root@master nexus]<span class="comment"># ls -lth </span></span><br><span class="line">total 223M</span><br><span class="line">-rw-r--r--<span class="number"> 1 </span>root root <span class="number"> 146 </span>Jun<span class="number"> 21 </span>16:06 Dockerfile</span><br><span class="line">-rw-r--r--<span class="number"> 1 </span>root root 108M Jun<span class="number"> 21 </span>16:02 nexus3.tar.gz</span><br><span class="line">drwxr-xr-x<span class="number"> 3 </span>root root 4.0K Jun<span class="number"> 21 </span>15:53 sonatype-work</span><br><span class="line">drwxr-xr-x<span class="number"> 9 </span>root root 4.0K Jun<span class="number"> 21 </span>15:53 nexus-3.12.1-01</span><br><span class="line">-rw-r--r--<span class="number"> 1 </span>root root 115M Jun<span class="number"> 21 </span>15:36 nexus-3.12.1-01-unix.tar.gz.org</span><br></pre></td></tr></table></figure>
+<p>docker镜像的制作很简单，新建一个Dockerfile文件：</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@master nexus]<span class="comment"># cat Dockerfile </span></span><br><span class="line"><span class="keyword">FROM</span> registry.cn-hangzhou.aliyuncs.com/luhaoyuan/oracle-jdk8:latest</span><br><span class="line"></span><br><span class="line"><span class="keyword">ADD</span><span class="bash"> nexus3.tar.gz /opt</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash">ENTRYPOINT [<span class="string">"/opt/nexus-3.12.1-01/bin/nexus"</span>, <span class="string">"run"</span>]</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>第一行：nexus的运行是依赖JDK环境的，所以我们这里就使用jdk作为基础镜像；(镜像是基于centos7，比较大，后续可以考虑修改为alpine_3.6)</li>
+<li>第二行：将我们配置过后的nexus(nexus-3.12.1-01)再重新打包一下，添加到容器中； </li>
+<li>第三行：启动容器时，执行的命令，nexus的启动命令有start和run，由于start默认是启动在后台进程的，这样容器一启动就退出了。所以这里必须要使用run命令启动了。</li>
+</ul>
+<p>最后构建Docker镜像：<br>docker build -t registry.martin.com:5000/tools/nexus:3.12.1 .<br>registry.martin.com:5000为我registry地址,构建之后将改image push到私库,当然也可以用harbor<br>如果有做ca校验，需要将证书拷贝到指定的:/etc/docker/certs.d/xxx/ca.crt,然后docker login校验<br>再docker push registry.martin.com:5000/tools/nexus:3.12.1，不然会提示x509认证失败</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/22/基于k8s 动态配置及扩容maven nexus私服/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/06/14/kubernetes-jenkins-ci-cd/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin Lei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="让一切随风">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/14/kubernetes-jenkins-ci-cd/" itemprop="url">kubernetes-jenkins-ci-cd</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-14T17:22:00+08:00">
+                2018-06-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/K8s/" itemprop="url" rel="index">
+                    <span itemprop="name">K8s</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="流程图："><a href="#流程图：" class="headerlink" title="流程图："></a>流程图：</h3><p>基于Jenkins的CI/CD流程如下所示:<br><img src="https://cos.leiyawu.com/docker/k8s/kubernetes-jenkins-ci-cd.png" alt="kubernetes-jenkins-ci-cd"></p>
+<h3 id="流程说明："><a href="#流程说明：" class="headerlink" title="流程说明："></a>流程说明：</h3><ol>
+<li>用户向Gitlab提交代码，代码中必须包含Dockerfile</li>
+<li>将代码提交到远程仓库</li>
+<li>用户在发布应用时需要填写git仓库地址和分支、服务类型、服务名称、资源数量、实例个数，确定后触发Jenkins自动构建</li>
+<li>Jenkins的CI流水线自动编译代码并打包成docker镜像推送到Harbor镜像仓库</li>
+<li>Jenkins的CI流水线中包括了自定义脚本，根据我们已准备好的kubernetes的YAML模板，将其中的变量替换成用户输入的选项</li>
+<li>生成应用的kubernetes YAML配置文件</li>
+<li>更新Ingress的配置，根据新部署的应用的名称，在ingress的配置文件中增加一条路由信息</li>
+<li>更新PowerDNS，向其中插入一条DNS记录，IP地址是边缘节点的IP地址。关于边缘节点，请查看<a href="https://jimmysong.io/kubernetes-handbook/practice/edge-node-configuration.html" target="_blank" rel="noopener">边缘节点配置</a></li>
+<li>Jenkins调用kubernetes的API，部署应用</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/06/13/Pause容器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin Lei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="让一切随风">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/13/Pause容器/" itemprop="url">Pause容器</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-13T16:50:00+08:00">
+                2018-06-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/K8s/" itemprop="url" rel="index">
+                    <span itemprop="name">K8s</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Pause容器定义"><a href="#Pause容器定义" class="headerlink" title="Pause容器定义"></a>Pause容器定义</h2><p>Pause容器，又叫Infra容器，本文将探究该容器的作用与原理。</p>
+<p>在kubelet的配置中有这样一个参数：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">KUBELET_POD_INFRA_CONTAINER=--pod-infra-container-image=registry<span class="selector-class">.access</span><span class="selector-class">.redhat</span><span class="selector-class">.com</span>/rhel7/pod-infrastructure:latest</span><br></pre></td></tr></table></figure>
+<p>上面是openshift中的配置参数，kubernetes中默认的配置参数是：</p>
+<figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">KUBELET_POD_INFRA_CONTAINER=--pod-infra-<span class="keyword">container</span>-<span class="keyword">image</span>=gcr.io/google_containers/<span class="keyword">pause</span>-amd64:<span class="number">3.0</span></span><br></pre></td></tr></table></figure>
+<p>Pause容器，是可以自己来定义，官方使用的gcr.io/google_containers/pause-amd64:3.0容器的代码见Github，使用C语言编写。</p>
+<h2 id="Pause容器的作用"><a href="#Pause容器的作用" class="headerlink" title="Pause容器的作用"></a>Pause容器的作用</h2><p>检查nod节点的时候会发现每个node上都运行了很多的pause容器，例如如下:</p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@elk<span class="string">-02</span> bin]# docker ps</span><br><span class="line">CONTAINER ID        IMAGE                                               COMMAND                  CREATED             STATUS              PORTS               NAMES</span><br><span class="line">576c56bd6065        mirrorgooglecontainers/kubernetes-dashboard-amd64   "/dashboard --inse..."   2 hours ago         Up 2 hours                              k8s_kubernetes-dashboard_kubernetes-dashboard<span class="string">-66</span>c9d98865-jdbg8_kube-system_d2406f4f<span class="string">-6</span>de3<span class="string">-11</span>e8<span class="string">-8760</span><span class="string">-5254004</span>f2222_0</span><br><span class="line">c4985381c2b7        d4b7466213fe                                        "/coredns -conf /e..."   2 hours ago         Up 2 hours                              k8s_coredns_coredns<span class="string">-77</span>c989547b-xq4dr_kube-system_d23ef2c4<span class="string">-6</span>de3<span class="string">-11</span>e8<span class="string">-8760</span><span class="string">-5254004</span>f2222_1</span><br><span class="line">ba2fef1cbf00        mirrorgooglecontainers/pause-amd64:3.0              "/pause"                 2 hours ago         Up 2 hours                              k8s_POD_coredns<span class="string">-77</span>c989547b-xq4dr_kube-system_d23ef2c4<span class="string">-6</span>de3<span class="string">-11</span>e8<span class="string">-8760</span><span class="string">-5254004</span>f2222_1</span><br><span class="line">ea6c2994b397        d4b7466213fe                                        "/coredns -conf /e..."   2 hours ago         Up 2 hours                              k8s_coredns_coredns<span class="string">-77</span>c989547b-lcbfw_kube-system_0696926b<span class="string">-6</span>d79<span class="string">-11</span>e8<span class="string">-8760</span><span class="string">-5254004</span>f2222_1</span><br><span class="line">f61476c51230        mirrorgooglecontainers/pause-amd64:3.0              "/pause"                 2 hours ago         Up 2 hours                              k8s_POD_kubernetes-dashboard<span class="string">-66</span>c9d98865-jdbg8_kube-system_d2406f4f<span class="string">-6</span>de3<span class="string">-11</span>e8<span class="string">-8760</span><span class="string">-5254004</span>f2222_0</span><br><span class="line">b6f61200d5ea        mirrorgooglecontainers/pause-amd64:3.0              "/pause"                 2 hours ago         Up 2 hours                              k8s_POD_coredns<span class="string">-77</span>c989547b-lcbfw_kube-system_0696926b<span class="string">-6</span>d79<span class="string">-11</span>e8<span class="string">-8760</span><span class="string">-5254004</span>f2222_1</span><br></pre></td></tr></table></figure>
+<p>kubernetes中的pause容器主要为每个业务容器提供以下功能：</p>
+<ul>
+<li>在pod中担任Linux命名空间共享的基础；</li>
+<li>启用pid命名空间，开启init进程。</li>
+</ul>
+<p>pause容器的作用可以从这个例子中看出，首先见下图：<br><img src="https://cos.leiyawu.com/docker/k8s/pause-container.png" alt="map"></p>
+<h2 id="Pause容器测试"><a href="#Pause容器测试" class="headerlink" title="Pause容器测试"></a>Pause容器测试</h2><p>首先在节点上运行一个pause容器。</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --<span class="keyword">name</span> <span class="keyword">pause</span> -p <span class="number">8880</span>:<span class="number">80</span> martin/<span class="keyword">pause</span>-amd64:<span class="number">3.0</span></span><br></pre></td></tr></table></figure>
+<p>然后再运行一个nginx容器，nginx将为localhost:2398创建一个代理。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">cat</span> &lt;&lt;EOF &gt;&gt; nginx.conff</span><br><span class="line">error_log stderr;</span><br><span class="line">events &#123; worker_connections  1024; &#125;</span><br><span class="line">http &#123;</span><br><span class="line">    access_log /dev/stdout combined;</span><br><span class="line">    server &#123;</span><br><span class="line">        listen 80 default_server;</span><br><span class="line">        server_name example.com www.example.com;</span><br><span class="line">        location / &#123;</span><br><span class="line">            proxy_pass http:<span class="comment">//127.0.0.1:2398;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">$ docker <span class="keyword">run</span> -<span class="keyword">d</span> --name nginx -v `<span class="keyword">pwd</span>`/nginx.<span class="keyword">conf</span>:/etc/nginx/nginx.<span class="keyword">conf</span> --<span class="keyword">net</span>=container:<span class="keyword">pause</span> --ipc=container:<span class="keyword">pause</span> --pid=container:<span class="keyword">pause</span> nginx</span><br></pre></td></tr></table></figure>
+<p>然后再为ghost创建一个应用容器，这是一款博客软件。</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="builtin-name">run</span> -d --name ghost <span class="attribute">--net</span>=container:pause <span class="attribute">--ipc</span>=container:pause <span class="attribute">--pid</span>=container:pause ghost</span><br></pre></td></tr></table></figure>
+<p>现在访问<a href="http://localhost:8880/就可以看到ghost博客的界面了。" target="_blank" rel="noopener">http://localhost:8880/就可以看到ghost博客的界面了。</a></p>
+<h2 id="Pause容器解析"><a href="#Pause容器解析" class="headerlink" title="Pause容器解析"></a>Pause容器解析</h2><p>pause容器将内部的80端口映射到宿主机的8880端口，pause容器在宿主机上设置好了网络namespace后，nginx容器加入到该网络namespace中，我们看到nginx容器启动的时候指定了–net=container:pause，ghost容器同样加入到了该网络namespace中，这样三个容器就共享了网络，互相之间就可以使用localhost直接通信，–ipc=contianer:pause –pid=container:pause就是三个容器处于同一个namespace中，init进程为pause，这时我们进入到ghost容器中查看进程情况。</p>
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ps aux</span></span><br><span class="line">USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND</span><br><span class="line">root        <span class="number"> 1 </span> 0.0  0.0  <span class="number"> 1024 </span>   <span class="number"> 4 </span>?        Ss   13:49   0:00 /pause</span><br><span class="line">root        <span class="number"> 5 </span> 0.0  0.1 <span class="number"> 32432 </span><span class="number"> 5736 </span>?        Ss   13:51   0:00 nginx: master p</span><br><span class="line">systemd+    <span class="number"> 9 </span> 0.0  0.0 <span class="number"> 32980 </span><span class="number"> 3304 </span>?        S    13:51   0:00 nginx: worker p</span><br><span class="line">node       <span class="number"> 10 </span> 0.3  2.0<span class="number"> 1254200 </span>83788 ?       Ssl  13:53   0:03 node current/in</span><br><span class="line">root       <span class="number"> 79 </span> 0.1  0.0  <span class="number"> 4336 </span> <span class="number"> 812 </span>pts/0    Ss   14:09   0:00 sh</span><br><span class="line">root       <span class="number"> 87 </span> 0.0  0.0 <span class="number"> 17500 </span><span class="number"> 2080 </span>pts/0    R+   14:10   0:00 ps aux</span><br></pre></td></tr></table></figure>
+<p>在ghost容器中同时可以看到pause和nginx容器的进程，并且pause容器的PID是1。而在kubernetes中容器的PID=1的进程即为容器本身的业务进程。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://o-my-chenjian.com/2017/10/17/The-Pause-Container-Of-Kubernetes/" target="_blank" rel="noopener">Kubernetes只Pause容器</a></p>
+<p><a href="https://jimmysong.io/posts/what-is-a-pause-container/" target="_blank" rel="noopener">kubernetes中的infra容器——Pause容器探究</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/05/24/crontab和anacron和logrotate-relation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin Lei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="让一切随风">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/24/crontab和anacron和logrotate-relation/" itemprop="url">crontab、anacron、logrotate relationship</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-24T16:33:00+08:00">
+                2018-05-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Logrotate/" itemprop="url" rel="index">
+                    <span itemprop="name">Logrotate</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>服务器上的nginx使用logrotate来分割日志，设置为每天分割。但是logrotate似乎没有工作，日志并没有分割。服务器是CentOS 6。</p>
+<p>为了找到原因，分析可能出错的地方。<br>如果是logrotate未执行，可能是crond没有启动，因为logrotate被/etc/cron.daily/logrotate脚本所启动，可以查看其中代码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@<span class="built_in">test</span> ~]<span class="comment"># cat /etc/cron.daily/logrotate</span></span><br><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"></span><br><span class="line">/usr/sbin/logrotate /etc/logrotate.conf</span><br><span class="line">EXITVALUE=$?</span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$EXITVALUE</span> != 0 ]; <span class="keyword">then</span></span><br><span class="line">    /usr/bin/logger -t logrotate <span class="string">"ALERT exited abnormally with [<span class="variable">$EXITVALUE</span>]"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="built_in">exit</span> 0</span><br></pre></td></tr></table></figure>
+<p>可以看到logrotate运行时加载配置文件logrotate.conf，而这个配置文件除了设定一些分割日志相关的选项，还包含分割日志的配置文件目录/etc/logrotate.d。</p>
+<p>nginx的日志分割配置文件就保存在logrotate.d目录：</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@test ~]<span class="meta"># cat !$</span></span><br><span class="line">cat <span class="meta-keyword">/etc/</span>logrotate.d/nginx</span><br><span class="line"><span class="meta-keyword">/root/</span>*.<span class="class">log </span>&#123;</span><br><span class="line">    Daily</span><br><span class="line">    Missingok</span><br><span class="line">    rotate <span class="number">52</span></span><br><span class="line">    compress</span><br><span class="line">    delaycompress</span><br><span class="line">    notifempty</span><br><span class="line">    dateext</span><br><span class="line">    create <span class="number">644</span> nobody nobody</span><br><span class="line">    sharedscripts</span><br><span class="line">    postrotate</span><br><span class="line">    [ -f <span class="meta-keyword">/usr/</span>local<span class="meta-keyword">/nginx/</span>logs/nginx.pid ] &amp;&amp; kill -USR1 `cat <span class="meta-keyword">/usr/</span>local<span class="meta-keyword">/nginx/</span>logs/nginx.pid`</span><br><span class="line">    endscript</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>/root/*.log就是需要被分割的日志的目录，通配符*表示目录内的所有log文件都被分割，分割的规则就是{…}中的内容。这里把/root/*.log当做nginx日志只是为了测试。<br>在启动crond服务后，发现日志还是没有分割，于是想到会不会是/etc/logrotate.d/nginx配置文件的语法有问题，使用以下命令调试这个文件：</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logrotate -vfd <span class="meta-keyword">/etc/</span>logrotate.d/nginx  <span class="meta"># -vfd 三个选项分别表示显示详情，强制分割日志，只是调试配置文件而不是真的分割日志</span></span><br></pre></td></tr></table></figure>
+<p>输出结果表明有语法错误，Daily，Missingok 都应该是小写。改成daily，missingok。再次调试配置文件，可以正确分割日志：</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@test ~]# ls <span class="number">-1</span> /root/</span><br><span class="line">install<span class="number">-2017</span><span class="number">-5</span><span class="number">-14.</span>log</span><br><span class="line">install<span class="number">-2017</span><span class="number">-5</span><span class="number">-14.</span>log<span class="number">-20170521</span>  #logrotate归档的日志</span><br></pre></td></tr></table></figure>
+<p>上面猜测是crond执行/etc/cron.daily/内的脚本，实现定时执行计划任务，包括执行logrotate日志分割。<br>为了验证是否正确，网上搜索一番后找到了答案。如果没有crontab命令，先安装：</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum install crontabs  <span class="comment">#安装crond，crond实际上来自cronie包，这个包作为crontabs包的依赖被安装</span></span><br><span class="line">chkconfig --<span class="keyword">add</span><span class="bash"> crond <span class="comment">#添加到开机启动列表</span></span></span><br><span class="line"><span class="bash">chkconfig crond on    <span class="comment">#开机启动crond服务</span></span></span><br><span class="line"><span class="bash">/etc/init.d/crond     <span class="comment">#立即启动crond</span></span></span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/24/crontab和anacron和logrotate-relation/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.leiyawu.com/2018/05/21/ELK-Sentinl/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin Lei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="让一切随风">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/21/ELK-Sentinl/" itemprop="url">ELK Sentinl</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-21T10:06:00+08:00">
+                2018-05-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ELK/" itemprop="url" rel="index">
+                    <span itemprop="name">ELK</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="Sentinl简介"><a href="#Sentinl简介" class="headerlink" title="Sentinl简介"></a>Sentinl简介</h3><p>Sentinl 5扩展自Kibi / Kibana 5，具有警报和报告功能，可使用标准查询，可编程验证器和各种可配置操作来监控，通知和报告数据系列更改 - 将其视为一个独立的“观察者” “报告”功能（PNG / PDFs快照）。</p>
+<p>SENTINEL还旨在通过直接在Kibana UI中整合来简化在Kibi / Kibana中创建和管理警报和报告的过程。</p>
+<h3 id="功能模块"><a href="#功能模块" class="headerlink" title="功能模块"></a>功能模块</h3><p>Watchers<br>Alarms<br>Reports<br>Watchers是Sentinl核心，主要由 input,Condition,Transform,Actions几大块组成，可以和X-Pack一一对应，部分文档可参考X-Pack，但需要注意的是它和X-Pack还有一些区别，主要体现在input只实现了search，其他并未实现，Actions也并未都实现</p>
+<h3 id="安装与配置"><a href="#安装与配置" class="headerlink" title="安装与配置"></a>安装与配置</h3><ul>
+<li>安装</li>
+</ul>
+<p>/usr/share/kibana/bin/kibana-plugin install <a href="https://github.com/sirensolutions/sentinl/releases/download/tag-5.5/sentinl-v5.6.5.zip" target="_blank" rel="noopener">https://github.com/sirensolutions/sentinl/releases/download/tag-5.5/sentinl-v5.6.5.zip</a></p>
+<ul>
+<li>config</li>
+</ul>
+<p>kibana.yml config:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">sentinl:</span></span><br><span class="line"><span class="attr">  es:</span></span><br><span class="line"><span class="attr">    timefield:</span> <span class="string">'@timestamp'</span></span><br><span class="line"><span class="attr">    default_index:</span> <span class="string">watcher</span></span><br><span class="line"><span class="attr">    type:</span> <span class="string">watch</span></span><br><span class="line"><span class="attr">    alarm_index:</span> <span class="string">watcher_alarms</span></span><br><span class="line"><span class="attr">  sentinl:</span></span><br><span class="line"><span class="attr">    history:</span> <span class="number">20</span></span><br><span class="line"><span class="attr">    results:</span> <span class="number">50</span></span><br><span class="line"><span class="attr">  settings:</span></span><br><span class="line"><span class="attr">    email:</span></span><br><span class="line"><span class="attr">      active:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">      user:</span> <span class="string">username</span></span><br><span class="line"><span class="attr">      password:</span> <span class="string">password</span></span><br><span class="line"><span class="attr">      host:</span> <span class="string">smtp.server.com</span></span><br><span class="line"><span class="attr">      ssl:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">      timeout:</span> <span class="number">10000</span>  <span class="comment"># mail server connection timeout</span></span><br><span class="line"><span class="attr">    slack:</span></span><br><span class="line"><span class="attr">      active:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">      username:</span> <span class="string">username</span></span><br><span class="line"><span class="attr">      hook:</span> <span class="string">'https://hooks.slack.com/services/&lt;token&gt;'</span></span><br><span class="line"><span class="attr">      channel:</span> <span class="string">'#channel'</span></span><br><span class="line"><span class="attr">    report:</span></span><br><span class="line"><span class="attr">      active:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">      tmp_path:</span> <span class="string">/tmp/</span></span><br><span class="line"><span class="attr">    pushapps:</span></span><br><span class="line"><span class="attr">      active:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">      api_key:</span> <span class="string">'&lt;pushapps API Key&gt;'</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>raw</li>
+</ul>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"input"</span>: &#123;</span><br><span class="line">      <span class="string">"search"</span>: &#123;</span><br><span class="line">        <span class="string">"request"</span>: &#123;</span><br><span class="line">          <span class="string">"index"</span>: [</span><br><span class="line">            <span class="string">"&lt;xxx-&#123;now/d&#125;&gt;"</span></span><br><span class="line">          ],</span><br><span class="line">          <span class="string">"body"</span>: &#123;</span><br><span class="line">            <span class="string">"query"</span>: &#123;</span><br><span class="line">              <span class="string">"bool"</span>: &#123;</span><br><span class="line">                <span class="string">"should"</span>: [</span><br><span class="line">                  &#123;</span><br><span class="line">                    <span class="string">"match"</span>: &#123;</span><br><span class="line">                      <span class="string">"status"</span>: <span class="string">"502"</span></span><br><span class="line">                    &#125;</span><br><span class="line">                  &#125;,</span><br><span class="line">                  &#123;</span><br><span class="line">                    <span class="string">"match"</span>: &#123;</span><br><span class="line">                      <span class="string">"status"</span>: <span class="string">"404"</span></span><br><span class="line">                    &#125;</span><br><span class="line">                  &#125;</span><br><span class="line">                ],</span><br><span class="line">                <span class="string">"minimum_should_match"</span>: <span class="number">1</span>,  #must setup</span><br><span class="line">                <span class="string">"filter"</span>: &#123;</span><br><span class="line">                  <span class="string">"range"</span>: &#123;</span><br><span class="line">                    <span class="string">"@timestamp"</span>: &#123;</span><br><span class="line">                      <span class="string">"gte"</span>: <span class="string">"now-60s"</span>,</span><br><span class="line">                      <span class="string">"lte"</span>: <span class="string">"now"</span></span><br><span class="line">                    &#125;</span><br><span class="line">                  &#125;</span><br><span class="line">                &#125;</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"condition"</span>: &#123;</span><br><span class="line">      <span class="string">"script"</span>: &#123;</span><br><span class="line">        <span class="string">"script"</span>: <span class="string">"payload.hits.total &gt; 30"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/touxiang.jpg"
+                alt="Martin Lei" />
+            
+              <p class="site-author-name" itemprop="name">Martin Lei</p>
+              <p class="site-description motion-element" itemprop="description">Still Waters Run Deep</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/hannius" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:hanniusshine@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/hannius_lei" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/p/1005051904036855/home?from=page_100505&is_all=1" target="_blank" title="微博">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>微博</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.liaoxuefeng.com/" title="老缪" target="_blank">老缪</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://jimmysong.io/" title="jimmysong" target="_blank">jimmysong</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/hannius" title="github" target="_blank">github</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Martin Lei</span>
+  <span>&nbsp;<a href="http://gd.beian.miit.gov.cn/">粤ICP备18019482号-1</a></span>
+  本站总访问量 <span id="busuanzi_value_site_pv"></span> 次, 访客数 <span id="busuanzi_value_site_uv"></span> 人次, 本文总阅读量 <span id="busuanzi_value_page_pv"></span> 次
+
+  
+</div>
+
+
+<!--  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
