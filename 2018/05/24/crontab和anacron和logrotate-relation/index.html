@@ -1,0 +1,500 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="服务器上的nginx使用logrotate来分割日志，设置为每天分割。但是logrotate似乎没有工作，日志并没有分割。服务器是CentOS 6。
+为了找到原因，分析可能出错的地方。如果是logrotate未执行，可能是crond没有启动，因为logrotate被/etc/cron.daily/logrotate脚本所启动，可以查看其中代码：
+123456789[root@test ~]# ca">
+  <meta name="author" content="Martin Lei">
+  <meta name="keywords" content="">
+  
+  <title>crontab、anacron、logrotate relationship - 让一切随风</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="让一切随风" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="crontab、anacron、logrotate relationship">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2018-05-24 16:33" pubdate>
+        2018年5月24日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      26
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">crontab、anacron、logrotate relationship</h1>
+            
+            <div class="markdown-body">
+              <p>服务器上的nginx使用logrotate来分割日志，设置为每天分割。但是logrotate似乎没有工作，日志并没有分割。服务器是CentOS 6。</p>
+<p>为了找到原因，分析可能出错的地方。<br>如果是logrotate未执行，可能是crond没有启动，因为logrotate被/etc/cron.daily/logrotate脚本所启动，可以查看其中代码：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs awk">[root@test ~]<span class="hljs-comment"># cat /etc/cron.daily/logrotate</span><br><span class="hljs-comment">#!/bin/sh</span><br><br><span class="hljs-regexp">/usr/</span>sbin<span class="hljs-regexp">/logrotate /</span>etc/logrotate.conf<br>EXITVALUE=$?<br><span class="hljs-keyword">if</span> [ <span class="hljs-variable">$EXITVALUE</span> != <span class="hljs-number">0</span> ]; then<br>    <span class="hljs-regexp">/usr/</span>bin/logger -t logrotate <span class="hljs-string">&quot;ALERT exited abnormally with [$EXITVALUE]&quot;</span><br>fi<br><span class="hljs-keyword">exit</span> <span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+<p>可以看到logrotate运行时加载配置文件logrotate.conf，而这个配置文件除了设定一些分割日志相关的选项，还包含分割日志的配置文件目录/etc/logrotate.d。</p>
+<p>nginx的日志分割配置文件就保存在logrotate.d目录：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs awk">[root@test ~]<span class="hljs-comment"># cat !$</span><br>cat <span class="hljs-regexp">/etc/</span>logrotate.d/nginx<br><span class="hljs-regexp">/root/</span>*.log &#123;<br>    Daily<br>    Missingok<br>    rotate <span class="hljs-number">52</span><br>    compress<br>    delaycompress<br>    notifempty<br>    dateext<br>    create <span class="hljs-number">644</span> nobody nobody<br>    sharedscripts<br>    postrotate<br>    [ -f <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/nginx/</span>logs<span class="hljs-regexp">/nginx.pid ] &amp;&amp; kill -USR1 `cat /u</span>sr<span class="hljs-regexp">/local/</span>nginx<span class="hljs-regexp">/logs/</span>nginx.pid`<br>    endscript<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>/root/*.log就是需要被分割的日志的目录，通配符*表示目录内的所有log文件都被分割，分割的规则就是{…}中的内容。这里把/root/*.log当做nginx日志只是为了测试。<br>在启动crond服务后，发现日志还是没有分割，于是想到会不会是/etc/logrotate.d/nginx配置文件的语法有问题，使用以下命令调试这个文件：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">logrotate -vfd <span class="hljs-regexp">/etc/</span>logrotate.d/nginx  <span class="hljs-comment"># -vfd 三个选项分别表示显示详情，强制分割日志，只是调试配置文件而不是真的分割日志</span><br></code></pre></td></tr></table></figure>
+<p>输出结果表明有语法错误，Daily，Missingok 都应该是小写。改成daily，missingok。再次调试配置文件，可以正确分割日志：</p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs subunit">[root@test ~]# ls <span class="hljs-string">-1</span> /root/<br>install<span class="hljs-string">-2017</span><span class="hljs-string">-5</span><span class="hljs-string">-14</span>.log<br>install<span class="hljs-string">-2017</span><span class="hljs-string">-5</span><span class="hljs-string">-14</span>.log<span class="hljs-string">-20170521</span>  #logrotate归档的日志<br></code></pre></td></tr></table></figure>
+<p>上面猜测是crond执行/etc/cron.daily/内的脚本，实现定时执行计划任务，包括执行logrotate日志分割。<br>为了验证是否正确，网上搜索一番后找到了答案。如果没有crontab命令，先安装：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs csharp">yum install crontabs  <span class="hljs-meta">#安装crond，crond实际上来自cronie包，这个包作为crontabs包的依赖被安装</span><br>chkconfig --<span class="hljs-keyword">add</span> crond <span class="hljs-meta">#添加到开机启动列表</span><br>chkconfig crond <span class="hljs-keyword">on</span>    <span class="hljs-meta">#开机启动crond服务</span><br>/etc/<span class="hljs-keyword">init</span>.d/crond     <span class="hljs-meta">#立即启动crond</span><br><br></code></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<p>以下文件或目录的作用：<br>cron计划任务有两种类型：</p>
+<ul>
+<li>1）系统cron任务：由crond服务执行，/etc/crontab配置系统级别的任务</li>
+<li>2）用户cron任务：由crond服务执行，用crontab命令编辑用户级别的任务</li>
+</ul>
+<p><font color=#DC143C size=3>属于系统cron任务的文件或目录：</font></p>
+<ul>
+<li>/etc/cron.d             #系统的任务脚本。执行 rpm -ql cronie 可以看到该目录被cronie包安装</li>
+<li>/etc/cron.hourly     #每小时执行其内脚本。其中的0anacron文件调用anacron来执行任务，它被包cronie-anacron安装</li>
+<li>/etc/cron.daily        #每天执行其内脚本。也被anacron执行其内脚本，logrotate调用脚本就在该目录内</li>
+<li>/etc/cron.weekly     #每周执行其内脚本。</li>
+<li>/etc/cron.monthly   #每月执行其内脚本。</li>
+</ul>
+<p><font color=#DC143C size=3>控制用户cron任务的执行：</font></p>
+<ul>
+<li>/etc/cron.allow   #默认不存在，如果这个文件存在，只有用户在这个文件中才能使用crontab命令</li>
+<li>/etc/cron.deny    #将不可以使用crontab命令的用户写入其中</li>
+</ul>
+<p>注意：cron.allow和cron.deny就是用户名的列表，每行一个用户名。比如 cron.deny中有一行jason，效果是如果当前登录用户是jason，执行 crontab -e会提示不允许使用crontab命令。</p>
+<p>以下三个目录的作用：</p>
+<p>/var/spool/cron/USER_NAME<br>#这个文件才是跟crontab -e/-l 关联的，这个文件保存了crontab -e编辑的任务内容<br>#比如执行 crontab -u root -e，编辑保存后，就会有/var/spool/cron/root 这个文件</p>
+<p>/var/spool/anacron/{cron.daily,cron.monthly,cron.weekly}<br>#这三个文件记录了anacron上一次执行的时间（上一天，上一周或上一月）<br>#anacron任务执行时，对照这里的时间，决定是否执行anacron任务</p>
+<p>/var/lib/logrotate.status<br>#这个文件记录logrotate执行情况，logrotate参考这个文件来决定是否需要rotate日志</p>
+<p>crontab和anacron和logrotate的关系：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs gradle">[root@test ~]# cat <span class="hljs-regexp">/etc/</span>cron.d<span class="hljs-regexp">/0hourly     #这个文件指定每小时的01分执行/</span>etc/cron.hourly内的所有脚本<br>SHELL=<span class="hljs-regexp">/bin/</span>bash<br>PATH=<span class="hljs-regexp">/sbin:/</span>bin:<span class="hljs-regexp">/usr/</span>sbin:<span class="hljs-regexp">/usr/</span>bin<br>MAILTO=root<br>HOME=/<br><span class="hljs-number">01</span> * * * * root run-parts <span class="hljs-regexp">/etc/</span>cron.hourly  #这里的root指定执行任务的用户，run-parts其实是一个可执行脚本，在<span class="hljs-regexp">/usr/</span>bin/run-parts，用来执行cron.hourly目录内的所有脚本<br><br></code></pre></td></tr></table></figure>
+<p>说明：用crontab -e命令每次编辑完某个用户的cron设置后，cron自动在/var/spool/cron下生成一个与此用户同名的文件，此用户的cron信息都记录在这个文件中。cron启动后每过一份钟读一次这个文件，检查是否要执行里面的命令。因此此文件修改后不需要重新启动cron服务。cron服务每分钟不仅要读一次/var/spool/cron内的所有文件，还需要读一次/etc/crontab，因此我们配置这个文件也能运用cron服务做一些事情。用crontab命令配置是针对某个用户的，而编辑/etc/crontab是针对系统的任务。此文件的文件格式是：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs elixir">SHELL=<span class="hljs-regexp">/bin/bash</span><br>PATH=<span class="hljs-regexp">/sbin:/bin</span><span class="hljs-symbol">:/usr/sbin</span><span class="hljs-symbol">:/usr/bin</span>     <span class="hljs-comment">#可执行文件查找路径</span><br>MAILTO=root      <span class="hljs-comment">#如果出现错误，或者有数据输出，数据作为邮件发给这个帐号</span><br>HOME=<span class="hljs-regexp">/           #使用者运行的路径，这里是根目录</span><br></code></pre></td></tr></table></figure>
+
+
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs awk">[root@test ~]<span class="hljs-comment"># cat /etc/cron.hourly/0anacron   #cron.hourly目录下的脚本，根据条件执行anacron命令</span><br><span class="hljs-comment">#!/bin/bash</span><br><span class="hljs-comment"># Skip excecution unless the date has changed from the previous run</span><br><span class="hljs-keyword">if</span> test -r <span class="hljs-regexp">/var/</span>spool<span class="hljs-regexp">/anacron/</span>cron.daily; then<br>    day=`cat <span class="hljs-regexp">/var/</span>spool<span class="hljs-regexp">/anacron/</span>cron.daily`<br>fi<br><span class="hljs-keyword">if</span> [ `date +%Y%m%d` = <span class="hljs-string">&quot;$day&quot;</span> ]; then<br>    <span class="hljs-keyword">exit</span> <span class="hljs-number">0</span>;<br>fi<br><br><span class="hljs-comment"># Skip excecution unless AC powered</span><br><span class="hljs-keyword">if</span> test -x <span class="hljs-regexp">/usr/</span>bin/on_ac_power; then<br>    <span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/on_ac_power &amp;&gt; /</span>dev/null<br>    <span class="hljs-keyword">if</span> test $? -eq <span class="hljs-number">1</span>; then<br>    <span class="hljs-keyword">exit</span> <span class="hljs-number">0</span><br>    fi<br>fi<br><span class="hljs-regexp">/usr/</span>sbin/anacron -s<br></code></pre></td></tr></table></figure>
+
+
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs awk">[root@test ~]<span class="hljs-comment"># cat /etc/anacrontab   #如果执行anacron命令，那么接着查看anacron的配置文件</span><br><span class="hljs-comment"># /etc/anacrontab: configuration file for anacron</span><br><br><span class="hljs-comment"># See anacron(8) and anacrontab(5) for details.</span><br><br>SHELL=<span class="hljs-regexp">/bin/</span>sh<br>PATH=<span class="hljs-regexp">/sbin:/</span>bin:<span class="hljs-regexp">/usr/</span>sbin:<span class="hljs-regexp">/usr/</span>bin<br>MAILTO=root<br><span class="hljs-comment"># the maximal random delay added to the base delay of the jobs</span><br>RANDOM_DELAY=<span class="hljs-number">45</span>     <span class="hljs-comment">#最大延迟时间</span><br><span class="hljs-comment"># the jobs will be started during the following hours only</span><br>START_HOURS_RANGE=<span class="hljs-number">3</span>-<span class="hljs-number">22</span>     <span class="hljs-comment">#只有在3-22点之间执行任务</span><br><br><span class="hljs-comment">#period in days   delay in minutes   job-identifier   command</span><br><span class="hljs-number">1</span>    <span class="hljs-number">5</span>    cron.daily        nice run-parts <span class="hljs-regexp">/etc/</span>cron.daily<br><span class="hljs-number">7</span>    <span class="hljs-number">25</span>    cron.weekly        nice run-parts <span class="hljs-regexp">/etc/</span>cron.weekly<br>@monthly <span class="hljs-number">45</span>    cron.monthly        nice run-parts <span class="hljs-regexp">/etc/</span>cron.monthly<br></code></pre></td></tr></table></figure>
+
+<p>以上anacrontab配置文件最重要的是最后一部分，以这行为例：</p>
+<p>1    5    cron.daily        nice run-parts /etc/cron.daily</p>
+<p>表示每天都执行/etc/cront.daily/目录下的脚本文件，真实的延迟是RANDOM_DELAY+delay。这里的延迟是5分钟，加上上面的RANDOM_DELAY，所以实际的延迟时间是5-50之间，开始时间为03-22点，如果机器没关，那么一般就是在03:05-03:50之间执行。<font color=#DC143C size=3>nice命令将该进程设置为nice=10，默认为0，即低优先级进程。</font>如果RANDOM_DELAY=0，那么表示准确延迟5min，即03:05执行cron.daily内的脚本。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs awk">[root@test ~]<span class="hljs-comment"># cat /etc/cron.daily/logrotate  #最后在cron.daily内有logrotate的调用脚本</span><br><span class="hljs-comment">#!/bin/sh</span><br><br><span class="hljs-regexp">/usr/</span>sbin<span class="hljs-regexp">/logrotate /</span>etc<span class="hljs-regexp">/logrotate.conf       #logrotate将会读取配置文件，最终会读取到/</span>etc<span class="hljs-regexp">/logrotate.d/</span>nginx<br>EXITVALUE=$?<br><span class="hljs-keyword">if</span> [ <span class="hljs-variable">$EXITVALUE</span> != <span class="hljs-number">0</span> ]; then<br>    <span class="hljs-regexp">/usr/</span>bin/logger -t logrotate <span class="hljs-string">&quot;ALERT exited abnormally with [$EXITVALUE]&quot;</span><br>fi<br><span class="hljs-keyword">exit</span> <span class="hljs-number">0</span><br><br></code></pre></td></tr></table></figure>
+<p>当logrotate命令加载了/etc/logrotate.d/nginx配置文件时，还要比较nginx日志的归档日期：</p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs subunit">[root@test ~]# cat /var/lib/logrotate.status | grep /root<br>&quot;/root/install<span class="hljs-string">-2017</span><span class="hljs-string">-5</span><span class="hljs-string">-14</span>.log&quot; 2017<span class="hljs-string">-5</span><span class="hljs-string">-21</span>   #如果今天是2017<span class="hljs-string">-5</span><span class="hljs-string">-21</span>，这个文件里也是2017<span class="hljs-string">-5</span><span class="hljs-string">-21</span>，说明今天已经归档过了，否则就会归档（分割）nginx日志<br></code></pre></td></tr></table></figure>
+
+<p>综上，整个逻辑流程为：</p>
+<p>crond服务加载/etc/cron.d/0hourly —&gt;在每小时的01分执行/etc/cront.hourly/0anacron —&gt;执行anacron —&gt;根据/etc/anacrontab的配置执行/etc/cron.daily，/etc/cron.weekly，/etc/cron.monthly —&gt;执行/etc/cron.daily/下的logrotate脚本 —&gt;执行logrotate —&gt;根据/etc/logrotate.conf配置执行脚本/etc/logrotate.d/nginx —&gt;分割nginx日志成功</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Logrotate/">Logrotate</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Logrotate/">Logrotate</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/06/13/Pause%E5%AE%B9%E5%99%A8/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Pause容器</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018/05/21/ELK-Sentinl/">
+                        <span class="hidden-mobile">ELK Sentinl</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

@@ -1,0 +1,547 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="自定义内置账号
+账户elastic为elasticsearch超级管理员，拥有所有权限
+账户kibana用于kibana组件获取相关信息用于web展示
+账户logstash_system用于logstash服务获取elasticsearch的监控数据
+注意：此步骤需先启动elasticsearch服务
+
+
+12345678910111213141516[elasticsearch@elastics">
+  <meta name="author" content="Martin Lei">
+  <meta name="keywords" content="">
+  
+  <title>ES内置账号密码修改、自定义角色自定义账号、ldap及AD认证 - 让一切随风</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="让一切随风" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="ES内置账号密码修改、自定义角色自定义账号、ldap及AD认证">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2018-05-07 18:29" pubdate>
+        2018年5月7日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      45
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ES内置账号密码修改、自定义角色自定义账号、ldap及AD认证</h1>
+            
+            <div class="markdown-body">
+              <h2 id="自定义内置账号"><a href="#自定义内置账号" class="headerlink" title="自定义内置账号"></a>自定义内置账号</h2><ul>
+<li>账户elastic为elasticsearch超级管理员，拥有所有权限</li>
+<li>账户kibana用于kibana组件获取相关信息用于web展示</li>
+<li>账户logstash_system用于logstash服务获取elasticsearch的监控数据</li>
+<li>注意：此步骤需先启动elasticsearch服务</li>
+</ul>
+<p><img src="https://cos.leiyawu.com/img/elk/es_user.png" srcset="/img/loading.gif" lazyload alt="es_user"></p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">[elasticsearch@elasticsearch elasticsearch<span class="hljs-number">-6.0</span><span class="hljs-number">.0</span>]$ ./bin/x-pack/setup-passwords interactive<br>Initiating the setup <span class="hljs-keyword">of</span> reserved <span class="hljs-keyword">user</span> elastic,kibana,logstash_system passwords.<br>You will be prompted <span class="hljs-keyword">to</span> enter passwords <span class="hljs-keyword">as</span> the process progresses.<br>Please confirm that you would <span class="hljs-keyword">like</span> <span class="hljs-keyword">to</span> <span class="hljs-keyword">continue</span> [y/N]y<br><br><br>Enter <span class="hljs-keyword">password</span> <span class="hljs-keyword">for</span> [elastic]: <br>Reenter <span class="hljs-keyword">password</span> <span class="hljs-keyword">for</span> [elastic]: <br>Enter <span class="hljs-keyword">password</span> <span class="hljs-keyword">for</span> [kibana]: <br>Reenter <span class="hljs-keyword">password</span> <span class="hljs-keyword">for</span> [kibana]: <br>Enter <span class="hljs-keyword">password</span> <span class="hljs-keyword">for</span> [logstash_system]: <br>Reenter <span class="hljs-keyword">password</span> <span class="hljs-keyword">for</span> [logstash_system]: <br>Changed <span class="hljs-keyword">password</span> <span class="hljs-keyword">for</span> <span class="hljs-keyword">user</span> [kibana]<br>Changed <span class="hljs-keyword">password</span> <span class="hljs-keyword">for</span> <span class="hljs-keyword">user</span> [logstash_system]<br>Changed <span class="hljs-keyword">password</span> <span class="hljs-keyword">for</span> <span class="hljs-keyword">user</span> [elastic]<br>[elasticsearch@elasticsearch elasticsearch<span class="hljs-number">-6.0</span><span class="hljs-number">.0</span>]$ <br></code></pre></td></tr></table></figure>
+
+<h2 id="验证内置账户访问"><a href="#验证内置账户访问" class="headerlink" title="验证内置账户访问"></a>验证内置账户访问</h2><ul>
+<li>若不提供用户名密码则返回401</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs swift">[elasticsearch<span class="hljs-meta">@elasticsearch</span> elasticsearch<span class="hljs-operator">-</span><span class="hljs-number">6.0</span>.<span class="hljs-number">0</span>]$ curl &#x27;http:<span class="hljs-comment">//10.59.30.96:9200/_cat/indices?pretty&#x27;</span><br>&#123;<br>  <span class="hljs-string">&quot;error&quot;</span> : &#123;<br>    <span class="hljs-string">&quot;root_cause&quot;</span> : [<br>      &#123;<br>        <span class="hljs-string">&quot;type&quot;</span> : <span class="hljs-string">&quot;security_exception&quot;</span>,<br>        <span class="hljs-string">&quot;reason&quot;</span> : <span class="hljs-string">&quot;missing authentication token for REST request [/_cat/indices?pretty]&quot;</span>,<br>        <span class="hljs-string">&quot;header&quot;</span> : &#123;<br>          <span class="hljs-string">&quot;WWW-Authenticate&quot;</span> : <span class="hljs-string">&quot;Basic realm=<span class="hljs-subst">\&quot;</span>security<span class="hljs-subst">\&quot;</span> charset=<span class="hljs-subst">\&quot;</span>UTF-8<span class="hljs-subst">\&quot;</span>&quot;</span><br>        &#125;<br>      &#125;<br>    ],<br>    <span class="hljs-string">&quot;type&quot;</span> : <span class="hljs-string">&quot;security_exception&quot;</span>,<br>    <span class="hljs-string">&quot;reason&quot;</span> : <span class="hljs-string">&quot;missing authentication token for REST request [/_cat/indices?pretty]&quot;</span>,<br>    <span class="hljs-string">&quot;header&quot;</span> : &#123;<br>      <span class="hljs-string">&quot;WWW-Authenticate&quot;</span> : <span class="hljs-string">&quot;Basic realm=<span class="hljs-subst">\&quot;</span>security<span class="hljs-subst">\&quot;</span> charset=<span class="hljs-subst">\&quot;</span>UTF-8<span class="hljs-subst">\&quot;</span>&quot;</span><br>    &#125;<br>  &#125;,<br>  <span class="hljs-string">&quot;status&quot;</span> : <span class="hljs-number">401</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>提供相应用户信息后可访问，若用户权限不足则返回403</p>
+<p>使用logstash_system用户访问</p>
+</li>
+</ul>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs ada">[elasticsearch@elasticsearch elasticsearch-<span class="hljs-number">6.0</span>.<span class="hljs-number">0</span>]$ curl <span class="hljs-symbol">&#x27;http</span>://<span class="hljs-number">10.59</span>.<span class="hljs-number">30.96</span>:<span class="hljs-number">9200</span>/_cat/indices?pretty&#x27; -u logstash_system:logstash_system<br>&#123;<br>  <span class="hljs-string">&quot;error&quot;</span> : &#123;<br>    <span class="hljs-string">&quot;root_cause&quot;</span> : [<br>      &#123;<br>        <span class="hljs-string">&quot;type&quot;</span> : &quot;<span class="hljs-type">security_exception</span><span class="hljs-string">&quot;,</span><br><span class="hljs-string">        &quot;</span>reason<span class="hljs-string">&quot; : &quot;</span>action [indices:monitor/stats] <span class="hljs-keyword">is</span> unauthorized <span class="hljs-keyword">for</span> user [logstash_system]<span class="hljs-string">&quot;</span><br><span class="hljs-string">      &#125;</span><br><span class="hljs-string">    ],</span><br><span class="hljs-string">    &quot;</span><span class="hljs-keyword">type</span><span class="hljs-string">&quot; : &quot;</span>security_exception<span class="hljs-string">&quot;,</span><br><span class="hljs-string">    &quot;</span>reason<span class="hljs-string">&quot; : &quot;</span>action [indices:monitor/stats] <span class="hljs-keyword">is</span> unauthorized <span class="hljs-keyword">for</span> user [logstash_system]<span class="hljs-string">&quot;</span><br><span class="hljs-string">  &#125;,</span><br><span class="hljs-string">  &quot;</span>status<span class="hljs-string">&quot; : 403</span><br><span class="hljs-string">&#125;</span><br><span class="hljs-string">[elasticsearch@elasticsearch elasticsearch-6.0.0]$</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>使用kibana用户访问</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs swift">[elasticsearch<span class="hljs-meta">@elasticsearch</span> elasticsearch<span class="hljs-operator">-</span><span class="hljs-number">6.0</span>.<span class="hljs-number">0</span>]$ curl &#x27;http:<span class="hljs-comment">//10.59.30.96:9200/_cat/indices?pretty&#x27; -u kibana:kibana</span><br>yellow <span class="hljs-keyword">open</span> .monitoring<span class="hljs-operator">-</span>es<span class="hljs-operator">-</span><span class="hljs-number">6</span><span class="hljs-operator">-</span><span class="hljs-number">2018.01</span>.<span class="hljs-number">10</span>   nND6<span class="hljs-operator">-</span>i_rR5iLEYVccBGj8w <span class="hljs-number">1</span> <span class="hljs-number">1</span>    <br>yellow <span class="hljs-keyword">open</span> .triggered_watches            <span class="hljs-type">BtygGZisSDqiL3Y2TaQGqQ</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>    <br>green  <span class="hljs-keyword">open</span> .security<span class="hljs-operator">-</span><span class="hljs-number">6</span>                   <span class="hljs-type">QVRL1mcFSAilryHGEhen7Q</span> <span class="hljs-number">1</span> <span class="hljs-number">0</span>    <br>yellow <span class="hljs-keyword">open</span> .watcher<span class="hljs-operator">-</span>history<span class="hljs-operator">-</span><span class="hljs-number">6</span><span class="hljs-operator">-</span><span class="hljs-number">2018.01</span>.<span class="hljs-number">10</span> <span class="hljs-type">SBGiHDAnTPiXFoHU65VY_g</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>    <br>yellow <span class="hljs-keyword">open</span> .watches                      kMzN4j5cQySZQQSDVPww8w <span class="hljs-number">1</span> <span class="hljs-number">1</span>    <br>yellow <span class="hljs-keyword">open</span> .monitoring<span class="hljs-operator">-</span>alerts<span class="hljs-operator">-</span><span class="hljs-number">6</span>          <span class="hljs-type">VygY6VN9R3S0PR_jrGy50Q</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>    <br>[elasticsearch<span class="hljs-meta">@elasticsearch</span> elasticsearch<span class="hljs-operator">-</span><span class="hljs-number">6.0</span>.<span class="hljs-number">0</span>]$ <br></code></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h2 id="添加自定义角色"><a href="#添加自定义角色" class="headerlink" title="添加自定义角色"></a>添加自定义角色</h2><ul>
+<li><p>添加角色接口为 POST /_xpack/security/role/<rolename></p>
+<p>下述示例为添加超级管理员角色的方法</p>
+</li>
+</ul>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs ada">[elasticsearch@elasticsearch elasticsearch-<span class="hljs-number">6.0</span>.<span class="hljs-number">0</span>]$ curl -XPOST -H <span class="hljs-symbol">&#x27;Content</span>-<span class="hljs-keyword">type</span>: application/json&#x27; -u elastic:elastic <span class="hljs-symbol">&#x27;http</span>://<span class="hljs-number">10.59</span>.<span class="hljs-number">30.96</span>:<span class="hljs-number">9200</span>/_xpack/security/role/admin?pretty&#x27; -d &#x27;&#123;<br>&gt;   <span class="hljs-string">&quot;run_as&quot;</span>: [ <span class="hljs-string">&quot;elastic&quot;</span> ],<br>&gt;   <span class="hljs-string">&quot;cluster&quot;</span>: [ <span class="hljs-string">&quot;all&quot;</span> ],<br>&gt;   <span class="hljs-string">&quot;indices&quot;</span>: [<br>&gt;     &#123;<br>&gt;       <span class="hljs-string">&quot;names&quot;</span>: [ <span class="hljs-string">&quot;*&quot;</span> ],<br>&gt;       <span class="hljs-string">&quot;privileges&quot;</span>: [ <span class="hljs-string">&quot;all&quot;</span> ]<br>&gt;     &#125;<br>&gt;   ]<br>&gt; &#125;&#x27;<br>&#123;<br>  <span class="hljs-string">&quot;role&quot;</span> : &#123;<br>    <span class="hljs-string">&quot;created&quot;</span> : <span class="hljs-type">true</span><br>  &#125;<br>&#125;<br>[elasticsearch@elasticsearch elasticsearch-<span class="hljs-number">6.0</span>.<span class="hljs-number">0</span>]$ curl -XGET -H <span class="hljs-symbol">&#x27;Content</span>-<span class="hljs-keyword">type</span>: application/json&#x27; -u elastic:elastic <span class="hljs-symbol">&#x27;http</span>://<span class="hljs-number">10.59</span>.<span class="hljs-number">30.96</span>:<span class="hljs-number">9200</span>/_xpack/security/role/admin?pretty&#x27;<br>&#123;<br>  <span class="hljs-string">&quot;admin&quot;</span> : &#123;<br>    <span class="hljs-string">&quot;cluster&quot;</span> : [<br>      <span class="hljs-string">&quot;all&quot;</span><br>    ],<br>    <span class="hljs-string">&quot;indices&quot;</span> : [<br>      &#123;<br>        <span class="hljs-string">&quot;names&quot;</span> : [<br>          <span class="hljs-string">&quot;*&quot;</span><br>        ],<br>        <span class="hljs-string">&quot;privileges&quot;</span> : [<br>          <span class="hljs-string">&quot;all&quot;</span><br>        ]<br>      &#125;<br>    ],<br>    <span class="hljs-string">&quot;run_as&quot;</span> : [<br>      <span class="hljs-string">&quot;elastic&quot;</span><br>    ],<br>    <span class="hljs-string">&quot;metadata&quot;</span> : &#123; &#125;,<br>    <span class="hljs-string">&quot;transient_metadata&quot;</span> : &#123;<br>      <span class="hljs-string">&quot;enabled&quot;</span> : <span class="hljs-type">true</span><br>    &#125;<br>  &#125;<br>&#125;<br>[elasticsearch@elasticsearch elasticsearch-<span class="hljs-number">6.0</span>.<span class="hljs-number">0</span>]$<br></code></pre></td></tr></table></figure>
+
+<h2 id="添加自定义账户"><a href="#添加自定义账户" class="headerlink" title="添加自定义账户"></a>添加自定义账户</h2><ul>
+<li><p>添加用户接口为 POST /_xpack/security/user/<username></p>
+<p>下述为添加martin账户并添加至admin角色操作方法</p>
+</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs scala">[elasticsearch<span class="hljs-meta">@elasticsearch</span> elasticsearch<span class="hljs-number">-6.0</span><span class="hljs-number">.0</span>]$ curl -<span class="hljs-type">XPOST</span> -<span class="hljs-type">H</span> <span class="hljs-symbol">&#x27;Content</span>-<span class="hljs-class"><span class="hljs-keyword">type</span></span>: application/json&#x27; -u elastic:elastic <span class="hljs-symbol">&#x27;http</span>:<span class="hljs-comment">//10.59.30.96:9200/_xpack/security/user/martin?pretty&#x27; -d &#x27;&#123;</span><br>&gt;   <span class="hljs-string">&quot;password&quot;</span> : <span class="hljs-string">&quot;123456&quot;</span>,<br>&gt;   <span class="hljs-string">&quot;full_name&quot;</span> : <span class="hljs-string">&quot;Martin Lei&quot;</span>,<br>&gt;   <span class="hljs-string">&quot;roles&quot;</span> : [<span class="hljs-string">&quot;admin&quot;</span>],<br>&gt;   <span class="hljs-string">&quot;email&quot;</span> : <span class="hljs-string">&quot;martin@martin.com&quot;</span><br>&gt; &#125;&#x27;<br>&#123;<br>  <span class="hljs-string">&quot;user&quot;</span> : &#123;<br>    <span class="hljs-string">&quot;created&quot;</span> : <span class="hljs-literal">true</span><br>  &#125;<br>&#125;<br>[elasticsearch<span class="hljs-meta">@elasticsearch</span> elasticsearch<span class="hljs-number">-6.0</span><span class="hljs-number">.0</span>]$ curl -<span class="hljs-type">XGET</span> -<span class="hljs-type">H</span> <span class="hljs-symbol">&#x27;Content</span>-<span class="hljs-class"><span class="hljs-keyword">type</span></span>: application/json&#x27; -u elastic:elastic <span class="hljs-symbol">&#x27;http</span>:<span class="hljs-comment">//10.59.30.96:9200/_xpack/security/user/martin?pretty&#x27;</span><br>&#123;<br>  <span class="hljs-string">&quot;rocshen&quot;</span> : &#123;<br>    <span class="hljs-string">&quot;username&quot;</span> : <span class="hljs-string">&quot;martin&quot;</span>,<br>    <span class="hljs-string">&quot;roles&quot;</span> : [<br>      <span class="hljs-string">&quot;admin&quot;</span><br>    ],<br>    <span class="hljs-string">&quot;full_name&quot;</span> : <span class="hljs-string">&quot;Martin Lei&quot;</span>,<br>    <span class="hljs-string">&quot;email&quot;</span> : <span class="hljs-string">&quot;martin@martin.com&quot;</span>,<br>    <span class="hljs-string">&quot;metadata&quot;</span> : &#123; &#125;,<br>    <span class="hljs-string">&quot;enabled&quot;</span> : <span class="hljs-literal">true</span><br>  &#125;<br>&#125;<br>[elasticsearch<span class="hljs-meta">@elasticsearch</span> elasticsearch<span class="hljs-number">-6.0</span><span class="hljs-number">.0</span>]$ curl -<span class="hljs-type">XGET</span> -<span class="hljs-type">H</span> <span class="hljs-symbol">&#x27;Content</span>-<span class="hljs-class"><span class="hljs-keyword">type</span></span>: application/json&#x27; -u martin:<span class="hljs-number">123456</span> <span class="hljs-symbol">&#x27;http</span>:<span class="hljs-comment">//10.59.30.96:9200/_cat/indices?pretty&#x27;</span><br>yellow open .monitoring-es<span class="hljs-number">-6</span><span class="hljs-number">-2018.01</span><span class="hljs-number">.10</span>   nND6-i_rR5iLEYVccBGj8w <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">4883</span> <span class="hljs-number">88</span>   <span class="hljs-number">2.5</span>mb   <span class="hljs-number">2.5</span>mb<br>yellow open .triggered_watches            <span class="hljs-type">BtygGZisSDqiL3Y2TaQGqQ</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>    <span class="hljs-number">0</span>  <span class="hljs-number">0</span>  <span class="hljs-number">24.2</span>kb  <span class="hljs-number">24.2</span>kb<br>green  open .security<span class="hljs-number">-6</span>                   <span class="hljs-type">QVRL1mcFSAilryHGEhen7Q</span> <span class="hljs-number">1</span> <span class="hljs-number">0</span>                        <br>yellow open .watcher-history<span class="hljs-number">-6</span><span class="hljs-number">-2018.01</span><span class="hljs-number">.10</span> <span class="hljs-type">SBGiHDAnTPiXFoHU65VY_g</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>  <span class="hljs-number">630</span>  <span class="hljs-number">0</span> <span class="hljs-number">703.3</span>kb <span class="hljs-number">703.3</span>kb<br>yellow open .watches                      kMzN4j5cQySZQQSDVPww8w <span class="hljs-number">1</span> <span class="hljs-number">1</span>    <span class="hljs-number">5</span>  <span class="hljs-number">0</span>  <span class="hljs-number">33.3</span>kb  <span class="hljs-number">33.3</span>kb<br>yellow open .monitoring-alerts<span class="hljs-number">-6</span>          <span class="hljs-type">VygY6VN9R3S0PR_jrGy50Q</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>    <span class="hljs-number">1</span>  <span class="hljs-number">0</span>   <span class="hljs-number">6.5</span>kb   <span class="hljs-number">6.5</span>kb<br>[elasticsearch<span class="hljs-meta">@elasticsearch</span> elasticsearch<span class="hljs-number">-6.0</span><span class="hljs-number">.0</span>]$<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="修改账户密码"><a href="#修改账户密码" class="headerlink" title="修改账户密码"></a>修改账户密码</h2><ol>
+<li>修改密码需使用超级管理员权限即elastic账户，接口为POST _xpack/security/user/<username>/_password</li>
+</ol>
+<p>curl参数含义如下</p>
+<ul>
+<li>-XPOST 使用post方法传递参数</li>
+<li>-H 指定http协议的header信息</li>
+<li>-u 指定用于认证的用户信息用户名与密码使用冒号分隔</li>
+<li>-d 指定具体要传递的参数信息</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs scala">[elasticsearch<span class="hljs-meta">@elasticsearch</span> elasticsearch<span class="hljs-number">-6.0</span><span class="hljs-number">.0</span>]$ curl -<span class="hljs-type">XPOST</span> -<span class="hljs-type">H</span> <span class="hljs-symbol">&#x27;Content</span>-<span class="hljs-class"><span class="hljs-keyword">type</span></span>: application/json&#x27; -u elastic:elastic <span class="hljs-symbol">&#x27;http</span>:<span class="hljs-comment">//10.59.30.96:9200/_xpack/security/user/kibana/_password?pretty&#x27; -d &#x27;&#123;&quot;password&quot;: &quot;123456&quot;&#125;&#x27;</span><br>&#123; &#125;<br></code></pre></td></tr></table></figure>
+<ol start="2">
+<li>密码修改后使用老密码访问则返回401，使用更新后的密码则正常</li>
+</ol>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs swift">[elasticsearch<span class="hljs-meta">@elasticsearch</span> elasticsearch<span class="hljs-operator">-</span><span class="hljs-number">6.0</span>.<span class="hljs-number">0</span>]$ curl &#x27;http:<span class="hljs-comment">//10.59.30.96:9200/_cat/indices?pretty&#x27; -u kibana:kibana</span><br>&#123;<br>  <span class="hljs-string">&quot;error&quot;</span> : &#123;<br>    <span class="hljs-string">&quot;root_cause&quot;</span> : [<br>      &#123;<br>        <span class="hljs-string">&quot;type&quot;</span> : <span class="hljs-string">&quot;security_exception&quot;</span>,<br>        <span class="hljs-string">&quot;reason&quot;</span> : <span class="hljs-string">&quot;failed to authenticate user [kibana]&quot;</span>,<br>        <span class="hljs-string">&quot;header&quot;</span> : &#123;<br>          <span class="hljs-string">&quot;WWW-Authenticate&quot;</span> : <span class="hljs-string">&quot;Basic realm=<span class="hljs-subst">\&quot;</span>security<span class="hljs-subst">\&quot;</span> charset=<span class="hljs-subst">\&quot;</span>UTF-8<span class="hljs-subst">\&quot;</span>&quot;</span><br>        &#125;<br>      &#125;<br>    ],<br>    <span class="hljs-string">&quot;type&quot;</span> : <span class="hljs-string">&quot;security_exception&quot;</span>,<br>    <span class="hljs-string">&quot;reason&quot;</span> : <span class="hljs-string">&quot;failed to authenticate user [kibana]&quot;</span>,<br>    <span class="hljs-string">&quot;header&quot;</span> : &#123;<br>      <span class="hljs-string">&quot;WWW-Authenticate&quot;</span> : <span class="hljs-string">&quot;Basic realm=<span class="hljs-subst">\&quot;</span>security<span class="hljs-subst">\&quot;</span> charset=<span class="hljs-subst">\&quot;</span>UTF-8<span class="hljs-subst">\&quot;</span>&quot;</span><br>    &#125;<br>  &#125;,<br>  <span class="hljs-string">&quot;status&quot;</span> : <span class="hljs-number">401</span><br>&#125;<br>[elasticsearch<span class="hljs-meta">@elasticsearch</span> elasticsearch<span class="hljs-operator">-</span><span class="hljs-number">6.0</span>.<span class="hljs-number">0</span>]$ curl &#x27;http:<span class="hljs-comment">//10.59.30.96:9200/_cat/indices?pretty&#x27; -u kibana:123456</span><br>yellow <span class="hljs-keyword">open</span> .monitoring<span class="hljs-operator">-</span>es<span class="hljs-operator">-</span><span class="hljs-number">6</span><span class="hljs-operator">-</span><span class="hljs-number">2018.01</span>.<span class="hljs-number">10</span>   nND6<span class="hljs-operator">-</span>i_rR5iLEYVccBGj8w <span class="hljs-number">1</span> <span class="hljs-number">1</span>    <br>yellow <span class="hljs-keyword">open</span> .triggered_watches            <span class="hljs-type">BtygGZisSDqiL3Y2TaQGqQ</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>    <br>green  <span class="hljs-keyword">open</span> .security<span class="hljs-operator">-</span><span class="hljs-number">6</span>                   <span class="hljs-type">QVRL1mcFSAilryHGEhen7Q</span> <span class="hljs-number">1</span> <span class="hljs-number">0</span>    <br>yellow <span class="hljs-keyword">open</span> .watcher<span class="hljs-operator">-</span>history<span class="hljs-operator">-</span><span class="hljs-number">6</span><span class="hljs-operator">-</span><span class="hljs-number">2018.01</span>.<span class="hljs-number">10</span> <span class="hljs-type">SBGiHDAnTPiXFoHU65VY_g</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>    <br>yellow <span class="hljs-keyword">open</span> .watches                      kMzN4j5cQySZQQSDVPww8w <span class="hljs-number">1</span> <span class="hljs-number">1</span>    <br>yellow <span class="hljs-keyword">open</span> .monitoring<span class="hljs-operator">-</span>alerts<span class="hljs-operator">-</span><span class="hljs-number">6</span>          <span class="hljs-type">VygY6VN9R3S0PR_jrGy50Q</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>    <br>[elasticsearch<span class="hljs-meta">@elasticsearch</span> elasticsearch<span class="hljs-operator">-</span><span class="hljs-number">6.0</span>.<span class="hljs-number">0</span>]$ <br></code></pre></td></tr></table></figure>
+
+<h2 id="配置ldap帐号认证"><a href="#配置ldap帐号认证" class="headerlink" title="配置ldap帐号认证"></a>配置ldap帐号认证</h2><p>ldap服务安装可参考：<a target="_blank" rel="noopener" href="https://segmentfault.com/a/11">https://segmentfault.com/a/11</a>…</p>
+<p>添加下述ldap相关述配置 bind_dn为ldap的管理DN</p>
+<ul>
+<li>bind_password为管理dn的密码</li>
+<li>user_search.base_dn为linux系统账户信息导入ldap的信息</li>
+<li>user_search.attribute为账户在ldap中的标识信息</li>
+<li>group_search.base_dn为linux系统组信息导入ldap的信息</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs yaml">[<span class="hljs-string">elasticsearch@elasticsearch</span> <span class="hljs-string">elasticsearch-6.0.0</span>]<span class="hljs-string">$</span> <span class="hljs-string">vim</span> <span class="hljs-string">config/elasticsearch.yml</span> <br><br><span class="hljs-string">......</span><br><br><span class="hljs-attr">network.host:</span> <span class="hljs-number">10.59</span><span class="hljs-number">.30</span><span class="hljs-number">.96</span><br><span class="hljs-attr">bootstrap.system_call_filter:</span> <span class="hljs-literal">false</span><br><br><span class="hljs-attr">xpack.ssl.key:</span> <span class="hljs-string">elasticsearch/elasticsearch.key</span><br><span class="hljs-attr">xpack.ssl.certificate:</span> <span class="hljs-string">elasticsearch/elasticsearch.crt</span><br><span class="hljs-attr">xpack.ssl.certificate_authorities:</span> <span class="hljs-string">ca/ca.crt</span><br><span class="hljs-attr">xpack.security.transport.ssl.enabled:</span> <span class="hljs-literal">true</span><br><br><span class="hljs-attr">xpack:</span><br>  <span class="hljs-attr">security:</span><br>    <span class="hljs-attr">authc:</span><br>      <span class="hljs-attr">realms:</span><br>        <span class="hljs-attr">ldap1:</span><br>          <span class="hljs-attr">type:</span> <span class="hljs-string">ldap</span><br>          <span class="hljs-attr">order:</span> <span class="hljs-number">0</span><br>          <span class="hljs-attr">url:</span> <span class="hljs-string">&quot;ldap://10.59.30.95&quot;</span><br>          <span class="hljs-attr">bind_dn:</span> <span class="hljs-string">&quot;cn=Manager, dc=martin, dc=com&quot;</span><br>          <span class="hljs-attr">bind_password:</span> <span class="hljs-number">123456</span><br>          <span class="hljs-attr">user_search:</span><br>            <span class="hljs-attr">base_dn:</span> <span class="hljs-string">&quot;ou=People,dc=martin,dc=com&quot;</span><br>            <span class="hljs-attr">attribute:</span> <span class="hljs-string">uid</span><br>          <span class="hljs-attr">group_search:</span><br>            <span class="hljs-attr">base_dn:</span> <span class="hljs-string">&quot;ou=Group,dc=martin,dc=com&quot;</span><br>          <span class="hljs-attr">unmapped_groups_as_roles:</span> <span class="hljs-literal">false</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="配置AD域帐号认证"><a href="#配置AD域帐号认证" class="headerlink" title="配置AD域帐号认证"></a>配置AD域帐号认证</h2><p>添加下ldap相关述配置至elasticsearch.yml，此处为接着上述LDAP配置添加，如果只需配置AD认证请将ldap相关配置删除即可；</p>
+<ul>
+<li>domain_name为AD域的域名</li>
+<li>url为AD域的地址</li>
+<li>bind_dnw为随意的域账户名称（格式为user@domain）</li>
+<li>bind_password为上述账户的密码</li>
+</ul>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs less">xpack:<br>  security:<br>    authc:<br>      realms:<br>        ldap1:<br>          type: ldap<br>          <span class="hljs-attribute">order</span>: <span class="hljs-number">0</span><br>          <span class="hljs-attribute">url</span>: <span class="hljs-string">&quot;ldap://10.59.30.94&quot;</span><br>          <span class="hljs-attribute">bind_dn</span>: <span class="hljs-string">&quot;cn=Manager, dc=martin, dc=com&quot;</span><br>          <span class="hljs-attribute">bind_password</span>: <span class="hljs-number">123456</span><br>          <span class="hljs-attribute">user_search</span>:<br>            <span class="hljs-attribute">base_dn</span>: <span class="hljs-string">&quot;ou=People,dc=martin,dc=com&quot;</span><br>            <span class="hljs-attribute">attribute</span>: uid<br>          <span class="hljs-attribute">group_search</span>:<br>            <span class="hljs-attribute">base_dn</span>: <span class="hljs-string">&quot;ou=Group,dc=martin,dc=com&quot;</span><br>          <span class="hljs-attribute">unmapped_groups_as_roles</span>: false<br>        <span class="hljs-attribute">active_directory</span>:<br>          <span class="hljs-attribute">type</span>: active_directory<br>          <span class="hljs-attribute">order</span>: <span class="hljs-number">1</span><br>          <span class="hljs-attribute">domain_name</span>: martin.com<br>          <span class="hljs-attribute">url</span>: <span class="hljs-attribute">ldap</span>:<span class="hljs-comment">//ad.martin.com</span><br>          <span class="hljs-attribute">bind_dn</span>: martin<span class="hljs-variable">@martin</span>.com<br>          <span class="hljs-attribute">bind_password</span>: AD.<span class="hljs-number">123456</span><br></code></pre></td></tr></table></figure>
+<p>重启elasticsearch服务并使用ldap域账户user01登录</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs gradle">[elasticsearch@elasticsearch elasticsearch-<span class="hljs-number">6.0</span>.<span class="hljs-number">0</span>]$ killall java<br>[elasticsearch@elasticsearch elasticsearch-<span class="hljs-number">6.0</span>.<span class="hljs-number">0</span>]$ .<span class="hljs-regexp">/bin/</span>elasticsearch -d<br>[elasticsearch@elasticsearch elasticsearch-<span class="hljs-number">6.0</span>.<span class="hljs-number">0</span>]$ curl -XGET -u user01:user01 <span class="hljs-string">&#x27;http://10.59.30.96:9200/_cat?pretty&#x27;</span><br>=^.^=<br><span class="hljs-regexp">/_cat/</span>allocation<br><span class="hljs-regexp">/_cat/</span>shards<br><span class="hljs-regexp">/_cat/</span>shards/&#123;index&#125;<br><span class="hljs-regexp">/_cat/m</span>aster<br><span class="hljs-regexp">/_cat/</span>nodes<br><span class="hljs-regexp">/_cat/</span>tasks<br><span class="hljs-regexp">/_cat/i</span>ndices<br><span class="hljs-regexp">/_cat/i</span>ndices/&#123;index&#125;<br><span class="hljs-regexp">/_cat/</span>segments<br><span class="hljs-regexp">/_cat/</span>segments/&#123;index&#125;<br><span class="hljs-regexp">/_cat/</span><span class="hljs-keyword">count</span><br><span class="hljs-regexp">/_cat/</span><span class="hljs-keyword">count</span>/&#123;index&#125;<br><span class="hljs-regexp">/_cat/</span>recovery<br><span class="hljs-regexp">/_cat/</span>recovery/&#123;index&#125;<br><span class="hljs-regexp">/_cat/</span>health<br><span class="hljs-regexp">/_cat/</span>pending_tasks<br><span class="hljs-regexp">/_cat/</span>aliases<br><span class="hljs-regexp">/_cat/</span>aliases/&#123;alias&#125;<br><span class="hljs-regexp">/_cat/</span>thread_pool<br><span class="hljs-regexp">/_cat/</span>thread_pool/&#123;thread_pools&#125;<br><span class="hljs-regexp">/_cat/</span>plugins<br><span class="hljs-regexp">/_cat/</span>fielddata<br><span class="hljs-regexp">/_cat/</span>fielddata/&#123;fields&#125;<br><span class="hljs-regexp">/_cat/</span>nodeattrs<br><span class="hljs-regexp">/_cat/</span><span class="hljs-keyword">repositories</span><br><span class="hljs-regexp">/_cat/</span>snapshots/&#123;repository&#125;<br><span class="hljs-regexp">/_cat/</span>templates<br>[elasticsearch@elasticsearch elasticsearch-<span class="hljs-number">6.0</span>.<span class="hljs-number">0</span>]$<br><br></code></pre></td></tr></table></figure>
+
+<p>使用AD域账户martin登录</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs gradle">[elasticsearch@elasticsearch elasticsearch-<span class="hljs-number">6.0</span>.<span class="hljs-number">0</span>]$ curl http:<span class="hljs-comment">//10.59.30.96:9200/_cat?pretty -u martin:AD.123456</span><br>=^.^=<br><span class="hljs-regexp">/_cat/</span>allocation<br><span class="hljs-regexp">/_cat/</span>shards<br><span class="hljs-regexp">/_cat/</span>shards/&#123;index&#125;<br><span class="hljs-regexp">/_cat/m</span>aster<br><span class="hljs-regexp">/_cat/</span>nodes<br><span class="hljs-regexp">/_cat/</span>tasks<br><span class="hljs-regexp">/_cat/i</span>ndices<br><span class="hljs-regexp">/_cat/i</span>ndices/&#123;index&#125;<br><span class="hljs-regexp">/_cat/</span>segments<br><span class="hljs-regexp">/_cat/</span>segments/&#123;index&#125;<br><span class="hljs-regexp">/_cat/</span><span class="hljs-keyword">count</span><br><span class="hljs-regexp">/_cat/</span><span class="hljs-keyword">count</span>/&#123;index&#125;<br><span class="hljs-regexp">/_cat/</span>recovery<br><span class="hljs-regexp">/_cat/</span>recovery/&#123;index&#125;<br><span class="hljs-regexp">/_cat/</span>health<br><span class="hljs-regexp">/_cat/</span>pending_tasks<br><span class="hljs-regexp">/_cat/</span>aliases<br><span class="hljs-regexp">/_cat/</span>aliases/&#123;alias&#125;<br><span class="hljs-regexp">/_cat/</span>thread_pool<br><span class="hljs-regexp">/_cat/</span>thread_pool/&#123;thread_pools&#125;<br><span class="hljs-regexp">/_cat/</span>plugins<br><span class="hljs-regexp">/_cat/</span>fielddata<br><span class="hljs-regexp">/_cat/</span>fielddata/&#123;fields&#125;<br><span class="hljs-regexp">/_cat/</span>nodeattrs<br><span class="hljs-regexp">/_cat/</span><span class="hljs-keyword">repositories</span><br><span class="hljs-regexp">/_cat/</span>snapshots/&#123;repository&#125;<br><span class="hljs-regexp">/_cat/</span>templates<br>[elasticsearch@elasticsearch elasticsearch-<span class="hljs-number">6.0</span>.<span class="hljs-number">0</span>]$<br></code></pre></td></tr></table></figure>
+
+<h2 id="为域账户信息映射角色"><a href="#为域账户信息映射角色" class="headerlink" title="为域账户信息映射角色"></a>为域账户信息映射角色</h2><p>接口为：POST /_xpack/security/role_mapping/<name></p>
+<p>下述为映射user1*账户为管理员角色的操作步骤</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs scala">[elasticsearch<span class="hljs-meta">@elasticsearch</span> elasticsearch<span class="hljs-number">-6.0</span><span class="hljs-number">.0</span>]$ curl -<span class="hljs-type">XPOST</span> -<span class="hljs-type">H</span> <span class="hljs-symbol">&#x27;Content</span>-<span class="hljs-class"><span class="hljs-keyword">type</span></span>: application/json&#x27; -u elastic:elastic <span class="hljs-symbol">&#x27;http</span>:<span class="hljs-comment">//10.59.30.96:9200/_xpack/security/role_mapping/ldap_user_admin?pretty&#x27; -d &#x27;&#123;</span><br>&gt;   <span class="hljs-string">&quot;roles&quot;</span>: [ <span class="hljs-string">&quot;admin&quot;</span> ],<br>&gt;   <span class="hljs-string">&quot;enabled&quot;</span>: <span class="hljs-literal">true</span>,<br>&gt;   <span class="hljs-string">&quot;rules&quot;</span>: &#123;<br>&gt;     <span class="hljs-string">&quot;any&quot;</span>: [<br>&gt;       &#123;<br>&gt;         <span class="hljs-string">&quot;field&quot;</span>: &#123;<br>&gt;           <span class="hljs-string">&quot;username&quot;</span>: <span class="hljs-string">&quot;/user1*/&quot;</span><br>&gt;         &#125;<br>&gt;       &#125;<br>&gt;     ]<br>&gt;   &#125;<br>&gt; &#125;&#x27;<br>&#123;<br>  <span class="hljs-string">&quot;role_mapping&quot;</span> : &#123;<br>    <span class="hljs-string">&quot;created&quot;</span> : <span class="hljs-literal">true</span><br>  &#125;<br>&#125;<br>[elasticsearch<span class="hljs-meta">@elasticsearch</span> elasticsearch<span class="hljs-number">-6.0</span><span class="hljs-number">.0</span>]$ curl -<span class="hljs-type">XGET</span> -<span class="hljs-type">H</span> <span class="hljs-symbol">&#x27;Content</span>-<span class="hljs-class"><span class="hljs-keyword">type</span></span>: application/json&#x27; -u elastic:elastic <span class="hljs-symbol">&#x27;http</span>:<span class="hljs-comment">//10.59.30.96:9200/_xpack/security/role_mapping/ldap_user_admin?pretty&#x27;</span><br>&#123;<br>  <span class="hljs-string">&quot;ldap_user_admin&quot;</span> : &#123;<br>    <span class="hljs-string">&quot;enabled&quot;</span> : <span class="hljs-literal">true</span>,<br>    <span class="hljs-string">&quot;roles&quot;</span> : [<br>      <span class="hljs-string">&quot;admin&quot;</span><br>    ],<br>    <span class="hljs-string">&quot;rules&quot;</span> : &#123;<br>      <span class="hljs-string">&quot;any&quot;</span> : [<br>        &#123;<br>          <span class="hljs-string">&quot;field&quot;</span> : &#123;<br>            <span class="hljs-string">&quot;username&quot;</span> : <span class="hljs-string">&quot;/user1*/&quot;</span><br>          &#125;<br>        &#125;<br>      ]<br>    &#125;,<br>    <span class="hljs-string">&quot;metadata&quot;</span> : &#123; &#125;<br>  &#125;<br>&#125;<br>[elasticsearch<span class="hljs-meta">@elasticsearch</span> elasticsearch<span class="hljs-number">-6.0</span><span class="hljs-number">.0</span>]$ <br></code></pre></td></tr></table></figure>
+
+<p>验证域账户权限，使用user01无权访问indices接口，使用user11可以访问；</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs swift">[elasticsearch<span class="hljs-meta">@elasticsearch</span> elasticsearch<span class="hljs-operator">-</span><span class="hljs-number">6.0</span>.<span class="hljs-number">0</span>]$ curl <span class="hljs-operator">-</span><span class="hljs-type">XGET</span> <span class="hljs-operator">-</span>u user01:user01 &#x27;http:<span class="hljs-comment">//10.59.30.96:9200/_cat/indices?pretty&#x27;</span><br>&#123;<br>  <span class="hljs-string">&quot;error&quot;</span> : &#123;<br>    <span class="hljs-string">&quot;root_cause&quot;</span> : [<br>      &#123;<br>        <span class="hljs-string">&quot;type&quot;</span> : <span class="hljs-string">&quot;security_exception&quot;</span>,<br>        <span class="hljs-string">&quot;reason&quot;</span> : <span class="hljs-string">&quot;action [cluster:monitor/state] is unauthorized for user [user01]&quot;</span><br>      &#125;<br>    ],<br>    <span class="hljs-string">&quot;type&quot;</span> : <span class="hljs-string">&quot;security_exception&quot;</span>,<br>    <span class="hljs-string">&quot;reason&quot;</span> : <span class="hljs-string">&quot;action [cluster:monitor/state] is unauthorized for user [user01]&quot;</span><br>  &#125;,<br>  <span class="hljs-string">&quot;status&quot;</span> : <span class="hljs-number">403</span><br>&#125;<br>[elasticsearch<span class="hljs-meta">@elasticsearch</span> elasticsearch<span class="hljs-operator">-</span><span class="hljs-number">6.0</span>.<span class="hljs-number">0</span>]$ curl <span class="hljs-operator">-</span><span class="hljs-type">XGET</span> <span class="hljs-operator">-</span>u user11:user11 &#x27;http:<span class="hljs-comment">//10.59.30.96:9200/_cat/indices?pretty&#x27;</span><br>yellow <span class="hljs-keyword">open</span> .monitoring<span class="hljs-operator">-</span>es<span class="hljs-operator">-</span><span class="hljs-number">6</span><span class="hljs-operator">-</span><span class="hljs-number">2018.01</span>.<span class="hljs-number">10</span>   nND6<span class="hljs-operator">-</span>i_rR5iLEYVccBGj8w <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">6178</span> <span class="hljs-number">44</span>  <span class="hljs-number">5</span>.9mb  <span class="hljs-number">5</span>.9mb<br>yellow <span class="hljs-keyword">open</span> .triggered_watches            <span class="hljs-type">BtygGZisSDqiL3Y2TaQGqQ</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>    <span class="hljs-number">0</span>  <span class="hljs-number">0</span> <span class="hljs-number">11</span>.7kb <span class="hljs-number">11</span>.7kb<br>green  <span class="hljs-keyword">open</span> .security<span class="hljs-operator">-</span><span class="hljs-number">6</span>                   <span class="hljs-type">QVRL1mcFSAilryHGEhen7Q</span> <span class="hljs-number">1</span> <span class="hljs-number">0</span>                      <br>yellow <span class="hljs-keyword">open</span> .watcher<span class="hljs-operator">-</span>history<span class="hljs-operator">-</span><span class="hljs-number">6</span><span class="hljs-operator">-</span><span class="hljs-number">2018.01</span>.<span class="hljs-number">10</span> <span class="hljs-type">SBGiHDAnTPiXFoHU65VY_g</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>  <span class="hljs-number">777</span>  <span class="hljs-number">0</span>  <span class="hljs-number">1</span>.1mb  <span class="hljs-number">1</span>.1mb<br>yellow <span class="hljs-keyword">open</span> .watches                      kMzN4j5cQySZQQSDVPww8w <span class="hljs-number">1</span> <span class="hljs-number">1</span>    <span class="hljs-number">5</span>  <span class="hljs-number">0</span> <span class="hljs-number">40</span>.2kb <span class="hljs-number">40</span>.2kb<br>yellow <span class="hljs-keyword">open</span> .monitoring<span class="hljs-operator">-</span>alerts<span class="hljs-operator">-</span><span class="hljs-number">6</span>          <span class="hljs-type">VygY6VN9R3S0PR_jrGy50Q</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>    <span class="hljs-number">1</span>  <span class="hljs-number">0</span> <span class="hljs-number">12</span>.8kb <span class="hljs-number">12</span>.8kb<br>[elasticsearch<span class="hljs-meta">@elasticsearch</span> elasticsearch<span class="hljs-operator">-</span><span class="hljs-number">6.0</span>.<span class="hljs-number">0</span>]$ <br></code></pre></td></tr></table></figure>
+
+<h2 id="常见报错"><a href="#常见报错" class="headerlink" title="常见报错"></a>常见报错</h2><p>No subject alternative names matching IP address</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-selector-attr">[2018-01-10T19:19:35,483]</span><span class="hljs-selector-attr">[WARN ]</span><span class="hljs-selector-attr">[o.e.x.s.t.n.SecurityNetty4Transport]</span> <span class="hljs-selector-attr">[fzP4t-4]</span> exception caught on transport layer <span class="hljs-selector-attr">[[id: 0x5d97fe48, L:/0:0:0:0:0:0:0:1:49121 ! R:/0:0:0:0:0:0:0:1:9300]</span>], closing connection<br>    io<span class="hljs-selector-class">.netty</span><span class="hljs-selector-class">.handler</span><span class="hljs-selector-class">.codec</span><span class="hljs-selector-class">.DecoderException</span>: javax<span class="hljs-selector-class">.net</span><span class="hljs-selector-class">.ssl</span><span class="hljs-selector-class">.SSLHandshakeException</span>: General SSLEngine problem<br>......<br>Caused by: java<span class="hljs-selector-class">.security</span><span class="hljs-selector-class">.cert</span><span class="hljs-selector-class">.CertificateException</span>: No subject alternative names matching IP <span class="hljs-selector-tag">address</span> <span class="hljs-number">0</span>:<span class="hljs-number">0</span>:<span class="hljs-number">0</span>:<span class="hljs-number">0</span>:<span class="hljs-number">0</span>:<span class="hljs-number">0</span>:<span class="hljs-number">0</span>:<span class="hljs-number">1</span> found<br></code></pre></td></tr></table></figure>
+
+<p>解决方案为一种是关闭IPv6地址，另一种是修改ES_HOME/config/elasticsearch.yml中的network.host值为本机eth0的IP</p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li>官方安装步骤：<a target="_blank" rel="noopener" href="https://www.elastic.co/guide/">https://www.elastic.co/guide/</a>…</li>
+<li>配置内置账户密码：<br><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/">https://www.elastic.co/guide/</a>…</li>
+<li>修改账户密码：<br><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/">https://www.elastic.co/guide/</a>…</li>
+<li>用户相关操作：<br><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/">https://www.elastic.co/guide/</a>…</li>
+<li>使用LDAP认证： <a target="_blank" rel="noopener" href="https://www.elastic.co/guide/">https://www.elastic.co/guide/</a>…</li>
+<li>用户角色映射： <a target="_blank" rel="noopener" href="https://www.elastic.co/guide/">https://www.elastic.co/guide/</a>…</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/ELK/">ELK</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/ELK/">ELK</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/05/21/ELK-Sentinl/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ELK Sentinl</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018/05/07/Elasticsearch%E5%88%86%E7%89%87%E5%8F%8A%E9%9B%86%E7%BE%A4%E8%AF%B4%E6%98%8E/">
+                        <span class="hidden-mobile">Elasticsearch分片及集群说明</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

@@ -1,0 +1,514 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="配置nexus从官网下载了nexus之后还需要进行一些配置。编辑bin/nexus.vmoptions 调整后的如下：
+12345678910111213141516-Xms600M-Xmx600M-XX:MaxDirectMemorySize=1G-XX:+UnlockDiagnosticVMOptions-XX:+UnsyncloadClass-XX:+LogVMOutput-XX:LogFi">
+  <meta name="author" content="Martin Lei">
+  <meta name="keywords" content="">
+  
+  <title>基于k8s 动态配置及扩容maven nexus私服 - 让一切随风</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="让一切随风" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="基于k8s 动态配置及扩容maven nexus私服">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2018-06-22 10:36" pubdate>
+        2018年6月22日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.9k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      26
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">基于k8s 动态配置及扩容maven nexus私服</h1>
+            
+            <div class="markdown-body">
+              <h3 id="配置nexus"><a href="#配置nexus" class="headerlink" title="配置nexus"></a>配置nexus</h3><p>从官网下载了nexus之后还需要进行一些配置。<br>编辑bin/nexus.vmoptions 调整后的如下：</p>
+<figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs haml">-<span class="ruby">Xms600M</span><br><span class="ruby"></span>-<span class="ruby">Xmx600M</span><br><span class="ruby"></span>-<span class="ruby"><span class="hljs-symbol">XX:</span>MaxDirectMemorySize=1G</span><br><span class="ruby"></span>-<span class="ruby"><span class="hljs-symbol">XX:</span>+UnlockDiagnosticVMOptions</span><br><span class="ruby"></span>-<span class="ruby"><span class="hljs-symbol">XX:</span>+UnsyncloadClass</span><br><span class="ruby"></span>-<span class="ruby"><span class="hljs-symbol">XX:</span>+LogVMOutput</span><br><span class="ruby"></span>-<span class="ruby"><span class="hljs-symbol">XX:</span>LogFile=<span class="hljs-regexp">/data/docker</span><span class="hljs-regexp">/soft/nexus</span><span class="hljs-regexp">/log/jvm</span>.log</span><br><span class="ruby"></span>-<span class="ruby"><span class="hljs-symbol">XX:</span>-OmitStackTraceInFastThrow</span><br><span class="ruby"></span>-<span class="ruby">Djava.net.preferIPv4Stack=<span class="hljs-literal">true</span></span><br><span class="ruby"></span>-<span class="ruby">Dkaraf.home=.</span><br><span class="ruby"></span>-<span class="ruby">Dkaraf.base=.</span><br><span class="ruby"></span>-<span class="ruby">Dkaraf.etc=etc/karaf</span><br><span class="ruby"></span>-<span class="ruby">Djava.util.logging.config.file=etc/karaf/java.util.logging.properties</span><br><span class="ruby"></span>-<span class="ruby">Dkaraf.data=<span class="hljs-regexp">/data/docker</span><span class="hljs-regexp">/soft/nexus</span><span class="hljs-regexp">/data</span></span><br><span class="hljs-regexp"><span class="ruby"></span></span>-<span class="ruby"><span class="hljs-regexp">Djava.io.tmpdir=/data</span><span class="hljs-regexp">/docker/soft</span><span class="hljs-regexp">/nexus/tmp</span></span><br><span class="ruby"></span>-<span class="ruby">Dkaraf.startLocalConsole=<span class="hljs-literal">false</span></span><br></code></pre></td></tr></table></figure>
+
+<p>其中除了1，2行的jvm内存配置之外，最关键的就是，以下几个属性配置：</p>
+<ul>
+<li>-XX:LogFile=/data/docker/soft/nexus/log/jvm.log       # 日志文件生成位置</li>
+<li>-Dkaraf.data=/data/docker/soft/nexus/data             # 仓库数据存放位置(上传的jar包)</li>
+<li>-Djava.io.tmpdir=/data/docker/soft/nexus/tmp          # 临时文件存放位置</li>
+</ul>
+<h3 id="制作Docker镜像"><a href="#制作Docker镜像" class="headerlink" title="制作Docker镜像"></a>制作Docker镜像</h3><p>配置好nexus之后，需要再制作自己的docker镜像，因为k8s就是调度镜像容器的。 </p>
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs tap">[root@master nexus]<span class="hljs-comment"># pwd</span><br>/data/docker/dockerfile/nexus<br>[root@master nexus]<span class="hljs-comment"># ls -lth </span><br>total 223M<br>-rw-r--r--<span class="hljs-number"> 1 </span>root root <span class="hljs-number"> 146 </span>Jun<span class="hljs-number"> 21 </span>16:06 Dockerfile<br>-rw-r--r--<span class="hljs-number"> 1 </span>root root 108M Jun<span class="hljs-number"> 21 </span>16:02 nexus3.tar.gz<br>drwxr-xr-x<span class="hljs-number"> 3 </span>root root 4.0K Jun<span class="hljs-number"> 21 </span>15:53 sonatype-work<br>drwxr-xr-x<span class="hljs-number"> 9 </span>root root 4.0K Jun<span class="hljs-number"> 21 </span>15:53 nexus-3.12.1-01<br>-rw-r--r--<span class="hljs-number"> 1 </span>root root 115M Jun<span class="hljs-number"> 21 </span>15:36 nexus-3.12.1-01-unix.tar.gz.org<br></code></pre></td></tr></table></figure>
+
+<p>docker镜像的制作很简单，新建一个Dockerfile文件：</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">[root@<span class="hljs-keyword">master</span> <span class="hljs-title">nexus</span>]<span class="hljs-comment"># cat Dockerfile </span><br>FROM registry.cn-hangzhou.aliyuncs.com/luhaoyuan/oracle-jdk8:latest<br><br>ADD nexus3.tar.gz /opt<br><br>ENTRYPOINT [<span class="hljs-string">&quot;/opt/nexus-3.12.1-01/bin/nexus&quot;</span>, <span class="hljs-string">&quot;run&quot;</span>]<br></code></pre></td></tr></table></figure>
+<ul>
+<li>第一行：nexus的运行是依赖JDK环境的，所以我们这里就使用jdk作为基础镜像；(镜像是基于centos7，比较大，后续可以考虑修改为alpine_3.6)</li>
+<li>第二行：将我们配置过后的nexus(nexus-3.12.1-01)再重新打包一下，添加到容器中； </li>
+<li>第三行：启动容器时，执行的命令，nexus的启动命令有start和run，由于start默认是启动在后台进程的，这样容器一启动就退出了。所以这里必须要使用run命令启动了。</li>
+</ul>
+<p>最后构建Docker镜像：<br>docker build -t registry.martin.com:5000/tools/nexus:3.12.1 .<br>registry.martin.com:5000为我registry地址,构建之后将改image push到私库,当然也可以用harbor<br>如果有做ca校验，需要将证书拷贝到指定的:/etc/docker/certs.d/xxx/ca.crt,然后docker login校验<br>再docker push registry.martin.com:5000/tools/nexus:3.12.1，不然会提示x509认证失败</p>
+<span id="more"></span>
+
+<h3 id="配置k8s-PV-PVC"><a href="#配置k8s-PV-PVC" class="headerlink" title="配置k8s PV-PVC"></a>配置k8s PV-PVC</h3><p>为了避免容器重启数据丢失，需要挂载主机的卷空间。<br>在k8s中，pod挂载主机的存储卷，就需要使用到了PV（PersistentVolume）和PVC（PersistentVolumeClaim）。<br>新建nexus3-pv-pvc.yaml文件：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs yaml">[<span class="hljs-string">root@master</span> <span class="hljs-string">nexus</span>]<span class="hljs-comment"># pwd</span><br><span class="hljs-string">/data/k8s/nexus</span><br>[<span class="hljs-string">root@master</span>  <span class="hljs-string">nexus</span>]<span class="hljs-comment"># ls -lth</span><br><span class="hljs-string">total</span> <span class="hljs-string">12K</span><br><span class="hljs-string">-rw-r--r--</span> <span class="hljs-number">1</span> <span class="hljs-string">root</span> <span class="hljs-string">root</span> <span class="hljs-number">777</span> <span class="hljs-string">Jun</span> <span class="hljs-number">21</span> <span class="hljs-number">18</span><span class="hljs-string">:49</span> <span class="hljs-string">nexus3-deployment.yaml</span><br><span class="hljs-string">-rw-r--r--</span> <span class="hljs-number">1</span> <span class="hljs-string">root</span> <span class="hljs-string">root</span> <span class="hljs-number">370</span> <span class="hljs-string">Jun</span> <span class="hljs-number">21</span> <span class="hljs-number">17</span><span class="hljs-string">:12</span> <span class="hljs-string">nexus3-service.yaml</span><br><span class="hljs-string">-rw-r--r--</span> <span class="hljs-number">1</span> <span class="hljs-string">root</span> <span class="hljs-string">root</span> <span class="hljs-number">525</span> <span class="hljs-string">Jun</span> <span class="hljs-number">21</span> <span class="hljs-number">16</span><span class="hljs-string">:49</span> <span class="hljs-string">nexus3-pv-pvc.yaml</span><br>[<span class="hljs-string">root@master</span>  <span class="hljs-string">nexus</span>]<span class="hljs-comment"># cat nexus3-pv-pvc.yaml </span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">PersistentVolume</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">nexus3-data-pv</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">nexus3-data-pv</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">capacity:</span><br>    <span class="hljs-attr">storage:</span> <span class="hljs-string">500Gi</span><br>  <span class="hljs-attr">accessModes:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">ReadWriteOnce</span><br>  <span class="hljs-attr">persistentVolumeReclaimPolicy:</span> <span class="hljs-string">Recycle</span><br>  <span class="hljs-attr">hostPath:</span><br>    <span class="hljs-attr">path:</span> <span class="hljs-string">/data/docker/soft/nexus</span><br><br><span class="hljs-meta">---</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">PersistentVolumeClaim</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">nexus3-data-pvc</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">nexus3-data-pvc</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">accessModes:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">ReadWriteOnce</span><br>  <span class="hljs-attr">resources:</span><br>    <span class="hljs-attr">requests:</span><br>      <span class="hljs-attr">storage:</span> <span class="hljs-string">500Gi</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">matchLabels:</span><br>      <span class="hljs-attr">app:</span> <span class="hljs-string">nexus3-data-pv</span><br>[<span class="hljs-string">root@master</span>  <span class="hljs-string">nexus</span>]<span class="hljs-comment"># </span><br></code></pre></td></tr></table></figure>
+<p>==注意：PV中的hostPath，指定了宿主主机上的挂载路径(node节点最好全部先创建好)==</p>
+<h3 id="配置k8s-Deployment"><a href="#配置k8s-Deployment" class="headerlink" title="配置k8s Deployment"></a>配置k8s Deployment</h3><p>在k8s早期更多的是使用ReplicationController (RC)来控制保障pod，不过后来又出现了Deployment。<br>Deployment不仅包含了RC的所有功能，还具有：版本记录、回滚、暂停和启动等多种额外的强大功能。<br>所以可以尽量都使用Deployment,新建nexus3-deployment.yaml文件：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs yaml">[<span class="hljs-string">root@master</span> <span class="hljs-string">nexus</span>]<span class="hljs-comment"># cat nexus3-deployment.yaml </span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">extensions/v1beta1</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">nexus3</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">nexus3</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">replicas:</span> <span class="hljs-number">1</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">matchLabels:</span><br>      <span class="hljs-attr">app:</span> <span class="hljs-string">nexus3</span><br>  <span class="hljs-attr">template:</span><br>    <span class="hljs-attr">metadata:</span><br>      <span class="hljs-attr">labels:</span><br>        <span class="hljs-attr">app:</span> <span class="hljs-string">nexus3</span><br>    <span class="hljs-attr">spec:</span><br>      <span class="hljs-attr">containers:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nexus3</span><br>          <span class="hljs-attr">image:</span> <span class="hljs-string">registry.martin.com:5000/tools/nexus:3.12.1</span><br>          <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">IfNotPresent</span><br>          <span class="hljs-attr">ports:</span><br>          <span class="hljs-bullet">-</span> <span class="hljs-attr">containerPort:</span> <span class="hljs-number">9193</span><br>            <span class="hljs-attr">protocol:</span> <span class="hljs-string">TCP</span><br>          <span class="hljs-attr">volumeMounts:</span><br>          <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nexus-data</span><br>            <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/data/docker/soft/nexus</span><br>      <span class="hljs-attr">volumes:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nexus-data</span><br>          <span class="hljs-attr">persistentVolumeClaim:</span><br>            <span class="hljs-attr">claimName:</span> <span class="hljs-string">nexus3-data-pvc</span><br>      <span class="hljs-attr">nodeSelector:</span><br>        <span class="hljs-attr">kubernetes.io/hostname:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.15</span><br></code></pre></td></tr></table></figure>
+<p>需要在volumes结点上引用之前创建的PVC：</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs haskell"><span class="hljs-title">volumes</span>:<br>  - name: nexus-<span class="hljs-class"><span class="hljs-keyword">data</span></span><br>    persistentVolumeClaim:<br>      claimName: nexus3-<span class="hljs-class"><span class="hljs-keyword">data</span>-pvc</span><br></code></pre></td></tr></table></figure>
+<p>在volumeMounts结点上，配置了挂载到容器中的路径：/data/docker/soft/nexus(node节点最好全部先创建好)</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">volumeMounts:<br>  - name: nexus-data<br>    mountPath: <span class="hljs-regexp">/data/</span>docker<span class="hljs-regexp">/soft/</span>nexus<br></code></pre></td></tr></table></figure>
+<p>最后的nodeSelector表示pod只在某个主机上运行,可以通过在k8s的master上使用:kubectl get nodes查看</p>
+<h3 id="配置k8s-Service"><a href="#配置k8s-Service" class="headerlink" title="配置k8s Service"></a>配置k8s Service</h3><p>k8s中的pod的访问是不可靠的，随时可能发生pod停止-漂移-创建的过程。<br>所以要想能够稳定的访问，就必须要创建Service进行服务发现了，在Service中是根据selector来寻找pod的。<br>最后k8s上的Service只能在集群节点上访问，如果我们想要在集群外部进行访问的话，只有三种方式：</p>
+<ul>
+<li>NodePort、</li>
+<li>LoadBalancer、</li>
+<li>Ingress。 </li>
+</ul>
+<p>这里使用NodePort，绑定宿主机的端口来进行暴露服务。跟docker run -p 看上去效果相似。<br>新建nexus3-service.yaml文件：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs yaml">[<span class="hljs-string">root@master</span> <span class="hljs-string">nexus</span>]<span class="hljs-comment"># cat nexus3-service.yaml </span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Service</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">nexus3</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">nexus3</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">type:</span> <span class="hljs-string">NodePort</span><br>  <span class="hljs-attr">ports:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">port:</span> <span class="hljs-number">8081</span><br>    <span class="hljs-attr">targetPort:</span> <span class="hljs-number">8081</span><br>    <span class="hljs-attr">nodePort:</span> <span class="hljs-number">30031</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">web-ui</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">nexus3</span><br>[<span class="hljs-string">root@master</span> <span class="hljs-string">nexus</span>]<span class="hljs-comment"># </span><br></code></pre></td></tr></table></figure>
+<p>其中关键的地方就是spec.type节点配置NodePort类型了。<br>说明下的ports 端口的配置：</p>
+<ul>
+<li>port 属性定义了Service的虚端口；</li>
+<li>targetPort 属性指定了后面pod上提供的端口，如果没有指定则默认与port相同(这里我们显视的指定了)；</li>
+<li>nodePort 属性指定了绑定在宿主机(物理机)上的端口号，我们可以通过宿主机IP + 端口的形式访问到后方pod中的服。</li>
+<li>name 如果有多个port配置的话，必须要为每个port指定一个名称。</li>
+</ul>
+<h3 id="k8s部署访问"><a href="#k8s部署访问" class="headerlink" title="k8s部署访问"></a>k8s部署访问</h3><h4 id="创建-PV-PVC"><a href="#创建-PV-PVC" class="headerlink" title="创建 PV-PVC"></a>创建 PV-PVC</h4><p>根据配置文件，创建PV-PVC：</p>
+<p>kubectl create -f nexus3-pv-pvc.yaml</p>
+<p>创建完成后，查看一下状态，是否正常： </p>
+<p>kubectl get pv</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs fortran"><span class="hljs-keyword">NAME</span>             CAPACITY   <span class="hljs-keyword">ACCESS</span> MODES   RECLAIM POLICY   <span class="hljs-keyword">STATUS</span>    CLAIM                     STORAGECLASS   REASON    AGE<br>nexus3-<span class="hljs-keyword">data</span>-pv   <span class="hljs-number">500</span>Gi      RWO            Recycle          Bound     <span class="hljs-keyword">default</span>/nexus3-<span class="hljs-keyword">data</span>-pvc                            <span class="hljs-number">17</span>h<br></code></pre></td></tr></table></figure>
+
+<h4 id="创建Deployment"><a href="#创建Deployment" class="headerlink" title="创建Deployment"></a>创建Deployment</h4><p>继续创建Deployment，创建完后会自动创建pod的，并维护pod数量始终为1。 </p>
+<p>kubectl create -f nexus3-deployment.yaml </p>
+<p>稍等几秒钟，查看pod状态： </p>
+<p>kubectl get pod -o wide</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">NAME</span>                      READY     STATUS    RESTARTS   AGE       IP           NODE<br><span class="hljs-attribute">nexus3</span>-<span class="hljs-number">68</span>f<span class="hljs-number">55</span>d<span class="hljs-number">9746</span>-vfnf<span class="hljs-number">8</span>   <span class="hljs-number">1</span>/<span class="hljs-number">1</span>       Running   <span class="hljs-number">0</span>          <span class="hljs-number">12</span>h       <span class="hljs-number">10.20.7.12</span>   <span class="hljs-number">192.168.0.15</span><br></code></pre></td></tr></table></figure>
+<p>==注意：默认不用-n指定namespace的都是用的default，-o wide可以看到详细的IP及node信息==</p>
+<h4 id="创建Service"><a href="#创建Service" class="headerlink" title="创建Service"></a>创建Service</h4><p>创建Service，暴露服务：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">kubectl</span> create -f nexus<span class="hljs-number">3</span>-service.yaml<br></code></pre></td></tr></table></figure>
+<p>查看状态：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs apache"> <span class="hljs-attribute">kubectl</span> get svc<br><span class="hljs-attribute">NAME</span>            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                                        AGE<br><span class="hljs-attribute">kubernetes</span>      ClusterIP   <span class="hljs-number">10.10.0.1</span>       &lt;none&gt;        <span class="hljs-number">443</span>/TCP                                        <span class="hljs-number">13</span>d<br><span class="hljs-attribute">nexus3</span>          NodePort    <span class="hljs-number">10.10.165.3</span>     &lt;none&gt;        <span class="hljs-number">8081</span>:<span class="hljs-number">30031</span>/TCP,<span class="hljs-number">5000</span>:<span class="hljs-number">30032</span>/TCP,<span class="hljs-number">8889</span>:<span class="hljs-number">30033</span>/TCP   <span class="hljs-number">12</span>h<br><span class="hljs-attribute">nginx</span>-service   ClusterIP   <span class="hljs-number">10.10.147.216</span>   &lt;none&gt;        <span class="hljs-number">80</span>/TCP                                         <span class="hljs-number">10</span>d<br></code></pre></td></tr></table></figure>
+<p>==注意这里的访问，是访问宿主机的IP+端口，至于CLUSTER-IP这些都是虚拟的IP，无法在外部进行访问的==。</p>
+<h3 id="访问Nexus"><a href="#访问Nexus" class="headerlink" title="访问Nexus"></a>访问Nexus</h3><p><a target="_blank" rel="noopener" href="http://192.168.1.2:30031/">http://192.168.1.2:30031</a> (pod内container端口为：8081)</p>
+<h3 id="升级"><a href="#升级" class="headerlink" title="升级"></a>升级</h3><p>借用k8s Deployment的升级方式:</p>
+<ol>
+<li>从官网下载最新的nexus安装包；</li>
+<li>修改nexus配置文件，将上面旧版本的配置覆盖过来就行了；</li>
+<li>修改Dockerfile文件，构建新的Docker镜像，将新打包的nexus放入镜像中。<br>如：docker build -t registry.martin.com:5000/tools/nexus:3.12.2 .<br>Ps: 不要忘记启动命令路径也要调整!</li>
+<li>使用k8s命令升级Deployment：<br>如：kubectl set image deployment/nexus3 nexus3=registry.martin.com:5000/tools/nexus:3.12.2</li>
+<li>回滚升级，如果发现升级了的不好用，或者出现问题，也可以回滚：<br>如：kubectl rollout undo deployment/nexus3</li>
+</ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>其实这个过程中里复杂了一部分，也简化了一部分。<br>复杂了pv-pvc过程，pv-pvc不用创建直接在Deployment中挂载hostPath也是可以的。<br>简化了Deployment，其实应该还需要加上cpu、内存等资源限制的。<br>这里只是在nexus配置文件中做了限制，如果出现内存泄漏问题，还是没办法解决!</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/K8s/">K8s</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/K8s/">K8s</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/06/27/bernetes-RBAC-Detailed/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Kubernetes RBAC  Detailed</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018/06/14/kubernetes-jenkins-ci-cd/">
+                        <span class="hidden-mobile">kubernetes-jenkins-ci-cd</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

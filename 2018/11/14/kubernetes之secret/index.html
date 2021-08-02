@@ -1,0 +1,510 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="Secret解决了密码、token、密钥等敏感数据的配置问题，而不需要把这些敏感数据暴露到镜像或者Pod Spec中。Secret可以以Volume或者环境变量的方式使用。
+Secret类型：
+Opaque：base64编码格式的Secret，用来存储密码、密钥等；但数据也通过base64 –decode解码得到原始数据，所有加密性很弱。
+kubernetes.io/dockerconfigjso">
+  <meta name="author" content="Martin Lei">
+  <meta name="keywords" content="">
+  
+  <title>kubernetes之secret - 让一切随风</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="让一切随风" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="kubernetes之secret">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2018-11-14 15:36" pubdate>
+        2018年11月14日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      16
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">kubernetes之secret</h1>
+            
+            <div class="markdown-body">
+              <p>Secret解决了密码、token、密钥等敏感数据的配置问题，而不需要把这些敏感数据暴露到镜像或者Pod Spec中。Secret可以以Volume或者环境变量的方式使用。</p>
+<h4 id="Secret类型："><a href="#Secret类型：" class="headerlink" title="Secret类型："></a>Secret类型：</h4><ol>
+<li>Opaque：base64编码格式的Secret，用来存储密码、密钥等；但数据也通过base64 –decode解码得到原始数据，所有加密性很弱。</li>
+<li>kubernetes.io/dockerconfigjson：用来存储私有docker registry的认证信息。</li>
+<li>kubernetes.io/service-account-token： 用于被serviceaccount引用。serviceaccout创建时Kubernetes会默认创建对应的secret。Pod如果使用了serviceaccount，对应的secret会自动挂载到Pod目录/run/secrets/kubernetes.io/serviceaccount中。</li>
+</ol>
+<h5 id="1-Opaque-Secret"><a href="#1-Opaque-Secret" class="headerlink" title="1.Opaque Secret"></a>1.Opaque Secret</h5><p>Opaque类型的数据是一个map类型，要求value是base64编码格式： 比如来创建一个用户名为：admin，密码为： 1f2d1e2e67df的Secret 对象，首先把这用户名和密码做base64编码，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">echo</span> -n <span class="hljs-string">&quot;admin&quot;</span> | base64</span><br>YWRtaW4=<br><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">echo</span> -n <span class="hljs-string">&quot;1f2d1e2e67df&quot;</span> | base64</span><br>MWYyZDFlMmU2N2Rm<br></code></pre></td></tr></table></figure>
+<p>然后就可以利用上面编码过后的数据来编写一个YAML文件：(secrets.yml)</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-symbol">apiVersion:</span> v1<br><span class="hljs-symbol">kind:</span> Secret<br><span class="hljs-symbol">metadata:</span><br><span class="hljs-symbol">  name:</span> mysecret<br><span class="hljs-symbol">type:</span> Opaque<br><span class="hljs-symbol">data:</span><br><span class="hljs-symbol">  password:</span> MWYyZDFlMmU2N2Rm<br><span class="hljs-symbol">  username:</span> YWRtaW4=<br></code></pre></td></tr></table></figure>
+<p>同样的就可以使用kubectl命令来创建了： 创建secret：kubectl create -f secrets.yml。</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-comment"># kubectl get secret</span><br><span class="hljs-attribute">NAME</span>                  TYPE                                  DATA      AGE<br><span class="hljs-attribute">default</span>-token-xxx   kubernetes.io/service-account-token   <span class="hljs-number">3</span>         <span class="hljs-number">45</span>d<br><span class="hljs-attribute">mysecret</span>              Opaque                                <span class="hljs-number">2</span>         <span class="hljs-number">7</span>s<br></code></pre></td></tr></table></figure>
+<p>注意：其中default-token-xxx为创建集群时默认创建的secret，被serviceacount/default引用。 可以使用describe命令查看详情，如果想看到Data里面的详细信息，可以输出成YAML文件进行查看</p>
+<p>如果是从文件创建secret，则可以用更简单的kubectl命令，比如创建tls的secret：</p>
+<figure class="highlight sas"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sas">$ kubectl <span class="hljs-meta">create</span> secret generic helloworld-tls \<br>  --<span class="hljs-meta">from</span>-<span class="hljs-meta">file</span>=<span class="hljs-meta">key</span>.pem \<br>  --<span class="hljs-meta">from</span>-<span class="hljs-meta">file</span>=cert.pem<br></code></pre></td></tr></table></figure>
+
+<h5 id="2-Opaque-Secret的使用"><a href="#2-Opaque-Secret的使用" class="headerlink" title="2.Opaque Secret的使用"></a>2.Opaque Secret的使用</h5><p>创建好secret之后，有两种方式来使用它：</p>
+<ul>
+<li>以Volume方式</li>
+<li>以环境变量方式</li>
+<li>以Volume方式挂载制定的key</li>
+</ul>
+<h6 id="将Secret挂载到Volume中"><a href="#将Secret挂载到Volume中" class="headerlink" title="将Secret挂载到Volume中"></a>将Secret挂载到Volume中</h6><p>用一个Pod来验证下Volume挂载，创建一个Pod文件：(secret2-pod.yaml)</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Pod</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">db</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">db</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">volumes:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">secrets</span><br>    <span class="hljs-attr">secret:</span><br>      <span class="hljs-attr">secretName:</span> <span class="hljs-string">mysecret</span><br>  <span class="hljs-attr">containers:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">image:</span> <span class="hljs-string">registry.martin.com:5000/my_project_id/pg:v1</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">db</span><br>    <span class="hljs-attr">volumeMounts:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">secrets</span><br>      <span class="hljs-attr">mountPath:</span> <span class="hljs-string">&quot;/etc/secrets&quot;</span><br>      <span class="hljs-attr">readOnly:</span> <span class="hljs-literal">true</span><br>    <span class="hljs-attr">ports:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">cp</span><br>      <span class="hljs-attr">containerPort:</span> <span class="hljs-number">5432</span><br>      <span class="hljs-attr">hostPort:</span> <span class="hljs-number">5432</span><br></code></pre></td></tr></table></figure>
+
+<p>查看Pod中对应的信息：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs gradle"># ls <span class="hljs-regexp">/etc/</span>secrets<br>password  username<br># cat  <span class="hljs-regexp">/etc/</span>secrets/username<br>admin<br># cat  <span class="hljs-regexp">/etc/</span>secrets/password<br><span class="hljs-number">1</span>f2d1e2e67df<br></code></pre></td></tr></table></figure>
+<p>查看输出日志：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><span class="hljs-variable">$ </span>kubectl logs secret2-pod<br>password<br>username<br></code></pre></td></tr></table></figure>
+<p>可以看到secret把两个key挂载成了两个对应的文件。</p>
+<span id="more"></span>
+
+<h6 id="将Secret导出到环境变量中"><a href="#将Secret导出到环境变量中" class="headerlink" title="将Secret导出到环境变量中"></a>将Secret导出到环境变量中</h6><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">extensions/v1beta1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">wordpress-deployment</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">replicas:</span> <span class="hljs-number">2</span><br>  <span class="hljs-attr">strategy:</span><br>      <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span><br>  <span class="hljs-attr">template:</span><br>    <span class="hljs-attr">metadata:</span><br>      <span class="hljs-attr">labels:</span><br>        <span class="hljs-attr">app:</span> <span class="hljs-string">wordpress</span><br>        <span class="hljs-attr">visualize:</span> <span class="hljs-string">&quot;true&quot;</span><br>    <span class="hljs-attr">spec:</span><br>      <span class="hljs-attr">containers:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">&quot;wordpress&quot;</span><br>        <span class="hljs-attr">image:</span> <span class="hljs-string">&quot;wordpress&quot;</span><br>        <span class="hljs-attr">ports:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">containerPort:</span> <span class="hljs-number">80</span><br>        <span class="hljs-attr">env:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">WORDPRESS_DB_USER</span><br>          <span class="hljs-attr">valueFrom:</span><br>            <span class="hljs-attr">secretKeyRef:</span><br>              <span class="hljs-attr">name:</span> <span class="hljs-string">mysecret</span><br>              <span class="hljs-attr">key:</span> <span class="hljs-string">username</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">WORDPRESS_DB_PASSWORD</span><br>          <span class="hljs-attr">valueFrom:</span><br>            <span class="hljs-attr">secretKeyRef:</span><br>              <span class="hljs-attr">name:</span> <span class="hljs-string">mysecret</span><br>              <span class="hljs-attr">key:</span> <span class="hljs-string">password</span><br></code></pre></td></tr></table></figure>
+<p>主要上面环境变量中定义的secretKeyRef关键字，和configMapKeyRef比较类似，一个是从Secret对象中获取，一个是从ConfigMap对象中获取</p>
+<p>创建上面的Pod：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-variable">$</span> kubectl create <span class="hljs-operator">-f</span> secret1<span class="hljs-literal">-pod</span>.yaml<br>pod <span class="hljs-string">&quot;secret1-pod&quot;</span> created<br></code></pre></td></tr></table></figure>
+<p>然后查看Pod的日志输出：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs routeros">$ kubectl logs secret1-pod<br><span class="hljs-attribute">USERNAME</span>=admin<br><span class="hljs-attribute">PASSWORD</span>=admin321<br></code></pre></td></tr></table></figure>
+<p>可以看到有 USERNAME 和 PASSWORD 两个环境变量输出出来。</p>
+<h6 id="将Secret挂载指定的key"><a href="#将Secret挂载指定的key" class="headerlink" title="将Secret挂载指定的key"></a>将Secret挂载指定的key</h6><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Pod</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">db</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">db</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">volumes:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">secrets</span><br>    <span class="hljs-attr">secret:</span><br>      <span class="hljs-attr">secretName:</span> <span class="hljs-string">mysecret</span><br>      <span class="hljs-attr">items:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">key:</span> <span class="hljs-string">password</span><br>        <span class="hljs-attr">mode:</span> <span class="hljs-number">511</span><br>        <span class="hljs-attr">path:</span> <span class="hljs-string">tst/psd</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">key:</span> <span class="hljs-string">username</span><br>        <span class="hljs-attr">mode:</span> <span class="hljs-number">511</span><br>        <span class="hljs-attr">path:</span> <span class="hljs-string">tst/usr</span><br>  <span class="hljs-attr">containers:</span><br>  <span class="hljs-attr">containers:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">image:</span> <span class="hljs-string">nginx</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">db</span><br>    <span class="hljs-attr">volumeMounts:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">secrets</span><br>      <span class="hljs-attr">mountPath:</span> <span class="hljs-string">&quot;/etc/secrets&quot;</span><br>      <span class="hljs-attr">readOnly:</span> <span class="hljs-literal">true</span><br>    <span class="hljs-attr">ports:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">cp</span><br>      <span class="hljs-attr">containerPort:</span> <span class="hljs-number">80</span><br>      <span class="hljs-attr">hostPort:</span> <span class="hljs-number">5432</span><br></code></pre></td></tr></table></figure>
+
+<p>可以直接用kubectl命令来创建用于docker registry认证的secret：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs routeros">$ kubectl create<span class="hljs-built_in"> secret </span>docker-registry myregistrykey <span class="hljs-attribute">--docker-server</span>=DOCKER_REGISTRY_SERVER <span class="hljs-attribute">--docker-username</span>=DOCKER_USER <span class="hljs-attribute">--docker-password</span>=DOCKER_PASSWORD <span class="hljs-attribute">--docker-email</span>=DOCKER_EMAIL<span class="hljs-built_in"></span><br><span class="hljs-built_in">secret </span><span class="hljs-string">&quot;myregistrykey&quot;</span> created.<br></code></pre></td></tr></table></figure>
+<p>查看secret的内容：</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-meta"># kubectl get secret myregistrykey  -o yaml</span><br><span class="hljs-symbol">apiVersion:</span> v1<br><span class="hljs-symbol">data:</span><br>  .dockercfg: eyJjY3IuY2NzLnRlbmNlbnR5dW4uY29tL3RlbmNlbnR5dW4iOnsidXNlcm5hbWUiOiIzMzIxMzM3OTk0IiwicGFzc3dvcmQiOiIxMjM0NTYuY29tIiwiZW1haWwiOiIzMzIxMzM3OTk0QHFxLmNvbSIsImF1dGgiOiJNek15TVRNek56azVORG94TWpNME5UWXVZMjl0In19<br><span class="hljs-symbol">kind:</span> Secret<br><span class="hljs-symbol">metadata:</span><br><span class="hljs-symbol">  creationTimestamp:</span> <span class="hljs-number">2017</span><span class="hljs-number">-08</span><span class="hljs-number">-04</span>T02:<span class="hljs-number">06</span>:<span class="hljs-number">05</span>Z<br><span class="hljs-symbol">  name:</span> myregistrykey<br><span class="hljs-symbol">  namespace:</span> default<br><span class="hljs-symbol">  resourceVersion:</span> <span class="hljs-string">&quot;1374279324&quot;</span><br><span class="hljs-symbol">  selfLink:</span> <span class="hljs-meta-keyword">/api/</span>v1<span class="hljs-meta-keyword">/namespaces/</span>default<span class="hljs-meta-keyword">/secrets/</span>myregistrykey<br><span class="hljs-symbol">  uid:</span> <span class="hljs-number">78f</span>6a423<span class="hljs-number">-78</span>b9<span class="hljs-number">-11e7</span>-a70a<span class="hljs-number">-525400</span>bc11f0<br><span class="hljs-symbol">type:</span> kubernetes.io/dockercfg<br></code></pre></td></tr></table></figure>
+<p>也可以直接读取~/.dockercfg的内容来创建：</p>
+<figure class="highlight sas"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sas">$ kubectl <span class="hljs-meta">create</span> secret docker-registry myregistrykey \<br>  --<span class="hljs-meta">from</span>-<span class="hljs-meta">file</span>=<span class="hljs-string">&quot;~/.docker/config.json&quot;</span><br></code></pre></td></tr></table></figure>
+<p>在创建Pod的时候，通过imagePullSecrets来引用刚创建的myregistrykey:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Pod</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">foo</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">containers:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">foo</span><br>      <span class="hljs-attr">image:</span> <span class="hljs-string">janedoe/awesomeapp:v1</span><br>  <span class="hljs-attr">imagePullSecrets:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">myregistrykey</span><br></code></pre></td></tr></table></figure>
+
+<p>kubernetes.io/service-account-token： 用于被serviceaccount引用。serviceaccout创建时Kubernetes会默认创建对应的secret。Pod如果使用了serviceaccount，对应的secret会自动挂载到Pod的/run/secrets/kubernetes.io/serviceaccount目录中。</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs arduino">$ kubectl run nginx --image nginx<br>deployment <span class="hljs-string">&quot;nginx&quot;</span> created<br>$ kubectl get pods<br>NAME                     READY     STATUS    RESTARTS   AGE<br>nginx<span class="hljs-number">-3137573019</span>-md1u2   <span class="hljs-number">1</span>/<span class="hljs-number">1</span>       Running   <span class="hljs-number">0</span>          <span class="hljs-number">13</span>s<br>$ kubectl exec nginx<span class="hljs-number">-3137573019</span>-md1u2 ls /run/secrets/kubernetes.io/serviceaccount<br>ca.crt<br><span class="hljs-keyword">namespace</span><br>token<br></code></pre></td></tr></table></figure>
+
+<h5 id="Secret与ConfigMap对比"><a href="#Secret与ConfigMap对比" class="headerlink" title="Secret与ConfigMap对比"></a>Secret与ConfigMap对比</h5><p>相同点：</p>
+<ul>
+<li>key/value的形式</li>
+<li>属于某个特定的namespace</li>
+<li>可以导出到环境变量</li>
+<li>可以通过目录/文件形式挂载(支持挂载所有key和部分key)</li>
+</ul>
+<p>不同点：</p>
+<ul>
+<li>Secret可以被ServerAccount关联(使用)</li>
+<li>Secret可以存储register的鉴权信息，用在ImagePullSecret参数中，用于拉取私有仓库的镜像</li>
+<li>Secret支持Base64加密</li>
+<li>Secret分为kubernetes.io/Service Account，kubernetes.io/dockerconfigjson，Opaque三种类型,Configmap不区分类型</li>
+<li>Secret文件存储在tmpfs文件系统中，Pod删除后Secret文件也会对应的删除。</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/K8s/">K8s</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/K8s/">K8s</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/10/17/bootstrap-memory-lock/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">bootstrap.memory_lock简要说明</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018/08/21/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/">
+                        <span class="hidden-mobile">生成k8s证书的三种方式</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
