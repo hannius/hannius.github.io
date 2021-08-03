@@ -17,26 +17,6 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Hello World</title>
-    <link href="http://www.leiyawu.com/2021/01/12/hello-world/"/>
-    <id>http://www.leiyawu.com/2021/01/12/hello-world/</id>
-    <published>2021-01-12T10:44:25.677Z</published>
-    <updated>2021-01-08T09:50:16.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/deployment.html">Deployment</a></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt; for</summary>
-      
-    
-    
-    
-    
-  </entry>
-  
-  <entry>
     <title>bootstrap.memory_lock简要说明</title>
     <link href="http://www.leiyawu.com/2019/10/17/bootstrap-memory-lock/"/>
     <id>http://www.leiyawu.com/2019/10/17/bootstrap-memory-lock/</id>
@@ -616,6 +596,29 @@
 &lt;p&gt;GET /iteblog_book_index/book/_search?q=title:in%20action&lt;/p&gt;
 &lt;p&gt;然而，DSL方式提供了更加灵活的方式来构建更加复杂的查询（我们将在后面看到），甚至指定你想要的返回结果。下面的例子中，我将指定需要返回结果的数量，开始的偏移量（这在分页的情况下非常有用），需要返回document中的哪些字段以及高亮关键字：&lt;/p&gt;
 &lt;p&gt;curl -XGET ‘&lt;a href=&quot;https://www.iteblog.com:9200/iteblog_book_index/book/_search&amp;#39;&quot;&gt;https://www.iteblog.com:9200/iteblog_book_index/book/_search&amp;#39;&lt;/a&gt; -d ‘&lt;br&gt;{&lt;br&gt;    “query”: {&lt;br&gt;        “match” : {&lt;br&gt;            “title” : “in action”&lt;br&gt;        }&lt;br&gt;    },&lt;br&gt;    “size”: 2,   #返回结果的数量&lt;br&gt;    “from”: 0,  #开始的偏移量&lt;br&gt;    “_source”: [ “title”, “summary”, “publish_date” ],&lt;br&gt;    “highlight”: {&lt;br&gt;        “fields” : {&lt;br&gt;            “title” : {}&lt;br&gt;        }&lt;br&gt;    }&lt;br&gt;}’&lt;/p&gt;</summary>
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>hexo使用进阶</title>
+    <link href="http://www.leiyawu.com/2018/03/19/hexo%E4%BD%BF%E7%94%A8%E8%BF%9B%E9%98%B6/"/>
+    <id>http://www.leiyawu.com/2018/03/19/hexo%E4%BD%BF%E7%94%A8%E8%BF%9B%E9%98%B6/</id>
+    <published>2018-03-19T03:09:47.000Z</published>
+    <updated>2021-01-08T09:50:16.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>hexo</p><p>一、后端管理插件hexo-admin<br>插件可以直接在网页端创建、编辑markdown文章内容，并将内容发布到_posts里。<br>另外，对我而言，最方便的是可以很方便的给文章加标题、分类、打标签。</p><p>参见：</p><p>An Admin Interface for Hexo<br>hexo-admin in github</p><p>1.安装</p><p>(1)npm install –save hexo-admin </p><p>(2)hexo server -d </p><p>(3)open <a href="http://localhost:4000/admin/">http://localhost:4000/admin/</a></p><p>2.配置</p><p>在_config.yml最后添加类似如下内容：</p><pre><code>admin:      username: myfavoritename      password_hash: be121740bf988b2225a313fa1f107ca1      secret: a secret something</code></pre><p>username：后端登录用户名</p><p>password_hash：后端登录用户密码对应的md5 hash值</p><p>secret：用于保证cookie安全</p><p>3.预览</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;hexo&lt;/p&gt;
+&lt;p&gt;一、后端管理插件hexo-admin&lt;br&gt;插件可以直接在网页端创建、编辑markdown文章内容，并将内容发布到_posts里。&lt;br&gt;另外，对我而言，最方便的是可以很方便的给文章加标题、分类、打标签。&lt;/p&gt;
+&lt;p&gt;参见：&lt;/p&gt;
+&lt;p&gt;An A</summary>
+      
     
     
     
