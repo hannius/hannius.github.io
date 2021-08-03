@@ -18,7 +18,7 @@
   <meta name="author" content="Martin Lei">
   <meta name="keywords" content="">
   
-  <title>hexo修改默认端口 - 让一切随风</title>
+  <title>hexo添加admin,修改默认端口 - 让一切随风</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -56,7 +56,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
@@ -164,7 +164,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="hexo修改默认端口">
+            <span class="h2" id="subtitle" title="hexo添加admin,修改默认端口">
               
             </span>
 
@@ -186,7 +186,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      61 字
+      155 字
     </span>
   
 
@@ -196,7 +196,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1
+      2
        分钟
     </span>
   
@@ -234,13 +234,16 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">hexo修改默认端口</h1>
+            <h1 style="display: none">hexo添加admin,修改默认端口</h1>
             
             <div class="markdown-body">
-              <p>默认使用4000端口，用hexo s -p 80 ，可以暂时修改启动端口。</p>
-<p>但是每次启动都要写”-p 80”才行，过于繁琐。</p>
-<p>修改方法：<br>找到node_modules\hexo-server\index.js文件，可以修改默认的port值！</p>
+              <h3 id="默认使用4000端口，用hexo-s-p-80-，可以暂时修改启动端口。"><a href="#默认使用4000端口，用hexo-s-p-80-，可以暂时修改启动端口。" class="headerlink" title="默认使用4000端口，用hexo s -p 80 ，可以暂时修改启动端口。"></a>默认使用4000端口，用hexo s -p 80 ，可以暂时修改启动端口。</h3><p>但是每次启动都要写”-p 80”才行，过于繁琐。</p>
+<p>修改方法：</p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs axapta">找到node_modules\hexo-<span class="hljs-keyword">server</span>\<span class="hljs-keyword">index</span>.js文件，可以修改默认的port值！<br></code></pre></td></tr></table></figure>
+<h3 id="另外需要在-config-yml添加如下信息："><a href="#另外需要在-config-yml添加如下信息：" class="headerlink" title="另外需要在_config.yml添加如下信息："></a>另外需要在_config.yml添加如下信息：</h3><figure class="highlight nsis"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs nsis"><span class="hljs-comment">#for hexo-admin</span><br><span class="hljs-literal">admin</span>:<br>  username: martin <span class="hljs-comment">#自己设置用户名</span><br>  password_hash: <span class="hljs-variable">$2a</span><span class="hljs-variable">$10</span><span class="hljs-variable">$3iexljP9AqDzeNGboJmHaetHM</span>/IaA.<span class="hljs-number">8</span>dSNuZOj.S0B0wINIhBKBym <span class="hljs-comment">#密码,明文经过bcrypt hash加密后生成的</span><br>  secret: martin  <span class="hljs-comment">#用于cookie安全</span><br>  deployCommand: <span class="hljs-string">&#x27;/data/scripts/hexo-generate.sh&#x27;</span>  <span class="hljs-comment">#调用该脚本</span><br></code></pre></td></tr></table></figure>
+<h3 id="hexo-generate-sh脚本如下："><a href="#hexo-generate-sh脚本如下：" class="headerlink" title="hexo-generate.sh脚本如下："></a>hexo-generate.sh脚本如下：</h3><figure class="highlight d"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs d">➜  init cat /data/scripts/hexo-generate.sh<br><span class="hljs-meta">#!/bin/bash</span><br>hexo g<br></code></pre></td></tr></table></figure>
 
+<h3 id="启动服务："><a href="#启动服务：" class="headerlink" title="启动服务："></a>启动服务：</h3><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs 1c">nohup hexo server -d <span class="hljs-meta">&amp;</span><br></code></pre></td></tr></table></figure>
             </div>
             <hr>
             <div>
@@ -295,6 +298,24 @@
               
             </div>
 
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDM4OS8xMDkyNg==">
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#lv-container', function() {
+        Fluid.utils.createScript('https://cdn-city.livere.com/js/embed.dist.js');
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
             
           </article>
         </div>

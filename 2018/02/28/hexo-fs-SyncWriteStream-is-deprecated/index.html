@@ -56,7 +56,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
@@ -186,7 +186,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      307 字
+      313 字
     </span>
   
 
@@ -237,15 +237,23 @@
             <h1 style="display: none">hexo fs.SyncWriteStream is deprecated</h1>
             
             <div class="markdown-body">
-              <p>fs.SyncWriteStream is deprecated<br>出现这个错误需要更新hexo-fs插件</p>
-<p>使用<br>npm install hexo-fs –save</p>
-<p>在执行hexo命令的时候，总会显示如下报错：<br>(node:7048) [DEP0061] DeprecationWarning: fs.SyncWriteStream is deprecated.</p>
+              <p>fs.SyncWriteStream is deprecated 出现这个错误需要更新hexo-fs插件</p>
+<p>使用</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs ada">npm install hexo-fs <span class="hljs-comment">--save</span><br><br></code></pre></td></tr></table></figure>
+
+<p>在执行hexo命令的时候，总会显示如下报错：</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">(<span class="hljs-keyword">node</span><span class="hljs-title">:7048</span>) [DEP0061] DeprecationWarning: fs.SyncWriteStream is deprecated.<br></code></pre></td></tr></table></figure>
+
 <p>从报错信息来看是因为fs.SyncWriteStream is deprecated，node.js从8.0开始已经弃用了fs.SyncWriteStream方法，所以是因为我们node_modules中某个插件调用了这个方法，通过查看Hexo作者GitHub对应的项目，在issue中看到有人提到这个问题，在hexo项目中其中有一个hexo-fs的插件调用了这个方法，所以需要更新hexo-fs插件，更新方法如下：</p>
-<p>npm install hexo-fs –save</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada">npm install hexo-fs <span class="hljs-comment">--save</span><br></code></pre></td></tr></table></figure>
+
 <p>更新插件后问题依然无法解决。</p>
-<p>通过–debug来查看：<br>[root@server init]# hexo –debug<br>06:55:32.711 DEBUG Hexo version: 3.5.0<br>06:55:32.714 DEBUG Working directory: /data/wwwroot/init/<br>06:55:32.787 DEBUG Config loaded: /data/wwwroot/init/_config.yml<br>06:55:32.832 DEBUG Plugin loaded: hexo-admin<br>(node:25414) [DEP0061] DeprecationWarning: fs.SyncWriteStream is deprecated.</p>
+<p>通过–debug来查看：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs routeros">[root@server init]# hexo --<span class="hljs-builtin-name">debug</span><br>06:55:32.711 <span class="hljs-builtin-name">DEBUG</span> Hexo version: 3.5.0<br>06:55:32.714 <span class="hljs-builtin-name">DEBUG</span> Working directory: /data/wwwroot/init/<br>06:55:32.787 <span class="hljs-builtin-name">DEBUG</span><span class="hljs-built_in"> Config </span>loaded: /data/wwwroot/init/_config.yml<br>06:55:32.832 <span class="hljs-builtin-name">DEBUG</span> Plugin loaded: hexo-admin<br>(node:25414) [DEP0061] DeprecationWarning: fs.SyncWriteStream is deprecated.<br></code></pre></td></tr></table></figure>
+
 <p>问题出在：hexo-admin的hexo-fs<br>因hexo-admin作为后台管理，无法npm uninstall hexo-admin卸载,则找到对应文件，注释：</p>
-<p>[root@server init]# grep -irn “SyncWriteStream” ./node_modules/hexo-admin/<br>./node_modules/hexo-admin/node_modules/hexo-fs/lib/fs.js:718:exports.SyncWriteStream = fs.SyncWriteStream;<br>[root@lywserver init]# </p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs gradle">[root@server init]# <span class="hljs-keyword">grep</span> -irn <span class="hljs-string">&quot;SyncWriteStream&quot;</span> .<span class="hljs-regexp">/node_modules/</span>hexo-admin/<br>.<span class="hljs-regexp">/node_modules/</span>hexo-admin<span class="hljs-regexp">/node_modules/</span>hexo-fs<span class="hljs-regexp">/lib/</span>fs.js:<span class="hljs-number">718</span>:exports.SyncWriteStream = fs.SyncWriteStream;<br>[root@lywserver init]# <br></code></pre></td></tr></table></figure>
+
 <p>将对应的exports.SyncWriteStream = fs.SyncWriteStream;注释(前面 //)即可！</p>
 
             </div>
@@ -302,6 +310,24 @@
               
             </div>
 
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDM4OS8xMDkyNg==">
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#lv-container', function() {
+        Fluid.utils.createScript('https://cdn-city.livere.com/js/embed.dist.js');
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
             
           </article>
         </div>

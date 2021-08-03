@@ -1,0 +1,584 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="Still Waters Run Deep">
+  <meta name="author" content="Martin Lei">
+  <meta name="keywords" content="">
+  
+  <title>Jenkins CICD实用经验分享 - 让一切随风</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="让一切随风" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Martin.Lei's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Jenkins CICD实用经验分享">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2018-07-10 16:33" pubdate>
+        July 10, 2018 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      41
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Jenkins CICD实用经验分享</h1>
+            
+            <div class="markdown-body">
+              <h3 id="1-修改-JVM-的内存配置"><a href="#1-修改-JVM-的内存配置" class="headerlink" title="1.修改 JVM 的内存配置"></a>1.修改 JVM 的内存配置</h3><p>Jenkins 启动方式有两种方式，一种是以 Jdk Jar 方式运行，一种是将 War 包放在 Tomcat 容器下运行。不管何种方式运行，都会存在一个问题就是，默认 JVM 内存分配太少，导致启动或者运行一段时间后内存溢出报错 java.lang.OutOfMemoryError: PermGen space。所以，需要在启动前修改 JVM 内存配置。以 Tomcat 容器方式启动 Jenkins 为例配置如下：</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs clean"># 进入到 Jenkins 运行所在 Tomcat bin目录<br>$ vim catalina.sh<br># 在 #JAVA_OPTS=<span class="hljs-string">&quot;$JAVA_OPTS -Dorg.apache.catalina.security.SecurityListener.UMASK=`umask`&quot;</span> 行下增加修改配置 JVM 内存配置大小，例如下边配置：<br>JAVA_OPTS=<span class="hljs-string">&quot;$JAVA_OPTS -server -Xms512m -Xmx1024m -XX:PermSize=256M -XX:MaxPermSize=512m&quot;</span><br></code></pre></td></tr></table></figure>
+<p>注意：这里的几个JVM 参数含义如下：</p>
+<ul>
+<li>-Xms: 使用的最小堆内存大小</li>
+<li>-Xmx: 使用的最大堆内存大小</li>
+<li>-XX:PermSize: 内存的永久保存区域大小</li>
+<li>-XX:MaxPermSize: 最大内存的永久保存区域大小</li>
+</ul>
+<h3 id="2-修改-Jenkins-主目录"><a href="#2-修改-Jenkins-主目录" class="headerlink" title="2.修改 Jenkins 主目录"></a>2.修改 Jenkins 主目录</h3><p>Linux下Jenkins默认安装目录为:/home/jenkins/.jenkins，这个目录磁盘空间有限，长时间使用会导致磁盘空间不够，建议修改为其他大磁盘空间目录。这里修改安装目录有两种方式，一种是配置为系统环境变量中，一种是配置到 Tomcat 容器环境变量中。</p>
+<p>2.1. 配置JENKINS_HOME到系统环境变量里面</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs routeros">注意：如果一台机器只安装一个Jenkins时，可以配置如下。<br><span class="hljs-variable">$vim</span> /etc<span class="hljs-built_in">/profile</span><br><span class="hljs-built_in"></span><span class="hljs-built_in">..</span>.<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">JENKINS_HOME</span>=/data/app/jenkins<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">PATH</span>=<span class="hljs-variable">$PATH</span>:$JENKINS_HOME<br><span class="hljs-comment"># 使配置生效</span><br>$ source /etc/profile<br></code></pre></td></tr></table></figure>
+<p>2.2 配置JENKINS_HOME到该Jenkins启动的Tomcat容器环境变量中</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs awk">注意：如果一台机器上边安装多个Jenkins 时，不能配置JENKINS_HOME 到系统环境变量里面，需要配置JENKINS_HOME到该Jenkins启动的Tomcat 容器配置里面，这样可以区分不同的Jenkins目录。<br>(<span class="hljs-number">1</span>)第一种方法是修改context.xml文件:<br>$ vim <span class="hljs-regexp">/data/</span>app<span class="hljs-regexp">/apache-tomcat-7.0.85/</span>conf/context.xml<br>&lt;Context&gt;<br>    ...<br>    <span class="hljs-comment"># 增加以下配置，优先获取该配置路径。</span><br>    &lt;Environment name=<span class="hljs-string">&quot;JENKINS_HOME&quot;</span> value=<span class="hljs-string">&quot;/data/app/jenkins/master/.jenkins&quot;</span> type=<span class="hljs-string">&quot;java.lang.String&quot;</span>/&gt;<br>&lt;/Context&gt;<br><br>(<span class="hljs-number">2</span>)第二种方法是修改bin下的catalina.sh<br>添加如下：<br>export JENKINS_HOME=<span class="hljs-string">&quot;/data/app/jenkins/master/.jenkins&quot;</span><br></code></pre></td></tr></table></figure>
+<p>这里要说明一下，如果一台机器上只安装了一个Jenkins服务时，可以配置 JENKINS_HOME到系统环境变量里面，如果安装了多个Jenkins服务时，不能这么配置，因为Jenkins会读取系统环境变量中JENKINS_HOME作为主目录安装，那样会存在配置覆盖的问题。</p>
+<p>此时应该采用第二种方式，各自配置JENKINS_HOME到自己启动的Tomcat容器环境变量中，Jenkins会优先读取该容器环境变量作为各自的主目录安装。</p>
+<p>附Jenkins寻找JENKINS_HOME环境变量的顺序为：</p>
+<ul>
+<li>首先读取容器环境变量</li>
+<li>如果没有，则读取系统环境变量</li>
+<li>如果还没有，则使用默认路径安装。</li>
+</ul>
+<h3 id="3-配置优化减少磁盘空间占用"><a href="#3-配置优化减少磁盘空间占用" class="headerlink" title="3.配置优化减少磁盘空间占用"></a>3.配置优化减少磁盘空间占用</h3><p>Jenkins运行Job构建比较多时，如果没有配置好清理策略的话，会导致占用磁盘空间比较大，最终由于磁盘空间不够导致构建失败的问题。</p>
+<h4 id="3-1-丢弃旧的构建配置"><a href="#3-1-丢弃旧的构建配置" class="headerlink" title="3.1.丢弃旧的构建配置"></a>3.1.丢弃旧的构建配置</h4><p>可以在Job中配置丢弃旧的构建，通过设置“保持构建的天数” 和“保持构建的最大个数” 两个参数，控制该Job最大保存构建数量。</p>
+<p>配置了最大保持3天之内的构建，如果超过3天的构建，则会在Job执行前被清理掉。同时配置了最大保持构建数量为10个，意思就是如果3天内构建次数如果超过10次，则最多保留最近执行的10个构建。这样配置的好处，除了能够自动清理一些Build之外，还能够为我们代码执行远程停止Job Build时，缩短停止时间</p>
+<h4 id="3-2-修改工作空间和构建记录根目录"><a href="#3-2-修改工作空间和构建记录根目录" class="headerlink" title="3.2.修改工作空间和构建记录根目录"></a>3.2.修改工作空间和构建记录根目录</h4><p>Jenkins 工作主要分为安装主目录，工作空间目录以及构建记录目录，默认配置路径：/home/jenkins/.jenkins<br>先停止tomcat,修改catalina.sh指定JENKINS_HOME,然后将/home/jenkins/.jenkins复制到JENKINS_HOME下，最后启动tomcat，则主目录会变成新的指定的JENKINS_HOME目录。</p>
+<h3 id="4-设置全局属性"><a href="#4-设置全局属性" class="headerlink" title="4.设置全局属性"></a>4.设置全局属性</h3><p>适当设置全局属性，可以避免在Job中重复写一些固定值，例如输出日志地址、接口请求地址等等，而且当固定值需要修改时，只需要修改一次即可，不用去每个Job里面修改，方便维护。可以去“系统管理” —&gt; “系统配置” —&gt; “全局属性” 下增加Environment variables键值对:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs elixir">键<span class="hljs-symbol">:DOCKER_JENKINS_URL</span><br><br>值<span class="hljs-symbol">:http</span><span class="hljs-symbol">://</span><span class="hljs-number">127.0</span>.0.<span class="hljs-number">1</span><span class="hljs-symbol">:</span><span class="hljs-number">8080</span>/jenkins<br><br>键<span class="hljs-symbol">:API_SERVICE_URL</span><br><br>值<span class="hljs-symbol">:http</span><span class="hljs-symbol">://</span><span class="hljs-number">127.0</span>.0.<span class="hljs-number">1</span><span class="hljs-symbol">:</span><span class="hljs-number">9090</span>/api/v1<br><br>键<span class="hljs-symbol">:LOG_PATH</span><br><br>值<span class="hljs-symbol">:/data/app/logs</span><br></code></pre></td></tr></table></figure>
+<p>那么在job构建时执行”Execute Shell”，可以直接应用，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#转发另一个Jenkins job执行</span><br>curl -X POST <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;DOCKER_JENKINS_URL&#125;</span>/job/maven_build/buildWithParameters?token=a4575431315316313665555asdasdee55&quot;</span><br><br><span class="hljs-comment">#进入到日志目录</span><br><span class="hljs-built_in">cd</span> <span class="hljs-variable">$&#123;LOG_PATH&#125;</span><br><br><span class="hljs-comment">#输出接口地址</span><br><span class="hljs-built_in">echo</span> <span class="hljs-variable">$&#123;API_SERVICE_URL&#125;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="5-JDK-Maven-Gradle-等软件多版本安装"><a href="#5-JDK-Maven-Gradle-等软件多版本安装" class="headerlink" title="5.JDK/Maven/Gradle 等软件多版本安装"></a>5.JDK/Maven/Gradle 等软件多版本安装</h3><p>对于一些常用的软件，比如Jdk、Maven、Gradle等，可能每个项目对软件依赖版本不一样，有的项目依赖Jdk7，有的依赖Jdk8，所以为了更好的适配各个项目，可以指定安装多个版本软件，然后Job创建时选择其中一个版本使用。<br>这里以Jdk为例，去 “系统管理” —&gt; “Global Tool Configuration” —&gt; “JDK” 分别安装jdk6、Jdk7、Jdk8。 </p>
+<p>然后，在创建Job时，选择项目需要的一个版本即可!</p>
+<h3 id="6-设置构建超时时间"><a href="#6-设置构建超时时间" class="headerlink" title="6.设置构建超时时间"></a>6.设置构建超时时间</h3><p>有些Job在执行构建时，由于某些原因导致构建挂起，耗时比较长，而这些长时间挂起的Job会导致Jenkins内存占用比较大，性能下降，严重的会直接导致 Jenkins挂掉。所以，需要设置构建超时时间来预防这种事情发生，一旦超过一定的时间，要让Job自动停止掉。</p>
+<p>jenkins的”build timeout plugin”插件可以帮我们完成该任务。</p>
+<p>Build Timeout<br>Aborts a build if it’s taking too long</p>
+<p>例如，这里设置构建超过30分钟则将本次Build置为失败:<br>Abort the build if it’s stuck:<br>time-out strategy: Absolute   Timeout minutes:30</p>
+<h3 id="7-配置视图分类管理Job"><a href="#7-配置视图分类管理Job" class="headerlink" title="7.配置视图分类管理Job"></a>7.配置视图分类管理Job</h3><p>Jenkins默认视图为ALL,显示所有Job列表,如Job比较多的话,找某个Job会不太方便，虽然有Search搜索功能，毕竟还是不太方便。这时候，可以通过新建视图方式，对Job进行分门别类，这样管理和查找起来就方便多了！</p>
+<h3 id="8-配置多节点管理"><a href="#8-配置多节点管理" class="headerlink" title="8.配置多节点管理"></a>8.配置多节点管理</h3><p>一般我们会使用Jenkins Slave集群管理来完成日常持续集成操作，使用 Jenkins Slave一主多从方式，可以将Job调度到对应的Slave机器上执行，能够大大提高系统并发执行效率。</p>
+<p>可以从“系统管理”—&gt;“管理节点”—&gt;“新建节点”，设置节点类型为“Permanent Agent”名称“slave1”的一个从节点，当然有多个节点时，可以创建多个。创建完毕之后，此时插件还属于不可用状态，因为还没有执行关联，具体关联方式可以参照Jenkins上节点关联说明，关联完毕之后，就可以在新建Job中配置指定那个Slave节点运行了</p>
+<ul>
+<li>远程工作目录: /data/app/jenkins/slave</li>
+<li>标签：slave1</li>
+<li>用法：尽可能的使用这个节点</li>
+<li>启动方式：Launch slave agents via SSH</li>
+<li>主机：jenkins master所在主机ip</li>
+<li>可用性：尽量保持代理在线</li>
+</ul>
+<p>有两种方式指定Job在哪个Slave节点运行：</p>
+<ul>
+<li>一种是对于自由风格类型的Job，我们可以通过在“Restrict where this project can be run” 选项下指定“Label Expression” 标签指定节点标签。</li>
+<li>另一种是对于多配置项目类型的Job，可以通过在 “Configuration Matrix” 先配置“Slave”选择Node/Label勾选指定一个或多个Slave 执行。 </li>
+</ul>
+<h3 id="9-一些实用插件"><a href="#9-一些实用插件" class="headerlink" title="9.一些实用插件"></a>9.一些实用插件</h3><p>Jenkins的基础配置就能够满足我们日常的基本工作，但是为了提高构建效率和方便维护，Jenkins上提供了很多实用的插件，使用这些插件，可以更加轻松、更加简便、更加高效的执行持续集成和发布流程。下边，简单介绍几个插件。</p>
+<h4 id="9-1-Managed-Script-插件管理脚本文件"><a href="#9-1-Managed-Script-插件管理脚本文件" class="headerlink" title="9.1 Managed Script 插件管理脚本文件"></a>9.1 Managed Script 插件管理脚本文件</h4><p>该插件是为了在管理文件时创建Script脚本文件，然后在Job中配置直接使用，方便脚本的统一管理和维护。首先我们需要去“系统管理” —&gt; “管理插件” —&gt; “可选插件” 中选择“Managed script” 插件，安装重启即可。 </p>
+<p>安装完毕后，可以从“系统管理”—&gt;“Managed files”—&gt;“Add a new Config” 选择 “Managed script file” 类型，创建一个新的shell 脚本文件，然后输入我们要执行的脚本代码。这里我创建了两个脚本，分别为 before-build-step-shell 和 after-build-step-shell，意思很明确了，前者在构建前执行的一些操作，后者在构建后执行的一些操作。 </p>
+<p>注意: 这里的脚本可以使用一些Jenkins系统的环境变量参数、参数化构建时传递的参数以及系统命令。</p>
+<p>创建完毕后，在Job中构建处选择“Execute managed script” 就可以使用这些脚本了。 </p>
+<h4 id="9-2-PostBuildScript-插件根据-Build-状态执行脚本"><a href="#9-2-PostBuildScript-插件根据-Build-状态执行脚本" class="headerlink" title="9.2 PostBuildScript 插件根据 Build 状态执行脚本"></a>9.2 PostBuildScript 插件根据 Build 状态执行脚本</h4><p>推荐安装 PostBuildScript插件，该插件可以在构建后操作中，根据构建结果状态，执行对应的脚本操作，很实用的一个插件。同上安装该插件，重启 Jenkins 完毕插件生效后，Job 中构建后操作处选择 “Execute Scripts” ，然后在 “Add build step” 中选择 “Execute shell” 等选项（当然也可以配合上一个插件，那么这里就选择 “Execute managed script”），下边选择一个build状态条件值，如果选择SUCCESS状态，那么该脚本只有在Build成功时才会执行，其他状态依次类推，状态可以多选，多选代表多种状态都能下触发。 </p>
+<h4 id="9-3-Jenkins2-0-Pipeline-插件执行持续集成发布流程"><a href="#9-3-Jenkins2-0-Pipeline-插件执行持续集成发布流程" class="headerlink" title="9.3 Jenkins2.0 Pipeline 插件执行持续集成发布流程"></a>9.3 Jenkins2.0 Pipeline 插件执行持续集成发布流程</h4><p>详细文章参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/aixiaoyang168/article/details/72818804"> 初试Jenkins2.0 Pipeline持续集成</a></p>
+<h4 id="9-4-Kubernetes-Plugin-插件动态创建-Jenkins-Slave"><a href="#9-4-Kubernetes-Plugin-插件动态创建-Jenkins-Slave" class="headerlink" title="9.4 Kubernetes Plugin 插件动态创建 Jenkins Slave"></a>9.4 Kubernetes Plugin 插件动态创建 Jenkins Slave</h4><p>传统的Jenkins Slave一主多从方式会存在一些痛点，比如Master单点故障，Slave配置环境差异，资源分配不均衡等导致可靠性和可维护性比较差，而使用 Kubernetes Plugin插件可以动态的创建和删除Jenkins Slave 节点，使用它可以很好的保证服务高可用，动态伸缩合理使用资源，以及良好的扩展性。</p>
+<p>使用该插件后，它的工作流程大致为：当Jenkins Master接受到Build 请求时，会根据配置的Label动态创建一个运行在Docker Container中的 Jenkins Slave,并注册到Master上，当运行完Job后，这个Slave会被注销并且 Docker Container也会自动删除，恢复到最初状态。 </p>
+<p>详细文章参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/aixiaoyang168/article/details/79767649">  初试 Jenkins 使用 Kubernetes Plugin 完成持续构建与发布</a></p>
+<h3 id="10-JAVA-代码触发-Jenkins-Job-创建、删除、停止等操作。"><a href="#10-JAVA-代码触发-Jenkins-Job-创建、删除、停止等操作。" class="headerlink" title="10.JAVA 代码触发 Jenkins Job 创建、删除、停止等操作。"></a>10.JAVA 代码触发 Jenkins Job 创建、删除、停止等操作。</h3><p>Jenkins Job创建、删除、构建等操作，除了在页面手动操作外，还可以通过 Jenkins API接口执行对应操作，详细接口可参考 Jenkins<br>REST API 文档地址：http://<jenkins_url>/api。这里演示的是使用 Jenkins-client.jar包，使用JAVA代码操作如何创建、删除、停止、触发构建等，使用代码触发jenkins相关操作，好处就是自己可控，这样可以配合自己的业务需要，随时启动或者新建Job</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-keyword">class</span> JenkinsUtils &#123;<br><br>    <span class="hljs-keyword">private</span> static String jenkins_url = <span class="hljs-string">&quot;http://127.0.0.1/jenkins/&quot;</span>;<br>    <span class="hljs-keyword">private</span> static String jenkins_user = <span class="hljs-string">&quot;admin&quot;</span>;<br>    <span class="hljs-keyword">private</span> static String jenkins_token = <span class="hljs-string">&quot;1b356d175432ed0d34c440d68d00fe49&quot;</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 通过模板创建 Job</span><br><span class="hljs-comment">     * @param jobName</span><br><span class="hljs-comment">     * @param jobTemplate</span><br><span class="hljs-comment">     * @return</span><br><span class="hljs-comment">     */</span><br>    public static boolean create<span class="hljs-constructor">JobFromTemplate(String <span class="hljs-params">jobName</span>, String <span class="hljs-params">jobTemplate</span>)</span> &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            URI uri = <span class="hljs-keyword">new</span> <span class="hljs-constructor">URI(<span class="hljs-params">jenkins_url</span>)</span>;            <br>            JenkinsServer jenkins = <span class="hljs-keyword">new</span> <span class="hljs-constructor">JenkinsServer(<span class="hljs-params">uri</span>, <span class="hljs-params">jenkins_user</span>, <span class="hljs-params">jenkins_token</span>)</span>;<br>            String template = jenkins.get<span class="hljs-constructor">JobXml(<span class="hljs-params">jobTemplate</span>)</span>;<br>            Document doc = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DocumentHelper</span>.</span></span>parse<span class="hljs-constructor">Text(<span class="hljs-params">template</span>)</span>;<br>            String newConfigXml = doc.<span class="hljs-keyword">as</span><span class="hljs-constructor">XML()</span>;<br>            jenkins.create<span class="hljs-constructor">Job(<span class="hljs-params">jobName</span>, <span class="hljs-params">newConfigXml</span>, <span class="hljs-params">false</span>)</span>;<br>        &#125;catch (Exception e)&#123;<br>            e.print<span class="hljs-constructor">StackTrace()</span>;<br>            return <span class="hljs-literal">false</span>;<br>        &#125;<br>        return <span class="hljs-literal">true</span>;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 删除/禁用 Job</span><br><span class="hljs-comment">     * @param jobName</span><br><span class="hljs-comment">     * @return</span><br><span class="hljs-comment">     */</span><br>    public static boolean delete<span class="hljs-constructor">Job(String <span class="hljs-params">jobName</span>)</span>&#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            URI uri = <span class="hljs-keyword">new</span> <span class="hljs-constructor">URI(<span class="hljs-params">jenkins_url</span>)</span>;            <br>            JenkinsServer jenkins = <span class="hljs-keyword">new</span> <span class="hljs-constructor">JenkinsServer(<span class="hljs-params">uri</span>, <span class="hljs-params">jenkins_user</span>, <span class="hljs-params">jenkins_token</span>)</span>;<br>            jenkins.delete<span class="hljs-constructor">Job(<span class="hljs-params">jobName</span>, <span class="hljs-params">false</span>)</span>;<br>            jenkins.disable<span class="hljs-constructor">Job(<span class="hljs-params">jobName</span>, <span class="hljs-params">false</span>)</span>;<br>        &#125; catch (Exception e) &#123;<br>            e.print<span class="hljs-constructor">StackTrace()</span>;<br>            return <span class="hljs-literal">false</span>;<br>        &#125;<br>        return <span class="hljs-literal">true</span>;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 启动 Job 构建</span><br><span class="hljs-comment">     * @param jobName</span><br><span class="hljs-comment">     * @param params</span><br><span class="hljs-comment">     * @return</span><br><span class="hljs-comment">     */</span><br>    public static boolean start<span class="hljs-constructor">Job(String <span class="hljs-params">jobName</span>, String <span class="hljs-params">params</span>)</span>&#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            String buildUrl = jenkins_url + jobName + <span class="hljs-string">&quot;/buildWithParameters?&quot;</span> + params;<br>            HttpUtils.<span class="hljs-constructor">HttpGet(<span class="hljs-params">buildUrl</span>)</span>;<br>        &#125; catch (Exception e) &#123;<br>            e.print<span class="hljs-constructor">StackTrace()</span>;<br>            return <span class="hljs-literal">false</span>;<br>        &#125;<br>        return <span class="hljs-literal">true</span>;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 停止正在构建中的 Job，先清除等待队列中的 build，在停止运行中的 build</span><br><span class="hljs-comment">     * @param jobName</span><br><span class="hljs-comment">     * @return</span><br><span class="hljs-comment">     */</span><br>    public static boolean stop<span class="hljs-constructor">Job(String <span class="hljs-params">jobName</span>)</span>&#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            URI uri = <span class="hljs-keyword">new</span> <span class="hljs-constructor">URI(<span class="hljs-params">jenkins_url</span>)</span>;<br>            JenkinsServer jenkins = <span class="hljs-keyword">new</span> <span class="hljs-constructor">JenkinsServer(<span class="hljs-params">uri</span>, <span class="hljs-params">jenkins_user</span>, <span class="hljs-params">jenkins_token</span>)</span>;<br>            <span class="hljs-comment">// 先 kill 掉 queue 里面的 build</span><br>            QueueItem qi = jenkins.get<span class="hljs-constructor">Job(<span class="hljs-params">jobName</span>)</span>.get<span class="hljs-constructor">QueueItem()</span>;<br>            <span class="hljs-keyword">if</span>(qi != null)&#123;<br>                HttpUtils.<span class="hljs-constructor">HttpPost(<span class="hljs-params">jenkinsUrl</span> + <span class="hljs-string">&quot;queue/cancelItem?id=&quot;</span> + <span class="hljs-params">qi</span>.<span class="hljs-params">getId</span>()</span>);<br>            &#125;<br>            <span class="hljs-comment">// 在 kill 掉正在运行中的 build</span><br>            List&lt;Build&gt; bulidsList = jenkins.get<span class="hljs-constructor">Job(<span class="hljs-params">jobName</span>)</span>.get<span class="hljs-constructor">AllBuilds()</span>;<br>            <span class="hljs-keyword">for</span>(Build b:bulidsList)&#123;<br>                <span class="hljs-keyword">if</span>(b.details<span class="hljs-literal">()</span>.is<span class="hljs-constructor">Building()</span>)&#123;<br>                    <span class="hljs-keyword">try</span>&#123;<br>                        b.<span class="hljs-constructor">Stop()</span>;<br>                    &#125;catch(Exception ee)&#123;<br>                        ee.print<span class="hljs-constructor">StackTrace()</span>;<br>                        return <span class="hljs-literal">false</span>;<br>                    &#125;<br>                &#125;<br>            &#125;<br>        &#125; catch(Exception e) &#123;<br>            e.print<span class="hljs-constructor">StackTrace()</span>;<br>            return <span class="hljs-literal">false</span>;<br>        &#125;<br>        return <span class="hljs-literal">true</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这里有一个地方要注意，在停止构建中的Job 时，这里是遍历所有 Build，然后在Kill掉运行中的Build，如果Build历史比较多的时候，会耗时比较久，这将会导致立马重新执行该Job Build时，Build会被异常Abort掉。 也尝试过获取最后一次Build执行Stop操作，好像也不太好使。所以这里大家可以通过上边3.1、丢弃旧的构建配置中的操作，减少构建历史记录，这样就可以很快执行完毕，就不会出现上述问题了。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/jenkins/">jenkins</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/jenkins/">jenkins</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/07/19/MySQL5-6-5-7-SSL-Config/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">MySQL5.6  5.7 SSL Config</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018/07/03/pipeline-jnlp/">
+                        <span class="hidden-mobile">pipeline jnlp</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDM4OS8xMDkyNg==">
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#lv-container', function() {
+        Fluid.utils.createScript('https://cdn-city.livere.com/js/embed.dist.js');
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hannius.github.io/" target="_blank" rel="nofollow noopener"><span>Blog</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/hannius" target="_blank" rel="nofollow noopener"><span>Hannius</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        粤ICP备18019482号-1
+      </a>
+    </span>
+    
+      
+        <span>
+          <a
+            href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=18019482"
+            rel="nofollow noopener"
+            class="beian-police"
+            target="_blank"
+          >
+            
+              <span style="visibility: hidden; width: 0">|</span>
+              <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+            
+            <span>粤公网安备18019482号</span>
+          </a>
+        </span>
+      
+    
+  </div>
+
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

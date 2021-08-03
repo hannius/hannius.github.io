@@ -40,7 +40,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
@@ -183,6 +183,432 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2018/07/03/pipeline-%E8%AF%AD%E6%B3%95%E8%AF%A6%E8%A7%A3/" target="_self">
+          pipeline 语法详解
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2018/07/03/pipeline-%E8%AF%AD%E6%B3%95%E8%AF%A6%E8%A7%A3/" target="_self">
+          
+          
+            
+          
+          pipeline 脚本是有groovy语言实现的,无需专门学习 groovy
+pipeline支持两种语法:
+
+Declarative 声明式
+Scripted pipeline脚本式
+
+如何创建基本的pipeline
+
+直接在jenkins web ui网页界面输入脚本
+通过常见一个jenkins可以检入项目的源代码管理库
+
+Declarative 声明式pipeline声明式pipeline基
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-07-03 16:23" pubdate>
+              2018-07-03
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/jenkins/">jenkins</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/jenkins/">jenkins</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2018/06/28/kubernetes%E4%B9%8BService-Account/" target="_self">
+          kubernetes之Service Account
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2018/06/28/kubernetes%E4%B9%8BService-Account/" target="_self">
+          
+          
+            
+          
+          Service Account概念的引入是基于这样的使用场景：运行在pod里的进程需要调用Kubernetes API以及非Kubernetes API的其它服务。Service Account它并不是给kubernetes集群的用户使用的，而是给pod里面的进程使用的，它为pod提供必要的身份认证。
+1234567891011121314➜  nexus kubectl get saNAME  
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-06-28 16:46" pubdate>
+              2018-06-28
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/k8s/">k8s</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/k8s/">k8s</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2018/06/27/bernetes-RBAC-Detailed/" target="_self">
+          Kubernetes RBAC  Detailed
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2018/06/27/bernetes-RBAC-Detailed/" target="_self">
+          
+          
+            
+          
+          RBAC - 基于角色的访问控制RBAC使用：rbac.authorization.k8s.io API Group 来实现授权决策，允许管理员通过 Kubernetes API 动态配置策略，要启用RBAC，需要在 apiserver 中添加参数–authorization-mode=RBAC，如果使用的kubeadm安装的集群，1.6 版本以上的都默认开启了RBAC，可以通过查看 Master
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-06-27 18:47" pubdate>
+              2018-06-27
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/k8s/">k8s</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/k8s/">k8s</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2018/06/25/Kubernetes%E4%BB%8EPrivate-Registry%E4%B8%AD%E6%8B%89%E5%8F%96%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E7%9A%84%E6%96%B9%E6%B3%95/" target="_self">
+          Kubernetes从Private Registry中拉取容器镜像的方法
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2018/06/25/Kubernetes%E4%BB%8EPrivate-Registry%E4%B8%AD%E6%8B%89%E5%8F%96%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E7%9A%84%E6%96%B9%E6%B3%95/" target="_self">
+          
+          
+            
+          
+          方法1：利用Node上的配置访问Private Registry在玩Docker时，很多朋友都 搭建过自己的Private Registry。Docker访问那些以basic auth方式进行鉴权的Private Registry，只需在本地执行docker login，输入用户名、密码后，就可以自由向Registry Push镜像或pull 镜像到本地了：
+1234[root@node3 doc
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-06-25 16:48" pubdate>
+              2018-06-25
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/k8s/">k8s</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/k8s/">k8s</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2018/06/22/%E5%9F%BA%E4%BA%8Ek8s%20%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE%E5%8F%8A%E6%89%A9%E5%AE%B9maven%20nexus%E7%A7%81%E6%9C%8D/" target="_self">
+          基于k8s 动态配置及扩容maven nexus私服
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2018/06/22/%E5%9F%BA%E4%BA%8Ek8s%20%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE%E5%8F%8A%E6%89%A9%E5%AE%B9maven%20nexus%E7%A7%81%E6%9C%8D/" target="_self">
+          
+          
+            
+          
+          配置nexus从官网下载了nexus之后还需要进行一些配置。编辑bin/nexus.vmoptions 调整后的如下：
+12345678910111213141516-Xms600M-Xmx600M-XX:MaxDirectMemorySize=1G-XX:+UnlockDiagnosticVMOptions-XX:+UnsyncloadClass-XX:+LogVMOutput-XX:LogFi
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-06-22 10:36" pubdate>
+              2018-06-22
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/k8s/">k8s</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/k8s/">k8s</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2018/06/14/kubernetes-jenkins-ci-cd/" target="_self">
+          kubernetes-jenkins-ci-cd
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2018/06/14/kubernetes-jenkins-ci-cd/" target="_self">
+          
+          
+            
+          
+          流程图：基于Jenkins的CI/CD流程如下所示:
+流程说明：
+用户向Gitlab提交代码，代码中必须包含Dockerfile
+将代码提交到远程仓库
+用户在发布应用时需要填写git仓库地址和分支、服务类型、服务名称、资源数量、实例个数，确定后触发Jenkins自动构建
+Jenkins的CI流水线自动编译代码并打包成docker镜像推送到Harbor镜像仓库
+Jenkins的CI流水线中包括了自定
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-06-14 17:22" pubdate>
+              2018-06-14
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/k8s/">k8s</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/k8s/">k8s</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2018/06/13/Pause%E5%AE%B9%E5%99%A8/" target="_self">
+          Pause容器
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2018/06/13/Pause%E5%AE%B9%E5%99%A8/" target="_self">
+          
+          
+            
+          
+          Pause容器定义Pause容器，又叫Infra容器，本文将探究该容器的作用与原理。
+在kubelet的配置中有这样一个参数：
+12KUBELET_POD_INFRA_CONTAINER=--pod-infra-container-image=registry.access.redhat.com/rhel7/pod-infrastructure:latest
+
+上面是openshift中的配置参数
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-06-13 16:50" pubdate>
+              2018-06-13
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/k8s/">k8s</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/k8s/">k8s</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2018/05/24/crontab%E5%92%8Canacron%E5%92%8Clogrotate-relation/" target="_self">
+          crontab、anacron、logrotate relationship
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2018/05/24/crontab%E5%92%8Canacron%E5%92%8Clogrotate-relation/" target="_self">
+          
+          
+            
+          
+          服务器上的nginx使用logrotate来分割日志，设置为每天分割。但是logrotate似乎没有工作，日志并没有分割。服务器是CentOS 6。
+为了找到原因，分析可能出错的地方。如果是logrotate未执行，可能是crond没有启动，因为logrotate被/etc/cron.daily/logrotate脚本所启动，可以查看其中代码：
+123456789[root@test ~]# ca
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-05-24 16:33" pubdate>
+              2018-05-24
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/logrotate/">logrotate</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/logrotate/">logrotate</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2018/05/21/ELK-Sentinl/" target="_self">
           ELK Sentinl
         </a>
@@ -286,402 +712,11 @@ SENTINEL还旨在通过直接在Kibana UI中整合来简化在Kibi / Kibana中�
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2018/05/07/Elasticsearch%E5%88%86%E7%89%87%E5%8F%8A%E9%9B%86%E7%BE%A4%E8%AF%B4%E6%98%8E/" target="_self">
-          Elasticsearch分片及集群说明
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2018/05/07/Elasticsearch%E5%88%86%E7%89%87%E5%8F%8A%E9%9B%86%E7%BE%A4%E8%AF%B4%E6%98%8E/" target="_self">
-          
-          
-            
-          
-          replica的作用主要包括：
-a.容灾:primary分片丢失，replica分片就会被顶上去成为新的主分片，同时根据这个新的主分片创建新的replica,集群数据安然无恙；
-
-b.提高查询性能：replica和primary分片的数据是相同的，所以对于一个query既可以查主分片也可以查备分片，在合适的范围内多个replica性能会更优(但要考虑资源占用也会提升[cpu/disk/heap])
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-05-07 14:48" pubdate>
-              2018-05-07
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/ELK/">ELK</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/ELK/">ELK</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2018/04/20/hexo%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E7%AB%AF%E5%8F%A3/" target="_self">
-          hexo修改默认端口
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2018/04/20/hexo%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E7%AB%AF%E5%8F%A3/" target="_self">
-          
-          
-            
-          
-          默认使用4000端口，用hexo s -p 80 ，可以暂时修改启动端口。
-但是每次启动都要写”-p 80”才行，过于繁琐。
-修改方法：找到node_modules\hexo-server\index.js文件，可以修改默认的port值！
-
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-04-20 16:22" pubdate>
-              2018-04-20
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/hexo/">hexo</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/hexo/">hexo</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2018/04/20/docker-cicd%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E9%83%A8%E7%BD%B2/" target="_self">
-          docker cicd持续集成部署
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2018/04/20/docker-cicd%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E9%83%A8%E7%BD%B2/" target="_self">
-          
-          
-            
-          
-          持续集成的概念持续集成，Continuous integration ，简称CI。
-首先，解释下集成：所有的项目代码都是托管在SVN或者GIT服务器上（以下简称代码服务器）。每个项目都有若干个单元测试和集成测试。集成测试是单元测试的逻辑扩展：在单元测试的基础上，将所有模块按照设计要求组装成为子系统或系统进行集成测试。实践表明，一些模块虽然能够单独地工作，但并不能保证连接起来也能正常的工作。一些局部
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-04-20 14:29" pubdate>
-              2018-04-20
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/docker/">docker</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/docker/">docker</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2018/04/13/logstash%E4%BC%98%E5%8C%96/" target="_self">
-          logstash吞吐率优化
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2018/04/13/logstash%E4%BC%98%E5%8C%96/" target="_self">
-          
-          
-            
-          
-          问题一##最近发现kibana的日志传的很慢，常常查不到日志，由于所有的日志收集都只传输到了一个logstash进行收集和过滤，于是怀疑是否是由于logstash的吞吐量存在瓶颈。一看，还真是到了瓶颈。
-优化过程经过查询logstash完整配置文件，有几个参数需要调整
-12345678# pipeline线程数，官方建议是等于CPU内核数pipeline.workers: 24# 实际output
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-04-13 16:55" pubdate>
-              2018-04-13
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/ELK/">ELK</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/ELK/">ELK</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2018/04/13/kafka%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" target="_self">
-          kafka性能调优
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2018/04/13/kafka%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" target="_self">
-          
-          
-            
-          
-          Kafka的配置详尽、复杂，想要进行全面的性能调优需要掌握大量信息，这里只记录一下我在日常工作使用中走过的坑和经验来对kafka集群进行优化常用的几点。##1.JVM的优化java相关系统自然离不开JVM的优化。首先想到的肯定是Heap Size的调整。
-vim bin/kafka-server-start.sh   
-调整KAFKA_HEAP_OPTS=”-Xmx16G -Xms16G”的值推荐
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-04-13 16:38" pubdate>
-              2018-04-13
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Kafka/">Kafka</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Kafka/">Kafka</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2018/04/03/ELK%E7%B4%A2%E5%BC%95/" target="_self">
-          ElasticSearch 索引查询使用指南
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2018/04/03/ELK%E7%B4%A2%E5%BC%95/" target="_self">
-          
-          
-            
-          
-          1.我们通常用用_cat API检测集群是否健康。 确保9200端口号可用:curl ‘localhost:9200/_cat/health?v’
-绿色表示一切正常, 黄色表示所有的数据可用但是部分副本还没有分配,红色表示部分数据因为某些原因不可用.
-2.通过如下语句，我们可以获取集群的节点列表：curl ‘localhost:9200/_cat/nodes?v’
-3.通过如下语句，列出所有索引：
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-04-03 12:03" pubdate>
-              2018-04-03
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/ELK/">ELK</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/ELK/">ELK</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2018/04/03/elk/" target="_self">
-          ELK的一次吞吐量优化
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2018/04/03/elk/" target="_self">
-          
-          
-            
-          
-          问题一  ● 最近发现kibana的日志传的很慢，常常查不到日志，由于所有的日志收集都只传输到了一个logstash进行收集和过滤，于是怀疑是否是由于logstash的吞吐量存在瓶颈。一看，还真是到了瓶颈。
-  ● 优化过程
-  ● 经过查询logstash完整配置文件，有几个参数需要调整
-12345678# pipeline线程数，官方建议是等于CPU内核数pipeline.workers: 2
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-04-03 11:42" pubdate>
-              2018-04-03
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2018/04/02/asd/" target="_self">
-          23种非常有用的ElasticSearch查询例子
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2018/04/02/asd/" target="_self">
-          
-          
-            
-          
-          一、新建索引为了展示Elasticsearch中不同查询的用法，先在Elasticsearch里面创建了book相关的documents，每本书主要涉及以下字段： title, authors, summary, publish_date(发行日期),publisher以及评论条数。
-操作如下：
-12345678910111213curl -XPUT &#x27;https://www.itebl
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-04-02 14:34" pubdate>
-              2018-04-02
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#board">3</a><a class="extend next" rel="next" href="/page/3/#board"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#board">3</a><a class="page-number" href="/page/4/#board">4</a><a class="extend next" rel="next" href="/page/3/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 

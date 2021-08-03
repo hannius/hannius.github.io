@@ -18,9 +18,25 @@
   <meta name="author" content="Martin Lei">
   <meta name="keywords" content="">
   
-  <title>Tags - K8s - 让一切随风</title>
+  <title>pipeline 语法详解 - 让一切随风</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
 
 
 
@@ -40,7 +56,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
@@ -49,7 +65,7 @@
 
 
 <body>
-  <header style="height: 80vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -148,17 +164,58 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Tag - K8s">
+            <span class="h2" id="subtitle" title="pipeline 语法详解">
               
             </span>
 
             
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2018-07-03 16:23" pubdate>
+        July 3, 2018 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      250 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      2
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
           </div>
 
-          
-            <div class="scroll-down-bar">
-              <i class="iconfont icon-arrowdown"></i>
-            </div>
           
         </div>
       </div>
@@ -167,70 +224,137 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<div class="list-group">
-  <p class="h4">6 posts in total.</p>
-  <hr>
-  
-  
-    
       
-      <p class="h5">2018</p>
-    
-    <a href="/2018/11/14/kubernetes%E4%B9%8Bsecret/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">kubernetes之secret</span>
-      <time style="float: right;">11-14</time>
-    </a>
-  
-    
-    <a href="/2018/08/21/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">生成k8s证书的三种方式</span>
-      <time style="float: right;">08-21</time>
-    </a>
-  
-    
-    <a href="/2018/06/27/bernetes-RBAC-Detailed/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Kubernetes RBAC  Detailed</span>
-      <time style="float: right;">06-27</time>
-    </a>
-  
-    
-    <a href="/2018/06/22/%E5%9F%BA%E4%BA%8Ek8s%20%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE%E5%8F%8A%E6%89%A9%E5%AE%B9maven%20nexus%E7%A7%81%E6%9C%8D/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">基于k8s 动态配置及扩容maven nexus私服</span>
-      <time style="float: right;">06-22</time>
-    </a>
-  
-    
-    <a href="/2018/06/14/kubernetes-jenkins-ci-cd/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">kubernetes-jenkins-ci-cd</span>
-      <time style="float: right;">06-14</time>
-    </a>
-  
-    
-    <a href="/2018/06/13/Pause%E5%AE%B9%E5%99%A8/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Pause容器</span>
-      <time style="float: right;">06-13</time>
-    </a>
-  
-</div>
 
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">pipeline 语法详解</h1>
+            
+            <div class="markdown-body">
+              <p>pipeline 脚本是有groovy语言实现的,无需专门学习 groovy</p>
+<p>pipeline支持两种语法:</p>
+<ul>
+<li>Declarative 声明式</li>
+<li>Scripted pipeline脚本式</li>
+</ul>
+<p>如何创建基本的pipeline</p>
+<ul>
+<li>直接在jenkins web ui网页界面输入脚本</li>
+<li>通过常见一个jenkins可以检入项目的源代码管理库</li>
+</ul>
+<p>Declarative 声明式pipeline<br>声明式pipeline基本语法和表达式遵循groovy语法，但是有以下例外：</p>
+<ul>
+<li>声明式pipeline必须包含在固定格式的pipeline{}块内</li>
+<li>每个声明语句必须独立一行，行尾无需使用分号</li>
+<li>块(Blocks{})只能包含章节(Sections),指令（Directives）,步骤(Steps),或者赋值语句</li>
+<li>属性引用语句被视为无参数方法调用,如input()</li>
+</ul>
+<ol>
+<li>块(Blocks{}):由大括号括起来的语句： 如Pipeline{}, Sections{}, parameters{}, script{}</li>
+<li>章节(Sections):通常包括一个或者多个指令或步骤,如agent，post，stages，steps</li>
+<li>指令(Directives): environment, options, parameters, triggers, stage, tools, when</li>
+<li>步骤(steps)：执行脚本式pipeline, 如script{}</li>
+</ol>
+<p>参考文章：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/fengjian2016/p/8227532.html">Jenkins pipeline：pipeline 语法详解</a></p>
 
-
-
-
-              </div>
             </div>
-          </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/jenkins/">jenkins</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/jenkins/">jenkins</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/07/03/pipeline-jnlp/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">pipeline jnlp</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018/06/28/kubernetes%E4%B9%8BService-Account/">
+                        <span class="hidden-mobile">kubernetes之Service Account</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDM4OS8xMDkyNg==">
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#lv-container', function() {
+        Fluid.utils.createScript('https://cdn-city.livere.com/js/embed.dist.js');
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
         </div>
       </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
     
 
     
@@ -361,9 +485,15 @@
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
 
 
 

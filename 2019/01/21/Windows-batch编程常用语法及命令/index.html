@@ -1,0 +1,518 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="Still Waters Run Deep">
+  <meta name="author" content="Martin Lei">
+  <meta name="keywords" content="">
+  
+  <title>Windows batch编程常用语法及命令 - 让一切随风</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="让一切随风" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Martin.Lei's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Windows batch编程常用语法及命令">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-01-21 10:09" pubdate>
+        January 21, 2019 am
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.6k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      56
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Windows batch编程常用语法及命令</h1>
+            
+            <div class="markdown-body">
+              <figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">1 <span class="hljs-keyword">echo</span> 和 @<br>回显命令<br>@                     <span class="hljs-comment">#关闭单行回显</span><br><span class="hljs-keyword">echo</span> off              <span class="hljs-comment">#从下一行开始关闭回显</span><br>@<span class="hljs-keyword">echo</span> off             <span class="hljs-comment">#从本行开始关闭回显。一般批处理第一行都是这个</span><br><span class="hljs-keyword">echo</span> on               <span class="hljs-comment">#从下一行开始打开回显</span><br><span class="hljs-keyword">echo</span>                  <span class="hljs-comment">#显示当前是 echo off 状态还是 echo on 状态</span><br><span class="hljs-keyword">echo</span>.                 <span class="hljs-comment">#输出一个”回车换行”，空白行</span><br>                         <span class="hljs-comment">#(同echo, echo; echo+ echo[ echo] echo/ echo)</span><br><br>2 errorlevel<br><span class="hljs-keyword">echo</span> %errorlevel%<br>每个命令运行结束，可以用这个命令行格式查看返回码<br>默认值为0，一般命令执行出错会设 errorlevel 为1<br><br>3 dir<br>显示文件夹内容<br>dir                  <span class="hljs-comment">#显示当前目录中的文件和子目录</span><br>dir <span class="hljs-string">/a</span>               <span class="hljs-comment">#显示当前目录中的文件和子目录，包括隐藏文件和系统文件</span><br>dir c: <span class="hljs-string">/a</span><span class="hljs-function">:d</span>          <span class="hljs-comment">#显示 C 盘当前目录中的目录</span><br>dir c: <span class="hljs-string">/a</span><span class="hljs-function">:-d</span>         <span class="hljs-comment">#显示 C 盘根目录中的文件</span><br>dir c: <span class="hljs-string">/b/p</span>         <span class="hljs-comment">#/b只显示文件名，/p分页显示</span><br>dir *<span class="hljs-string">.exe</span> <span class="hljs-string">/s</span>         <span class="hljs-comment">#显示当前目录和子目录里所有的.exe文件</span><br><br>4 <span class="hljs-keyword">cd</span><br>切换目录<br><span class="hljs-keyword">cd</span>  \             <span class="hljs-comment">#进入根目录</span><br><span class="hljs-keyword">cd</span>                   <span class="hljs-comment">#显示当前目录</span><br><span class="hljs-keyword">cd</span> <span class="hljs-string">/d</span> d<span class="hljs-function">:sdk</span>        <span class="hljs-comment">#可以同时更改盘符和目录</span><br><span class="hljs-keyword">cd</span> <span class="hljs-string">/d</span> %~dp0<br>更改当前目录为批处理本身的目录<br>比如你有个批处理a.bat在D:\qq文件夹下<br>a.bat内容为<br><span class="hljs-keyword">cd</span> <span class="hljs-string">/d</span> %~dp0<br>在这里<br><span class="hljs-keyword">cd</span> <span class="hljs-string">/d</span> %~dp0的意思就是<span class="hljs-keyword">cd</span> <span class="hljs-string">/d</span> d:\qq<br>%0代表批处理本身 d:\qq\a.bat<br>~dp是变量扩充<br>d既是扩充到分区号 d:<br>p就是扩充到路径 \qq<br>dp就是扩充到分区号路径 d:\qq <br><br>5 md<br>创建目录<br>md d<span class="hljs-function">:abc</span>          <span class="hljs-comment">#如果 d:a 不存在，将会自动创建中级目录</span><br><span class="hljs-comment">#如果命令扩展名被停用，则需要键入 mkdir abc。</span><br><br>6 rd<br>删除目录<br>rd abc               <span class="hljs-comment">#删除当前目录里的 abc 子目录，要求为空目录</span><br>rd <span class="hljs-string">/s/q</span> d<span class="hljs-function">:temp</span>      <span class="hljs-comment">#删除 d:temp 文件夹及其子文件夹和文件，/q安静模式</span><br><br>7 del<br>删除文件<br>del d<span class="hljs-function">:test.txt</span>      <span class="hljs-comment">#删除指定文件，不能是隐藏、系统、只读文件</span><br>del <span class="hljs-string">/q/a/f</span> d<span class="hljs-function">:temp</span>*.*<br>删除 d<span class="hljs-function">:temp</span> 文件夹里面的所有文件，包括隐藏、只读、系统文件，不包括子目录<br>del <span class="hljs-string">/q/a/f/s</span> d<span class="hljs-function">:temp</span>*.*<br>删除 d<span class="hljs-function">:temp</span> 及子文件夹里面的所有文件，包括隐藏、只读、系统文件，不包括子目录<br><br>8 ren<br>重命名命令<br>ren d<span class="hljs-function">:temp</span> tmp      <span class="hljs-comment">#支持对文件夹的重命名</span><br><br>9 cls<br>清屏<br><br>10 type<br>显示文件内容<br>type c<span class="hljs-function">:boot.ini</span>     <span class="hljs-comment">#显示指定文件的内容，程序文件一般会显示乱码</span><br>type *<span class="hljs-string">.txt</span>           <span class="hljs-comment">#显示当前目录里所有.txt文件的内容</span><br><br>11 copy<br>拷贝文件<br>copy c<span class="hljs-function">:test.txt</span> d<span class="hljs-function">:test.bak</span><br>复制 c<span class="hljs-function">:test.txt</span> 文件到 d: ，并重命名为 test.bak<br>copy con test.txt<br>从屏幕上等待输入，按 Ctrl+Z 结束输入，输入内容存为test.txt文件<br>con代表屏幕，prn代表打印机，nul代表空设备<br>copy 1.txt + 2.txt 3.txt<br>合并 1.txt 和 2.txt 的内容，保存为 3.txt 文件<br>如果不指定 3.txt ，则保存到 1.txt<br>copy test.txt +<br>复制文件到自己，实际上是修改了文件日期<br><br>12 title<br>设置cmd窗口的标题<br>title 新标题         <span class="hljs-comment">#可以看到cmd窗口的标题栏变了</span><br><br>13 ver<br>显示系统版本<br><br>14 label 和 vol<br>设置卷标<br>vol                  <span class="hljs-comment">#显示卷标</span><br>label                <span class="hljs-comment">#显示卷标，同时提示输入新卷标</span><br>label c<span class="hljs-function">:system</span>       <span class="hljs-comment">#设置C盘的卷标为 system</span><br><br>15 pause<br>暂停命令<br><br>16 rem 和 ::<br>注释命令<br>注释行不执行操作<br><br>17 date 和 time<br>日期和时间<br>date           <span class="hljs-comment">#显示当前日期，并提示输入新日期，按&quot;回车&quot;略过输入</span><br>date/t         <span class="hljs-comment">#只显示当前日期，不提示输入新日期</span><br>time           <span class="hljs-comment">#显示当前时间，并提示输入新时间，按&quot;回车&quot;略过输入</span><br>time/t         <span class="hljs-comment">#只显示当前时间，不提示输入新时间</span><br><br>18 goto 和 :<br>跳转命令<br><span class="hljs-function">:label</span>         <span class="hljs-comment">#行首为:表示该行是标签行，标签行不执行操作</span><br>goto label     <span class="hljs-comment">#跳转到指定的标签那一行</span><br><br>19 find <span class="hljs-params">(外部命令)</span><br>查找命令<br>find <span class="hljs-string">&quot;abc&quot;</span> c<span class="hljs-function">:test.txt</span><br>在 c<span class="hljs-function">:test.txt</span> 文件里查找含 abc 字符串的行<br>如果找不到，将设 errorlevel 返回码为1<br>find <span class="hljs-string">/i</span> “abc” c<span class="hljs-function">:test.txt</span><br>查找含 abc 的行，忽略大小写<br>find <span class="hljs-string">/c</span> <span class="hljs-string">&quot;abc&quot;</span> c<span class="hljs-function">:test.txt</span><br>显示含 abc 的行的行数<br><br>20 more <span class="hljs-params">(外部命令)</span><br>逐屏显示<br>more c<span class="hljs-function">:test.txt</span>     <span class="hljs-comment">#逐屏显示 c:test.txt 的文件内容</span><br><br>21 tree<br>显示目录结构<br>tree d:             <span class="hljs-comment">#显示D盘的文件目录结构</span><br><br>22 &amp;<br>顺序执行多条命令，而不管命令是否执行成功<br><br>23 &amp;&amp;<br>顺序执行多条命令，当碰到执行出错的命令后将不执行后面的命令<br>find <span class="hljs-string">&quot;ok&quot;</span> c<span class="hljs-function">:test.txt</span> &amp;&amp; <span class="hljs-keyword">echo</span> 成功<br>如果找到了<span class="hljs-string">&quot;ok&quot;</span>字样，就显示<span class="hljs-string">&quot;成功&quot;</span>，找不到就不显示<br><br>24 ||<br>顺序执行多条命令，当碰到执行正确的命令后将不执行后面的命令<br>find <span class="hljs-string">&quot;ok&quot;</span> c<span class="hljs-function">:test.txt</span> || <span class="hljs-keyword">echo</span> 不成功<br>如果找不到<span class="hljs-string">&quot;ok&quot;</span>字样，就显示<span class="hljs-string">&quot;不成功&quot;</span>，找到了就不显示<br><br>25 |<br>管道命令<br>dir *.* <span class="hljs-string">/s/a</span> | find <span class="hljs-string">/c</span> <span class="hljs-string">&quot;.exe&quot;</span><br>管道命令表示先执行 dir 命令，对其输出的结果执行后面的 find 命令<br>该命令行结果：输出当前文件夹及所有子文件夹里的<span class="hljs-string">.exe</span>文件的个数<br>type c<span class="hljs-function">:test.txt</span>|more<br>这个和 more c<span class="hljs-function">:test.txt</span> 的效果是一样的<br><br>26 &gt; 和 &gt;&gt;<br>输出重定向命令<br>&gt; 清除文件中原有的内容后再写入<br>&gt;&gt; 追加内容到文件末尾，而不会清除原有的内容<br>主要将本来显示在屏幕上的内容输出到指定文件中<br>指定文件如果不存在，则自动生成该文件<br>type c<span class="hljs-function">:test.txt</span> &gt;prn<br>屏幕上不显示文件内容，转向输出到打印机<br><span class="hljs-keyword">echo</span> hello world&gt;con<br>在屏幕上显示hello world，实际上所有输出都是默认 &gt;con 的<br>copy c<span class="hljs-function">:test.txt</span> f: &gt;nul<br>拷贝文件，并且不显示<span class="hljs-string">&quot;文件复制成功&quot;</span>的提示信息，但如果f盘不存在，还是会显示出错信息<br>copy c<span class="hljs-function">:test.txt</span> f: &gt;nul 2&gt;nul<br>不显示”文件复制成功”的提示信息，并且f盘不存在的话，也不显示错误提示信息<br><span class="hljs-keyword">echo</span> ^^W ^&gt; ^W&gt;c<span class="hljs-function">:test.txt</span><br>生成的文件内容为 ^W &gt; W<br>^ 和 &gt; 是控制命令，要把它们输出到文件，必须在前面加个 ^ 符号<br><br>27 &lt;<br>从文件中获得输入信息，而不是从屏幕上<br>一般用于 date time label 等需要等待输入的命令<br>@<span class="hljs-keyword">echo</span> off<br><span class="hljs-keyword">echo</span> 2005-05-01&gt;temp.txt<br>date &lt;temp.txt<br>del temp.txt<br>这样就可以不等待输入直接修改当前日期<br><br>28 %0 %1 %2 %3 %4 %5 %6 %7 %8 %9 %*<br>命令行传递给批处理的参数<br>%0 批处理文件本身<br>%1 第一个参数<br>%9 第九个参数<br>%* 从第一个参数开始的所有参数<br><br>批参数<span class="hljs-params">(%n)</span>的替代已被增强。您可以使用以下语法:<br><br>     %~1          - 删除引号<span class="hljs-params">(&quot;)</span>，扩充 %1<br>     %~f1         - 将 %1 扩充到一个完全合格的路径名<br>     %~d1         - 仅将 %1 扩充到一个驱动器号<br>     %~p1         - 仅将 %1 扩充到一个路径<br>     %~n1         - 仅将 %1 扩充到一个文件名<br>     %~x1         - 仅将 %1 扩充到一个文件扩展名<br>     %~s1         - 扩充的路径指含有短名<br>     %~a1         - 将 %1 扩充到文件属性<br>     %~t1         - 将 %1 扩充到文件的日期/时间<br>     %~z1         - 将 %1 扩充到文件的大小<br>     %~$PATH : 1 - 查找列在 PATH 环境变量的目录，并将 %1<br>                   扩充到找到的第一个完全合格的名称。如果环境<br>                   变量名未被定义，或者没有找到文件，此组合键会<br>                   扩充到空字符串<br><br>可以组合修定符来取得多重结果:<br><br>    %~dp1        - 只将 %1 扩展到驱动器号和路径<br>    %~nx1        - 只将 %1 扩展到文件名和扩展名<br>    %~dp$PATH<span class="hljs-function">:1</span> - 在列在 PATH 环境变量中的目录里查找 %1，<br>                   并扩展到找到的第一个文件的驱动器号和路径。<br>    %~ftza1      - 将 %1 扩展到类似 DIR 的输出行。<br>可以参照 call/? 或 for/? 看出每个参数的含意<br><span class="hljs-keyword">echo</span> load <span class="hljs-string">&quot;%%1&quot;</span> <span class="hljs-string">&quot;%%2&quot;</span>&gt;c<span class="hljs-function">:test.txt</span><br>生成的文件内容为 load <span class="hljs-string">&quot;%1&quot;</span> <span class="hljs-string">&quot;%2&quot;</span><br>批处理文件里，用这个格式把命令行参数输出到文件<br><br>29 <span class="hljs-keyword">if</span><br>判断命令<br><span class="hljs-keyword">if</span> <span class="hljs-string">&quot;%1&quot;</span>==<span class="hljs-string">&quot;/a&quot;</span> <span class="hljs-keyword">echo</span> 第一个参数是<span class="hljs-string">/a</span><br><span class="hljs-keyword">if</span> <span class="hljs-string">/i</span> <span class="hljs-string">&quot;%1&quot;</span> equ <span class="hljs-string">&quot;/a&quot;</span> <span class="hljs-keyword">echo</span> 第一个参数是<span class="hljs-string">/a</span><br><span class="hljs-string">/i</span> 表示不区分大小写，equ 和 == 是一样的，其它运算符参见 <span class="hljs-keyword">if</span>/?<br><span class="hljs-keyword">if</span> exist c<span class="hljs-function">:test.bat</span> <span class="hljs-keyword">echo</span> 存在c<span class="hljs-function">:test.bat</span>文件<br><span class="hljs-keyword">if</span> not exist c<span class="hljs-function">:windows</span> <span class="hljs-params">(</span><br><span class="hljs-params">     echo 不存在c:windows文件夹</span><br><span class="hljs-params">     )</span><br><span class="hljs-keyword">if</span> exist c<span class="hljs-function">:test.bat</span> <span class="hljs-params">(</span><br><span class="hljs-params">     echo 存在c:test.bat</span><br><span class="hljs-params">     )</span> else <span class="hljs-params">(</span><br><span class="hljs-params">     echo 不存在c:test.bat</span><br><span class="hljs-params">     )</span><br><br>30 setlocal 和 endlocal<br>设置”命令扩展名”和”延缓环境变量扩充”<br>SETLOCAL ENABLEEXTENSIONS             <span class="hljs-comment">#启用&quot;命令扩展名&quot;</span><br>SETLOCAL DISABLEEXTENSIONS            <span class="hljs-comment">#停用&quot;命令扩展名&quot;</span><br>SETLOCAL ENABLEDELAYEDEXPANSION       <span class="hljs-comment">#启用&quot;延缓环境变量扩充&quot;</span><br>SETLOCAL DISABLEDELAYEDEXPANSION      <span class="hljs-comment">#停用&quot;延缓环境变量扩充&quot;</span><br>ENDLOCAL                              <span class="hljs-comment">#恢复到使用SETLOCAL语句以前的状态</span><br>“命令扩展名”默认为启用<br>“延缓环境变量扩充”默认为停用<br>批处理结束系统会自动恢复默认值<br>可以修改注册表以禁用<span class="hljs-string">&quot;命令扩展名&quot;</span>，详见 cmd /? 。所以用到<span class="hljs-string">&quot;命令扩展名&quot;</span>的程<br>序，建议在开头和结尾加上 SETLOCAL ENABLEEXTENSIONS 和 ENDLOCAL 语句，以确<br>保程序能在其它系统上正确运行<br><span class="hljs-string">&quot;延缓环境变量扩充&quot;</span>主要用于 <span class="hljs-keyword">if</span> 和 for 的符合语句，在 <span class="hljs-keyword">set</span> 的说明里有其实用例程<br><br>31 <span class="hljs-keyword">set</span><br>设置变量<br>引用变量可在变量名前后加 % ，即 %变量名%<br><span class="hljs-keyword">set</span>                     <span class="hljs-comment">#显示目前所有可用的变量，包括系统变量和自定义的变量</span><br><span class="hljs-keyword">echo</span> %SystemDrive%      <span class="hljs-comment">#显示系统盘盘符。系统变量可以直接引用</span><br><span class="hljs-keyword">set</span> p                   <span class="hljs-comment">#显示所有以p开头的变量，要是一个也没有就设errorlevel=1</span><br><span class="hljs-keyword">set</span> p=aa1bb1aa2bb2      <span class="hljs-comment">#设置变量p，并赋值为 = 后面的字符串，即aa1bb1aa2bb2</span><br><span class="hljs-keyword">echo</span> %p%                <span class="hljs-comment">#显示变量p代表的字符串，即aa1bb1aa2bb2</span><br><span class="hljs-keyword">echo</span> %p:~6%             <span class="hljs-comment">#显示变量p中第6个字符以后的所有字符，即aa2bb2</span><br><span class="hljs-keyword">echo</span> %p:~6,3%           <span class="hljs-comment">#显示第6个字符以后的3个字符，即aa2</span><br><span class="hljs-keyword">echo</span> %p:~0,3%           <span class="hljs-comment">#显示前3个字符，即aa1</span><br><span class="hljs-keyword">echo</span> %p:~-2%            <span class="hljs-comment">#显示最后面的2个字符，即b2</span><br><span class="hljs-keyword">echo</span> %p:~0,-2%          <span class="hljs-comment">#显示除了最后2个字符以外的其它字符，即aa1bb1aa2b</span><br><span class="hljs-keyword">echo</span> %p<span class="hljs-function">:aa</span>=c%           <span class="hljs-comment">#用c替换变量p中所有的aa，即显示c1bb1c2bb2</span><br><span class="hljs-keyword">echo</span> %p<span class="hljs-function">:aa</span>=%            <span class="hljs-comment">#将变量p中的所有aa字符串置换为空，即显示1bb12bb2</span><br><span class="hljs-keyword">echo</span> %p:*bb=c%          <span class="hljs-comment">#第一个bb及其之前的所有字符被替换为c，即显示c1aa2bb2</span><br><span class="hljs-keyword">set</span> p=%p:*bb=c%         <span class="hljs-comment">#设置变量p，赋值为 %p:*bb=c% ，即c1aa2bb2</span><br><span class="hljs-keyword">set</span> <span class="hljs-string">/a</span> p=39             <span class="hljs-comment">#设置p为数值型变量，值为39</span><br><span class="hljs-keyword">set</span> <span class="hljs-string">/a</span> p=39/10          <span class="hljs-comment">#支持运算符，有小数时用去尾法，39/10=3.9，去尾得3，p=3</span><br><span class="hljs-keyword">set</span> <span class="hljs-string">/a</span> p=p/10           <span class="hljs-comment">#用 /a 参数时，在 = 后面的变量可以不加%直接引用</span><br><span class="hljs-keyword">set</span> <span class="hljs-string">/a</span> p=”1&amp;0″          <span class="hljs-comment">#”与”运算，要加引号。其它支持的运算符参见set/?</span><br><span class="hljs-keyword">set</span> p=                  <span class="hljs-comment">#取消p变量</span><br><span class="hljs-keyword">set</span> <span class="hljs-string">/p</span> p=请输入<br>屏幕上显示”请输入”，并会将输入的字符串赋值给变量p<br>注意这条可以用来取代 choice 命令<br>注意变量在 <span class="hljs-keyword">if</span> 和 for 的复合语句里是一次性全部替换的，如<br>@<span class="hljs-keyword">echo</span> off<br><span class="hljs-keyword">set</span> p=aaa<br><span class="hljs-keyword">if</span> %p%==aaa <span class="hljs-params">(</span><br><span class="hljs-params">     echo %p%</span><br><span class="hljs-params">     set <span class="hljs-attr">p</span>=bbb</span><br><span class="hljs-params">     echo %p%</span><br><span class="hljs-params">     )</span><br>结果将显示<br>aaa<br>aaa<br>因为在读取 <span class="hljs-keyword">if</span> 语句时已经将所有 %p% 替换为aaa<br>这里的<span class="hljs-string">&quot;替换&quot;</span>，在 /? 帮助里就是指<span class="hljs-string">&quot;扩充&quot;</span>、<span class="hljs-string">&quot;环境变量扩充&quot;</span><br>可以启用”延缓环境变量扩充”，用 ! 来引用变量，即 !变量名!<br>@<span class="hljs-keyword">echo</span> off<br>SETLOCAL ENABLEDELAYEDEXPANSION<br><span class="hljs-keyword">set</span> p=aaa<br><span class="hljs-keyword">if</span> %p%==aaa <span class="hljs-params">(</span><br><span class="hljs-params">     echo %p%</span><br><span class="hljs-params">     set <span class="hljs-attr">p</span>=bbb</span><br><span class="hljs-params">     echo !p!</span><br><span class="hljs-params">     )</span><br>ENDLOCAL<br>结果将显示<br>aaa<br>bbb<br>还有几个动态变量，运行 <span class="hljs-keyword">set</span> 看不到<br>%CD%                   <span class="hljs-comment">#代表当前目录的字符串</span><br>%DATE%                 <span class="hljs-comment">#当前日期</span><br>%TIME%                 <span class="hljs-comment">#当前时间</span><br>%RANDOM%               <span class="hljs-comment">#随机整数，介于0~32767</span><br>%ERRORLEVEL%           <span class="hljs-comment">#当前 ERRORLEVEL 值</span><br>%CMDEXTVERSION%        <span class="hljs-comment">#当前命令处理器扩展名版本号</span><br>%CMDCMDLINE%           <span class="hljs-comment">#调用命令处理器的原始命令行</span><br>可以用<span class="hljs-keyword">echo</span>命令查看每个变量值，如 <span class="hljs-keyword">echo</span> %time%<br>注意 %time% 精确到毫秒，在批处理需要延时处理时可以用到<br><br>32 start<br>批处理中调用外部程序的命令，否则等外部程序完成后才继续执行剩下的指令<br><br>33 call<br>批处理中调用另外一个批处理的命令，否则剩下的批处理指令将不会被执行<br>有时有的应用程序用start调用出错的，也可以call调用<br><br>34 choice <span class="hljs-params">(外部命令)</span><br>选择命令<br>让用户输入一个字符，从而选择运行不同的命令，返回码errorlevel为1234……<br>win98里是choice.com<br>win2000pro里没有，可以从win98里拷过来<br>win2003里是choice.exe<br>choice <span class="hljs-string">/N</span> <span class="hljs-string">/C</span> y <span class="hljs-string">/T</span> 5 <span class="hljs-string">/D</span> y&gt;nul<br>延时5秒<br><br>35 assoc 和 ftype<br>文件关联<br>assoc 设置&#x27;文件扩展名&#x27;关联，关联到&#x27;文件类型&#x27;<br>ftype 设置&#x27;文件类型&#x27;关联，关联到&#x27;执行程序和参数&#x27;<br>当你双击一个<span class="hljs-string">.txt</span>文件时，windows并不是根据<span class="hljs-string">.txt</span>直接判断用 notepad.exe 打开<br>而是先判断<span class="hljs-string">.txt</span>属于 txtfile &#x27;文件类型&#x27;<br>再调用 txtfile 关联的命令行 txtfile=%SystemRoot%system32NOTEPAD.EXE %1<br>可以在<span class="hljs-string">&quot;文件夹选项&quot;</span>→<span class="hljs-string">&quot;文件类型&quot;</span>里修改这2种关联<br>assoc            <span class="hljs-comment">#显示所有&#x27;文件扩展名&#x27;关联</span><br>assoc <span class="hljs-string">.txt</span>       <span class="hljs-comment">#显示.txt代表的&#x27;文件类型&#x27;，结果显示 .txt=txtfile</span><br>assoc <span class="hljs-string">.doc</span>       <span class="hljs-comment">#显示.doc代表的&#x27;文件类型&#x27;，结果显示 .doc=Word.Document.8</span><br>assoc <span class="hljs-string">.exe</span>       <span class="hljs-comment">#显示.exe代表的&#x27;文件类型&#x27;，结果显示 .exe=exefile</span><br>ftype            <span class="hljs-comment">#显示所有&#x27;文件类型&#x27;关联</span><br>ftype exefile    <span class="hljs-comment">#显示exefile类型关联的命令行，结果显示 exefile=&quot;%1&quot; %* </span><br>assoc <span class="hljs-string">.txt=Word.Document.8</span><br>设置<span class="hljs-string">.txt</span>为word类型的文档，可以看到<span class="hljs-string">.txt</span>文件的图标都变了<br>assoc <span class="hljs-string">.txt=txtfile</span><br>恢复<span class="hljs-string">.txt</span>的正确关联<br>ftype exefile=<span class="hljs-string">&quot;%1&quot;</span> %*<br>恢复 exefile 的正确关联<br>如果该关联已经被破坏，可以运行 <span class="hljs-keyword">command</span>.com ，再输入这条命令<br><br>36 pushd 和 popd<br>切换当前目录<br>@<span class="hljs-keyword">echo</span> off<br>c: &amp; <span class="hljs-keyword">cd</span> &amp; md mp3        <span class="hljs-comment">#在 C: 建立 mp3 文件夹</span><br>md d<span class="hljs-function">:mp4</span>                <span class="hljs-comment">#在 D: 建立 mp4 文件夹</span><br><span class="hljs-keyword">cd</span> <span class="hljs-string">/d</span> d<span class="hljs-function">:mp4</span>             <span class="hljs-comment">#更改当前目录为 d:mp4</span><br>pushd c<span class="hljs-function">:mp3</span>             <span class="hljs-comment">#保存当前目录，并切换当前目录为 c:mp3</span><br>popd                     <span class="hljs-comment">#恢复当前目录为刚才保存的 d:mp4</span><br><br>37 for<br>循环命令<br>这个比较复杂，请对照 for/? 来看<br>for %%i in <span class="hljs-params">(c: d: e: f:)</span> do <span class="hljs-keyword">echo</span> %%i<br>依次调用小括号里的每个字符串，执行 do 后面的命令<br>注意%%i，在批处理中 for 语句调用参数用2个%<br>默认的字符串分隔符是<span class="hljs-string">&quot;空格键&quot;</span>，<span class="hljs-string">&quot;Tab键&quot;</span>，<span class="hljs-string">&quot;回车键&quot;</span><br>for %%i in <span class="hljs-params">(*.txt)</span> do find <span class="hljs-string">&quot;abc&quot;</span> %%i<br>对当前目录里所有的txt文件执行 find 命令<br>for <span class="hljs-string">/r</span> . %%i in <span class="hljs-params">(*.txt)</span> do find <span class="hljs-string">&quot;abc&quot;</span> %%i<br>在当前目录和子目录里所有的<span class="hljs-string">.txt</span>文件中搜索包含 abc 字符串的行<br>for <span class="hljs-string">/r</span> . %%i in <span class="hljs-params">(.)</span> do <span class="hljs-keyword">echo</span> %%~pni<br>显示当前目录名和所有子目录名，包括路径，不包括盘符<br>for <span class="hljs-string">/r</span> d<span class="hljs-function">:mp3</span> %%i in <span class="hljs-params">(*.mp3)</span> do <span class="hljs-keyword">echo</span> %%i&gt;&gt;d<span class="hljs-function">:mp3.txt</span><br>把 d<span class="hljs-function">:mp3</span> 及其子目录里的mp3文件的文件名都存到 d<span class="hljs-function">:mp3.txt</span> 里去<br>for <span class="hljs-string">/l</span> %%i in <span class="hljs-params">(2,1,8)</span> do <span class="hljs-keyword">echo</span> %%i<br>生成2345678的一串数字，2是数字序列的开头，8是结尾，1表示每次加1<br>for <span class="hljs-string">/f</span> %%i in <span class="hljs-params">(&#x27;set&#x27;)</span> do <span class="hljs-keyword">echo</span> %%i<br>对 <span class="hljs-keyword">set</span> 命令的输出结果循环调用，每行一个<br>for <span class="hljs-string">/f</span> <span class="hljs-string">&quot;eol=P&quot;</span> %%i in <span class="hljs-params">(&#x27;set&#x27;)</span> do <span class="hljs-keyword">echo</span> %%i<br>取 <span class="hljs-keyword">set</span> 命令的输出结果，忽略以 P 开头的那几行<br>for <span class="hljs-string">/f</span> %%i in <span class="hljs-params">(d:mp3.txt)</span> do <span class="hljs-keyword">echo</span> %%i<br>显示 d<span class="hljs-function">:mp3.txt</span> 里的每个文件名，每行一个，不支持带空格的名称<br>for <span class="hljs-string">/f</span> <span class="hljs-string">&quot;delims=&quot;</span> %%i in <span class="hljs-params">(d:mp3.txt)</span> do <span class="hljs-keyword">echo</span> %%i<br>显示 d<span class="hljs-function">:mp3.txt</span> 里的每个文件名，每行一个，支持带空格的名称<br>for <span class="hljs-string">/f</span> <span class="hljs-string">&quot;skip=5 tokens=4&quot;</span> %%a in <span class="hljs-params">(&#x27;dir&#x27;)</span> do <span class="hljs-keyword">echo</span> %%a<br>对 dir 命令的结果，跳过前面5行，余下的每行取第4列<br>每列之间的分隔符为默认的<span class="hljs-string">&quot;空格&quot;</span><br>可以注意到 dir 命令输出的前5行是没有文件名的<br>for <span class="hljs-string">/f</span> <span class="hljs-string">&quot;tokens=1,2,3 delims=- &quot;</span> %%a in <span class="hljs-params">(&#x27;date /t&#x27;)</span> do <span class="hljs-params">(</span><br><span class="hljs-params">     echo %%a</span><br><span class="hljs-params">     echo %%b</span><br><span class="hljs-params">     echo %%c</span><br><span class="hljs-params">     )</span><br>如果一个循环你需要执行多条命令，可以在do后用<span class="hljs-params">()</span>括起来。对 date <span class="hljs-string">/t</span> 的输出结果，每行取1、2、3列<br>第一列对应指定的 %%a ，后面的 %%b 和 %%c 是派生出来的，对应其它列<br>分隔符指定为 - 和<span class="hljs-string">&quot;空格&quot;</span>，注意 delims=- 后面有个<span class="hljs-string">&quot;空格&quot;</span><br>其中 tokens=1,2,3 若用 tokens=1-3 替换，效果是一样的<br><br>for <span class="hljs-string">/f</span> <span class="hljs-string">&quot;tokens=2* delims=- &quot;</span> %%a in <span class="hljs-params">(&#x27;date /t&#x27;)</span> do <span class="hljs-keyword">echo</span> %%b<br>取第2列给 %%a ，其后的列都给 %%b<br><br>38 subst <span class="hljs-params">(外部命令)</span><br>映射磁盘<br>subst z: serverd      <span class="hljs-comment">#这样输入z:就可以访问serverd了</span><br>subst z: <span class="hljs-string">/d</span>              <span class="hljs-comment">#取消该映射</span><br>subst                    <span class="hljs-comment">#显示目前所有的映时</span><br><br>39   xcopy <span class="hljs-params">(外部命令)</span><br>文件拷贝<br><br>COPY和XCOPY都可以复制文件，这是它们的共处，区别如下：<br>1. COPY不能复制文件夹下的文件，而XCOPY可以。<br>如：有这样的文件结构：A盘下有2个文件夹，为A和B，在A下有1个文件和1个文件夹，为AA.TXT和AB文件夹，在AB文件夹下有个AAA的文件夹。现在要将A文件夹下所有的文件和文件夹都复制到B文件夹下，并保持原有文件结构。<br><br>解：最简单的方式就是用XCOPY命令<br>A:\&gt;XCOPY A:\A\*.* A:\B <span class="hljs-string">/S</span> <span class="hljs-string">/E</span><br>~~~~<span class="hljs-params">-------------------------</span><br><br>（~~~~表示机器反映出的内容，<span class="hljs-params">----</span>表示你输入的内容）<br><br>2. XCOPY不能连接文件，而COPY可以连接文件<br>如：将A盘中的A.TXT和B.TXT文件连接起来，连接后的文件名为C.TXT<br>解：用COPY命令即可完成此项操作。<br>A:\&gt;COPY A.TXT+B.TXT C.TXT<br><br><br>40 <span class="hljs-keyword">shutdown</span><br>关机<br><span class="hljs-keyword">shutdown</span> -s -f -t 300  <span class="hljs-comment">#300秒后强制关机</span><br></code></pre></td></tr></table></figure>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/windows/">windows</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/windows/">windows</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/10/17/bootstrap-memory-lock/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">bootstrap.memory_lock简要说明</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018/11/14/kubernetes%E4%B9%8Bsecret/">
+                        <span class="hidden-mobile">kubernetes之secret</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDM4OS8xMDkyNg==">
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#lv-container', function() {
+        Fluid.utils.createScript('https://cdn-city.livere.com/js/embed.dist.js');
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hannius.github.io/" target="_blank" rel="nofollow noopener"><span>Blog</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/hannius" target="_blank" rel="nofollow noopener"><span>Hannius</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        粤ICP备18019482号-1
+      </a>
+    </span>
+    
+      
+        <span>
+          <a
+            href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=18019482"
+            rel="nofollow noopener"
+            class="beian-police"
+            target="_blank"
+          >
+            
+              <span style="visibility: hidden; width: 0">|</span>
+              <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+            
+            <span>粤公网安备18019482号</span>
+          </a>
+        </span>
+      
+    
+  </div>
+
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

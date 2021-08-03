@@ -40,7 +40,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
@@ -236,6 +236,58 @@ NexT 主题由之前的 5.1.x 更新至 7.x.
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2020/08/03/Jenkins-use-ca-https-to-access-kubernetes-cluster-api/" target="_self">
+          Jenkins use ca_https to access kubernetes_cluster api
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/08/03/Jenkins-use-ca-https-to-access-kubernetes-cluster-api/" target="_self">
+          
+          
+            
+          
+          
+通过之前生成的admin的证书访问api server:
+1➜  pipeline curl --insecure --cacert /data/kubernetes/ssl/ca.crt --key /data/kubernetes/ssl/admin-key.pem --cert /data/kubernetes/ssl/admin.pem https://192.168.0.14:6443
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-08-03 16:27" pubdate>
+              2020-08-03
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/jenkins/">jenkins</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/jenkins/">jenkins</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2019/10/17/bootstrap-memory-lock/" target="_self">
           bootstrap.memory_lock简要说明
         </a>
@@ -262,6 +314,56 @@ bootstrap.memory_lock由于当jvm开始swapping时es的效率会降低，所以�
           </div>
         
         
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2019/01/21/Windows-batch%E7%BC%96%E7%A8%8B%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95%E5%8F%8A%E5%91%BD%E4%BB%A4/" target="_self">
+          Windows batch编程常用语法及命令
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2019/01/21/Windows-batch%E7%BC%96%E7%A8%8B%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95%E5%8F%8A%E5%91%BD%E4%BB%A4/" target="_self">
+          
+          
+            
+          
+          12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-01-21 10:09" pubdate>
+              2019-01-21
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/windows/">windows</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/windows/">windows</a>
+            
+          </div>
         
       </div>
     </article>
@@ -304,7 +406,7 @@ kubernetes.io/dockerconfigjso
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/K8s/">K8s</a>
+              <a href="/categories/k8s/">k8s</a>
             
           </div>
         
@@ -312,7 +414,7 @@ kubernetes.io/dockerconfigjso
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/K8s/">K8s</a>
+              <a href="/tags/k8s/">k8s</a>
             
           </div>
         
@@ -361,7 +463,7 @@ cfssl方式1.cfssl下载地址:12345VERSION=R1.2for i in &#123;cf
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/K8s/">K8s</a>
+              <a href="/categories/k8s/">k8s</a>
             
           </div>
         
@@ -369,7 +471,7 @@ cfssl方式1.cfssl下载地址:12345VERSION=R1.2for i in &#123;cf
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/K8s/">K8s</a>
+              <a href="/tags/k8s/">k8s</a>
             
           </div>
         
@@ -433,18 +535,18 @@ cfssl方式1.cfssl下载地址:12345VERSION=R1.2for i in &#123;cf
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2018/06/27/bernetes-RBAC-Detailed/" target="_self">
-          Kubernetes RBAC  Detailed
+        <a href="/2018/07/19/MySQL5-6-5-7-SSL-Config/" target="_self">
+          MySQL5.6  5.7 SSL Config
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2018/06/27/bernetes-RBAC-Detailed/" target="_self">
+        <a href="/2018/07/19/MySQL5-6-5-7-SSL-Config/" target="_self">
           
           
             
           
-          RBAC - 基于角色的访问控制RBAC使用：rbac.authorization.k8s.io API Group 来实现授权决策，允许管理员通过 Kubernetes API 动态配置策略，要启用RBAC，需要在 apiserver 中添加参数–authorization-mode=RBAC，如果使用的kubeadm安装的集群，1.6 版本以上的都默认开启了RBAC，可以通过查看 Master
+          5.71.mysql5.7上开启并配置ssl1234567891011121314151617[root@mysqlmaster01 bin]# ./mysql_ssl_rsa_setup --datadir=/data/mysql_data1/ --user=mysqlGenerating a 2048 bit RSA private key...........................
         </a>
       </p>
 
@@ -452,8 +554,8 @@ cfssl方式1.cfssl下载地址:12345VERSION=R1.2for i in &#123;cf
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2018-06-27 18:47" pubdate>
-              2018-06-27
+            <time datetime="2018-07-19 11:02" pubdate>
+              2018-07-19
             </time>
           </div>
         
@@ -461,7 +563,7 @@ cfssl方式1.cfssl下载地址:12345VERSION=R1.2for i in &#123;cf
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/K8s/">K8s</a>
+              <a href="/categories/mysql/">mysql</a>
             
           </div>
         
@@ -469,7 +571,7 @@ cfssl方式1.cfssl下载地址:12345VERSION=R1.2for i in &#123;cf
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/K8s/">K8s</a>
+              <a href="/tags/mysql/">mysql</a>
             
           </div>
         
@@ -483,19 +585,18 @@ cfssl方式1.cfssl下载地址:12345VERSION=R1.2for i in &#123;cf
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2018/06/22/%E5%9F%BA%E4%BA%8Ek8s%20%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE%E5%8F%8A%E6%89%A9%E5%AE%B9maven%20nexus%E7%A7%81%E6%9C%8D/" target="_self">
-          基于k8s 动态配置及扩容maven nexus私服
+        <a href="/2018/07/10/Jenkins-CICD%E5%AE%9E%E7%94%A8%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/" target="_self">
+          Jenkins CICD实用经验分享
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2018/06/22/%E5%9F%BA%E4%BA%8Ek8s%20%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE%E5%8F%8A%E6%89%A9%E5%AE%B9maven%20nexus%E7%A7%81%E6%9C%8D/" target="_self">
+        <a href="/2018/07/10/Jenkins-CICD%E5%AE%9E%E7%94%A8%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/" target="_self">
           
           
             
           
-          配置nexus从官网下载了nexus之后还需要进行一些配置。编辑bin/nexus.vmoptions 调整后的如下：
-12345678910111213141516-Xms600M-Xmx600M-XX:MaxDirectMemorySize=1G-XX:+UnlockDiagnosticVMOptions-XX:+UnsyncloadClass-XX:+LogVMOutput-XX:LogFi
+          1.修改 JVM 的内存配置Jenkins 启动方式有两种方式，一种是以 Jdk Jar 方式运行，一种是将 War 包放在 Tomcat 容器下运行。不管何种方式运行，都会存在一个问题就是，默认 JVM 内存分配太少，导致启动或者运行一段时间后内存溢出报错 java.lang.OutOfMemoryError: PermGen space。所以，需要在启动前修改 JVM 内存配置。以 Tomca
         </a>
       </p>
 
@@ -503,8 +604,8 @@ cfssl方式1.cfssl下载地址:12345VERSION=R1.2for i in &#123;cf
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2018-06-22 10:36" pubdate>
-              2018-06-22
+            <time datetime="2018-07-10 16:33" pubdate>
+              2018-07-10
             </time>
           </div>
         
@@ -512,7 +613,7 @@ cfssl方式1.cfssl下载地址:12345VERSION=R1.2for i in &#123;cf
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/K8s/">K8s</a>
+              <a href="/categories/jenkins/">jenkins</a>
             
           </div>
         
@@ -520,7 +621,7 @@ cfssl方式1.cfssl下载地址:12345VERSION=R1.2for i in &#123;cf
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/K8s/">K8s</a>
+              <a href="/tags/jenkins/">jenkins</a>
             
           </div>
         
@@ -534,24 +635,24 @@ cfssl方式1.cfssl下载地址:12345VERSION=R1.2for i in &#123;cf
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2018/06/14/kubernetes-jenkins-ci-cd/" target="_self">
-          kubernetes-jenkins-ci-cd
+        <a href="/2018/07/03/pipeline-jnlp/" target="_self">
+          pipeline jnlp
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2018/06/14/kubernetes-jenkins-ci-cd/" target="_self">
+        <a href="/2018/07/03/pipeline-jnlp/" target="_self">
           
           
             
           
-          流程图：基于Jenkins的CI/CD流程如下所示:
-流程说明：
-用户向Gitlab提交代码，代码中必须包含Dockerfile
-将代码提交到远程仓库
-用户在发布应用时需要填写git仓库地址和分支、服务类型、服务名称、资源数量、实例个数，确定后触发Jenkins自动构建
-Jenkins的CI流水线自动编译代码并打包成docker镜像推送到Harbor镜像仓库
-Jenkins的CI流水线中包括了自定
+          通过默认的jnlp
+jenkins-&gt;系统管理-&gt;系统设置-&gt;新增一个云(kubernetes)
+kubernetes相应设置：
+
+
+Name: kubernetes_jnlp
+Kubernetes URL: http://127.0.0.1:8080(通过http访问不用添加certificate key,不然要使用6443的https协议:API Server证书经过知名CA
         </a>
       </p>
 
@@ -559,8 +660,8 @@ Jenkins的CI流水线中包括了自定
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2018-06-14 17:22" pubdate>
-              2018-06-14
+            <time datetime="2018-07-03 16:30" pubdate>
+              2018-07-03
             </time>
           </div>
         
@@ -568,7 +669,7 @@ Jenkins的CI流水线中包括了自定
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/K8s/">K8s</a>
+              <a href="/categories/jenkins/">jenkins</a>
             
           </div>
         
@@ -576,113 +677,7 @@ Jenkins的CI流水线中包括了自定
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/K8s/">K8s</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2018/06/13/Pause%E5%AE%B9%E5%99%A8/" target="_self">
-          Pause容器
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2018/06/13/Pause%E5%AE%B9%E5%99%A8/" target="_self">
-          
-          
-            
-          
-          Pause容器定义Pause容器，又叫Infra容器，本文将探究该容器的作用与原理。
-在kubelet的配置中有这样一个参数：
-12KUBELET_POD_INFRA_CONTAINER=--pod-infra-container-image=registry.access.redhat.com/rhel7/pod-infrastructure:latest
-
-上面是openshift中的配置参数
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-06-13 16:50" pubdate>
-              2018-06-13
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/K8s/">K8s</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/K8s/">K8s</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2018/05/24/crontab%E5%92%8Canacron%E5%92%8Clogrotate-relation/" target="_self">
-          crontab、anacron、logrotate relationship
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2018/05/24/crontab%E5%92%8Canacron%E5%92%8Clogrotate-relation/" target="_self">
-          
-          
-            
-          
-          服务器上的nginx使用logrotate来分割日志，设置为每天分割。但是logrotate似乎没有工作，日志并没有分割。服务器是CentOS 6。
-为了找到原因，分析可能出错的地方。如果是logrotate未执行，可能是crond没有启动，因为logrotate被/etc/cron.daily/logrotate脚本所启动，可以查看其中代码：
-123456789[root@test ~]# ca
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-05-24 16:33" pubdate>
-              2018-05-24
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Logrotate/">Logrotate</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Logrotate/">Logrotate</a>
+              <a href="/tags/jenkins/">jenkins</a>
             
           </div>
         
@@ -694,7 +689,7 @@ Jenkins的CI流水线中包括了自定
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="page-number" href="/page/3/#board">3</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="page-number" href="/page/3/#board">3</a><a class="page-number" href="/page/4/#board">4</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 

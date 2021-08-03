@@ -56,7 +56,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
@@ -186,7 +186,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      154 字
+      152 字
     </span>
   
 
@@ -196,7 +196,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      2
+      1
        分钟
     </span>
   
@@ -237,31 +237,41 @@
             <h1 style="display: none">hexo使用进阶</h1>
             
             <div class="markdown-body">
-              <p>hexo</p>
-<p>一、后端管理插件hexo-admin<br>插件可以直接在网页端创建、编辑markdown文章内容，并将内容发布到_posts里。<br>另外，对我而言，最方便的是可以很方便的给文章加标题、分类、打标签。</p>
+              <h3 id="一、后端管理插件hexo-admin"><a href="#一、后端管理插件hexo-admin" class="headerlink" title="一、后端管理插件hexo-admin"></a>一、后端管理插件hexo-admin</h3><ul>
+<li>插件可以直接在网页端创建、编辑markdown文章内容，并将内容发布到_posts里。</li>
+<li>另外，对我而言，最方便的是可以很方便的给文章加标题、分类、打标签。</li>
+</ul>
 <p>参见：</p>
-<p>An Admin Interface for Hexo<br>hexo-admin in github</p>
-<p>1.安装</p>
-<p>(1)npm install –save hexo-admin </p>
+<ul>
+<li>An Admin Interface for Hexo</li>
+<li>hexo-admin in github</li>
+</ul>
+<h4 id="1-安装"><a href="#1-安装" class="headerlink" title="1.安装"></a>1.安装</h4><p>(1)npm install –save hexo-admin </p>
 <p>(2)hexo server -d </p>
 <p>(3)open <a target="_blank" rel="noopener" href="http://localhost:4000/admin/">http://localhost:4000/admin/</a></p>
-<p>2.配置</p>
-<p>在_config.yml最后添加类似如下内容：</p>
-<pre><code>admin:
-      username: myfavoritename
-      password_hash: be121740bf988b2225a313fa1f107ca1
-      secret: a secret something
-</code></pre>
-<p>username：后端登录用户名</p>
-<p>password_hash：后端登录用户密码对应的md5 hash值</p>
-<p>secret：用于保证cookie安全</p>
-<p>3.预览</p>
+<h4 id="2-配置"><a href="#2-配置" class="headerlink" title="2.配置"></a>2.配置</h4><p>在_config.yml最后添加类似如下内容：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">admin</span>:<br>  <span class="hljs-attribute">username</span>: myfavoritename<br>  <span class="hljs-attribute">password_hash</span>: be<span class="hljs-number">121740</span>bf<span class="hljs-number">988</span>b<span class="hljs-number">2225</span>a<span class="hljs-number">313</span>fa<span class="hljs-number">1</span>f<span class="hljs-number">107</span>ca<span class="hljs-number">1</span><br>  <span class="hljs-attribute">secret</span>: a secret something<br><br><span class="hljs-attribute">username</span>：后端登录用户名<br><br><span class="hljs-attribute">password_hash</span>：后端登录用户密码对应的md<span class="hljs-number">5</span> hash值<br><br><span class="hljs-attribute">secret</span>：用于保证cookie安全<br></code></pre></td></tr></table></figure>
 
+<h4 id="3-预览"><a href="#3-预览" class="headerlink" title="3.预览"></a>3.预览</h4>
             </div>
             <hr>
             <div>
               <div class="post-metas mb-3">
                 
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/hexo/">hexo</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/hexo/">hexo</a>
+                    
+                  </div>
                 
               </div>
               
@@ -297,6 +307,24 @@
               
             </div>
 
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDM4OS8xMDkyNg==">
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#lv-container', function() {
+        Fluid.utils.createScript('https://cdn-city.livere.com/js/embed.dist.js');
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
             
           </article>
         </div>

@@ -1,0 +1,599 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="Still Waters Run Deep">
+  <meta name="author" content="Martin Lei">
+  <meta name="keywords" content="">
+  
+  <title>Kubernetes从Private Registry中拉取容器镜像的方法 - 让一切随风</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="让一切随风" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Martin.Lei's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Kubernetes从Private Registry中拉取容器镜像的方法">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2018-06-25 16:48" pubdate>
+        June 25, 2018 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      67
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kubernetes从Private Registry中拉取容器镜像的方法</h1>
+            
+            <div class="markdown-body">
+              <h3 id="方法1：利用Node上的配置访问Private-Registry"><a href="#方法1：利用Node上的配置访问Private-Registry" class="headerlink" title="方法1：利用Node上的配置访问Private Registry"></a>方法1：利用Node上的配置访问Private Registry</h3><p>在玩Docker时，很多朋友都 搭建过自己的Private Registry。Docker访问那些以basic auth方式进行鉴权的Private Registry，只需在本地执行docker login，输入用户名、密码后，就可以自由向Registry Push镜像或pull 镜像到本地了：</p>
+<figure class="highlight ldif"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs ldif">[root@node3 docker]<span class="hljs-comment"># docker login registry.martin.com:5000</span><br><span class="hljs-attribute">Username (martin)</span>: martin<br><span class="hljs-attribute">Password</span>: <br><span class="hljs-attribute">Login Succeeded</span><br></code></pre></td></tr></table></figure>
+<p>在这一过程结束后，Docker实际上会在~/.docker目录下创建一个config.json文件，保存后续与Registry交互过程中所要使用的鉴权串（这个鉴权串只是一个base64编码结果，安全性欠佳)</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs awk">➜  nexus cat ~<span class="hljs-regexp">/.docker/</span>config.json <br>&#123;<br>        <span class="hljs-string">&quot;auths&quot;</span>: &#123;<br>                <span class="hljs-string">&quot;daocloud.io&quot;</span>: &#123;<br>                        <span class="hljs-string">&quot;auth&quot;</span>: <span class="hljs-string">&quot;xxxxQ==&quot;</span><br>                &#125;,<br>                <span class="hljs-string">&quot;https://index.docker.io/v1/&quot;</span>: &#123;<br>                        <span class="hljs-string">&quot;auth&quot;</span>: <span class="hljs-string">&quot;axxw==&quot;</span><br>                &#125;,<br>                <span class="hljs-string">&quot;registry.martin.com:5000&quot;</span>: &#123;<br>                        <span class="hljs-string">&quot;auth&quot;</span>: <span class="hljs-string">&quot;sdxxxxxxB&quot;</span><br>                &#125;<br>        &#125;,<br>        <span class="hljs-string">&quot;HttpHeaders&quot;</span>: &#123;<br>                <span class="hljs-string">&quot;User-Agent&quot;</span>: <span class="hljs-string">&quot;Docker-Client/17.09.0-ce (linux)&quot;</span><br>        &#125;<br>&#125;<span class="hljs-comment">#</span><br></code></pre></td></tr></table></figure>
+<p>一但Node上有了这个配置，那么K8s就可以通过docker直接访问Private Registry了，这是<a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/containers/images/#using-a-private-registry">K8s文档中与私有镜像仓库交互的第一个方法</a> 。考虑到Pod可以被调度到集群中的任意一个Node上，需要在每个Node上执行上述login操作，或者可以简单地将<del>/.docker/config.json scp到各个node上的</del>/.docker目录下。</p>
+<p>但实际效果却不尽人意.</p>
+<h4 id="创建一个Pod-yaml-测试一下是否能run起来"><a href="#创建一个Pod-yaml-测试一下是否能run起来" class="headerlink" title="创建一个Pod.yaml,测试一下是否能run起来:"></a>创建一个Pod.yaml,测试一下是否能run起来:</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">➜</span>  <span class="hljs-string">nexus</span> <span class="hljs-string">cat</span> <span class="hljs-string">test.yaml</span> <br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Pod</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">rbd-rest-api-using-node-config</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">containers:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">rbd-rest-api-using-node-config</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">registry.martin.com:5000/registry</span><br>    <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">Always</span><br>  <span class="hljs-attr">nodeSelector:</span> <span class="hljs-comment">#指定节点启用pod</span><br>    <span class="hljs-attr">kubernetes.io/hostname:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.16</span><br><span class="hljs-string">➜</span>  <span class="hljs-string">nexus</span> <br></code></pre></td></tr></table></figure>
+<h4 id="创建这个Pod并查看Pod的创建状态："><a href="#创建这个Pod并查看Pod的创建状态：" class="headerlink" title="创建这个Pod并查看Pod的创建状态："></a>创建这个Pod并查看Pod的创建状态：</h4><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">➜  nexus kubectl <span class="hljs-keyword">create</span> -f test.yaml <br>pod &quot;rbd-rest-api-using-node-config&quot; created<br>➜  nexus kubectl <span class="hljs-keyword">get</span> pods<br><span class="hljs-type">NAME</span>                             READY     STATUS             RESTARTS   AGE<br>nexus3<span class="hljs-number">-68</span>f55d9746-vfnf8          <span class="hljs-number">1</span>/<span class="hljs-number">1</span>       Running            <span class="hljs-number">0</span>          <span class="hljs-number">17</span>h<br>rbd-rest-api-<span class="hljs-keyword">using</span>-node-config   <span class="hljs-number">0</span>/<span class="hljs-number">1</span>       ImagePullBackOff   <span class="hljs-number">0</span>          <span class="hljs-number">5</span>s<br></code></pre></td></tr></table></figure>
+<h4 id="通过log查看Pod"><a href="#通过log查看Pod" class="headerlink" title="通过log查看Pod:"></a>通过log查看Pod:</h4><figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs subunit">➜  nexus kubectl logs pod/rbd-rest-api-using-node-config<br><span class="hljs-keyword">Error </span>from server (BadRequest): container &quot;rbd-rest-api-using-node-config&quot; in pod &quot;rbd-rest-api-using-node-config&quot; is waiting to start: trying and failing to pull image<br>➜  nexus <br></code></pre></td></tr></table></figure>
+<h4 id="通过describe查看pod失败的更加详细的信息："><a href="#通过describe查看pod失败的更加详细的信息：" class="headerlink" title="通过describe查看pod失败的更加详细的信息："></a>通过describe查看pod失败的更加详细的信息：</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs sql">➜  nexus kubectl <span class="hljs-keyword">describe</span> pod<span class="hljs-operator">/</span>rbd<span class="hljs-operator">-</span>rest<span class="hljs-operator">-</span>api<span class="hljs-operator">-</span><span class="hljs-keyword">using</span><span class="hljs-operator">-</span>node<span class="hljs-operator">-</span>config<br>....<br>前面部分省略<br>....<br>QoS Class:       BestEffort<br>Node<span class="hljs-operator">-</span>Selectors:  kubernetes.io<span class="hljs-operator">/</span>hostname<span class="hljs-operator">=</span><span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.16</span><br>Tolerations:     <span class="hljs-operator">&lt;</span><span class="hljs-keyword">none</span><span class="hljs-operator">&gt;</span><br>Events:<br>  Type     Reason                 Age                <span class="hljs-keyword">From</span>                   Message<br>  <span class="hljs-comment">----     ------                 ----               ----                   -------</span><br>  Normal   Scheduled              <span class="hljs-number">13</span>m                <span class="hljs-keyword">default</span><span class="hljs-operator">-</span>scheduler      Successfully assigned rbd<span class="hljs-operator">-</span>rest<span class="hljs-operator">-</span>api<span class="hljs-operator">-</span><span class="hljs-keyword">using</span><span class="hljs-operator">-</span>node<span class="hljs-operator">-</span>config <span class="hljs-keyword">to</span> <span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.16</span><br>  Normal   SuccessfulMountVolume  <span class="hljs-number">13</span>m                kubelet, <span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.16</span>  MountVolume.SetUp succeeded <span class="hljs-keyword">for</span> volume &quot;default-token-fck44&quot;<br>  Normal   SandboxChanged         <span class="hljs-number">13</span>m                kubelet, <span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.16</span>  Pod sandbox changed, it will be killed <span class="hljs-keyword">and</span> re<span class="hljs-operator">-</span>created.<br>  Warning  Failed                 <span class="hljs-number">12</span>m (x3 <span class="hljs-keyword">over</span> <span class="hljs-number">13</span>m)  kubelet, <span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.16</span>  Failed <span class="hljs-keyword">to</span> pull image &quot;registry.martin.com:5000/registry&quot;: rpc error: code <span class="hljs-operator">=</span> <span class="hljs-literal">Unknown</span> <span class="hljs-keyword">desc</span> <span class="hljs-operator">=</span> Error response <span class="hljs-keyword">from</span> daemon: <span class="hljs-keyword">Get</span> https:<span class="hljs-operator">/</span><span class="hljs-operator">/</span>registry.martin.com:<span class="hljs-number">5000</span><span class="hljs-operator">/</span>v2<span class="hljs-operator">/</span>registry<span class="hljs-operator">/</span>manifests<span class="hljs-operator">/</span>latest: <span class="hljs-keyword">no</span> basic auth credentials<br>  Normal   Pulling                <span class="hljs-number">11</span>m (x4 <span class="hljs-keyword">over</span> <span class="hljs-number">13</span>m)  kubelet, <span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.16</span>  pulling image &quot;registry.martin.com:5000/registry&quot;<br>  Warning  Failed                 <span class="hljs-number">11</span>m (x4 <span class="hljs-keyword">over</span> <span class="hljs-number">13</span>m)  kubelet, <span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.16</span>  Error: ErrImagePull<br>  Normal   BackOff                <span class="hljs-number">8</span>m (x21 <span class="hljs-keyword">over</span> <span class="hljs-number">13</span>m)  kubelet, <span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.16</span>  Back<span class="hljs-operator">-</span>off pulling image &quot;registry.martin.com:5000/registry&quot;<br>  Warning  Failed                 <span class="hljs-number">3</span>m (x42 <span class="hljs-keyword">over</span> <span class="hljs-number">13</span>m)  kubelet, <span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.16</span>  Error: ImagePullBackOff<br>➜  nexus <br></code></pre></td></tr></table></figure>
+<p>貌似不能生效,一直提示”no basic auth credentials”，结果是K8s无法从Private Registry获取我们想要的镜像文件.</p>
+<h4 id="删除该Pod-尝试手动pull-registry仓库镜像"><a href="#删除该Pod-尝试手动pull-registry仓库镜像" class="headerlink" title="删除该Pod,尝试手动pull registry仓库镜像"></a>删除该Pod,尝试手动pull registry仓库镜像</h4><ul>
+<li>删除Pod</li>
+</ul>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs arduino">➜  nexus kubectl <span class="hljs-keyword">delete</span> pod rbd-rest-api-<span class="hljs-keyword">using</span>-node-config<br>pod <span class="hljs-string">&quot;rbd-rest-api-using-node-config&quot;</span> deleted<br>➜  nexus kubectl get pods<br>NAME                      READY     STATUS    RESTARTS   AGE<br>已经没有该pod了<br></code></pre></td></tr></table></figure>
+<ul>
+<li>手动pull registry image</li>
+</ul>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs vim">[root@node3 docker]# docker pull registry.martin.<span class="hljs-keyword">com</span>:<span class="hljs-number">5000</span>/registry  <br>Using default <span class="hljs-keyword">ta</span><span class="hljs-variable">g:</span> latest<br>lates<span class="hljs-variable">t:</span> Pulling from registry<br><span class="hljs-number">81033</span>e7c1d6<span class="hljs-variable">a:</span> Pull <span class="hljs-built_in">complete</span> <br>b235084c2315: Pull <span class="hljs-built_in">complete</span> <br>c692f3a6894<span class="hljs-variable">b:</span> Pull <span class="hljs-built_in">complete</span> <br>ba2177f3a70e: Pull <span class="hljs-built_in">complete</span> <br>a8d793620947: Pull <span class="hljs-built_in">complete</span> <br>Diges<span class="hljs-variable">t:</span> <span class="hljs-built_in">sha256</span>:feb40d14cd33e646b9985e2d6754ed66616fedb840226c4d917ef53d616dcd6c<br>Statu<span class="hljs-variable">s:</span> Downloaded newer image <span class="hljs-keyword">for</span> registry.martin.<span class="hljs-keyword">com</span>:<span class="hljs-number">5000</span>/registry:latest<br>==node3为指定运行pod的节点==<br></code></pre></td></tr></table></figure>
+
+<h4 id="再次创建rbd-rest-api-using-node-config-pod"><a href="#再次创建rbd-rest-api-using-node-config-pod" class="headerlink" title="再次创建rbd-rest-api-using-node-config pod"></a>再次创建rbd-rest-api-using-node-config pod</h4><p>如果需要借助该image运行某些环境的话，是可以使用了，因为image已经手动拉取了。不然如果自动拉取的话会一直提示没有basic认证</p>
+<hr>
+<h3 id="方法2：通过kubectl创建docker-registry的secret"><a href="#方法2：通过kubectl创建docker-registry的secret" class="headerlink" title="方法2：通过kubectl创建docker-registry的secret"></a>方法2：通过kubectl创建docker-registry的secret</h3><p>K8s提供的第二种方法是通过kubectl创建一个docker-registry的secret，并在Pod描述文件中引用该secret以达到从Private Registry Pull Image的目的。</p>
+<h4 id="操作之前，先删除掉各个Node上的-docker-config-json。"><a href="#操作之前，先删除掉各个Node上的-docker-config-json。" class="headerlink" title="操作之前，先删除掉各个Node上的~/.docker/config.json。"></a>操作之前，先删除掉各个Node上的~/.docker/config.json。</h4><p>执行kubectl create secret docker-registry时需要提供private registry的访问UserName和Password：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs routeros">➜  nexus kubectl <span class="hljs-builtin-name">get</span><span class="hljs-built_in"> secret</span><br><span class="hljs-built_in"></span>NAME                 <span class="hljs-built_in"> TYPE </span>                                 DATA      AGE<br>default-token-fck44   kubernetes.io/service-account-token   3         15d<br>可以看到之前已经有个default-token的secret<br>➜  nexus <br>➜  nexus kubectl create<span class="hljs-built_in"> secret </span>docker-registry registrykey-2.6.2 <span class="hljs-attribute">--docker-server</span>=registry.martin.com:5000 <span class="hljs-attribute">--docker-username</span>=martin <span class="hljs-attribute">--docker-password</span>=xxx1 <span class="hljs-attribute">--docker-email</span>=hanniusshine@gmail.com<span class="hljs-built_in"></span><br><span class="hljs-built_in">secret </span><span class="hljs-string">&quot;registrykey-2.6.2&quot;</span> created<br><br>➜  nexus kubectl <span class="hljs-builtin-name">get</span><span class="hljs-built_in"> secret </span>                                               <br>NAME                 <span class="hljs-built_in"> TYPE </span>                                 DATA      AGE<br>default-token-fck44   kubernetes.io/service-account-token   3         15d<br>registrykey-2.6.2     kubernetes.io/dockerconfigjson        1         3s<br>➜  nexus <br></code></pre></td></tr></table></figure>
+
+<h4 id="secret-registrykey-2-6-2创建成功。测试一下引用这个secret对象的Pod是否能Pull-Image成功并Run起来-引用时Pod的YAML文件中必须指定imagePullSecrets为创建的secrety-Pod-yaml文件如下："><a href="#secret-registrykey-2-6-2创建成功。测试一下引用这个secret对象的Pod是否能Pull-Image成功并Run起来-引用时Pod的YAML文件中必须指定imagePullSecrets为创建的secrety-Pod-yaml文件如下：" class="headerlink" title="secret: registrykey-2.6.2创建成功。测试一下引用这个secret对象的Pod是否能Pull Image成功并Run起来,引用时Pod的YAML文件中必须指定imagePullSecrets为创建的secrety,Pod yaml文件如下："></a>secret: registrykey-2.6.2创建成功。测试一下引用这个secret对象的Pod是否能Pull Image成功并Run起来,引用时Pod的YAML文件中必须指定imagePullSecrets为创建的secrety,Pod yaml文件如下：</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">➜</span>  <span class="hljs-string">nexus</span> <span class="hljs-string">cat</span> <span class="hljs-string">test.yaml</span> <br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Pod</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">rbd-rest-api-registrykey-2.6.2</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">containers:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">rbd-rest-api-registrykey-2.6.2</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">registry.martin.com:5000/registry</span><br>    <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">Always</span><br>  <span class="hljs-attr">imagePullSecrets:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">registrykey-2.6.2</span>  <br>  <span class="hljs-attr">nodeSelector:</span><br>    <span class="hljs-attr">kubernetes.io/hostname:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.16</span><br><span class="hljs-string">➜</span>  <span class="hljs-string">nexus</span> <br></code></pre></td></tr></table></figure>
+
+<h4 id="创建Pod-查看Pod状态："><a href="#创建Pod-查看Pod状态：" class="headerlink" title="创建Pod,查看Pod状态："></a>创建Pod,查看Pod状态：</h4><figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs n1ql">➜  nexus kubectl <span class="hljs-keyword">create</span> -f test.yaml<br>The Pod <span class="hljs-string">&quot;rbd-rest-api-registrykey-m2.6.2-1&quot;</span> <span class="hljs-keyword">is</span> invalid: spec.containers[<span class="hljs-number">0</span>].name: Invalid <span class="hljs-keyword">value</span>: <span class="hljs-string">&quot;rbd-rest-api-registrykey-m2.6.2-1&quot;</span>: a DNS<span class="hljs-number">-1123</span> label must consist of <span class="hljs-built_in">lower</span> <span class="hljs-keyword">case</span> alphanumeric characters <span class="hljs-keyword">or</span> <span class="hljs-string">&#x27;-&#x27;</span>, <span class="hljs-keyword">and</span> must <span class="hljs-keyword">start</span> <span class="hljs-keyword">and</span> <span class="hljs-keyword">end</span> <span class="hljs-keyword">with</span> an alphanumeric character (<span class="hljs-built_in">e</span>.g. <span class="hljs-string">&#x27;my-name&#x27;</span>,  <span class="hljs-keyword">or</span> <span class="hljs-string">&#x27;123-abc&#x27;</span>, regex used <span class="hljs-keyword">for</span> validation <span class="hljs-keyword">is</span> <span class="hljs-string">&#x27;[a-z0-9]([-a-z0-9]*[a-z0-9])?&#x27;</span>)<br>原来container的name命名只能用小写字母和-，不能用.号，所以修改name为：<span class="hljs-string">&quot;rbd-rest-api-registrykey-m262-1&quot;</span><br><br>再次创建ok:<br>➜  nexus kubectl <span class="hljs-keyword">create</span> -f test.yaml<br>pod <span class="hljs-string">&quot;rbd-rest-api-registrykey-m262-1&quot;</span> created<br>➜  nexus <br>➜  nexus kubectl get pods           <br>NAME                              READY     STATUS    RESTARTS   AGE<br>nexus3<span class="hljs-number">-68</span>f55d9746-vfnf8           <span class="hljs-number">1</span>/<span class="hljs-number">1</span>       Running   <span class="hljs-number">0</span>          <span class="hljs-number">18</span>h<br>rbd-rest-api-registrykey-m262<span class="hljs-number">-1</span>   <span class="hljs-number">1</span>/<span class="hljs-number">1</span>       Running   <span class="hljs-number">0</span>          <span class="hljs-number">6</span>s<br>➜  nexus <br></code></pre></td></tr></table></figure>
+
+<h4 id="通过describe-pod，查看创建的event序列："><a href="#通过describe-pod，查看创建的event序列：" class="headerlink" title="通过describe pod，查看创建的event序列："></a>通过describe pod，查看创建的event序列：</h4><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">➜  nexus kubectl describe pod/rbd-rest-api-registrykey-m262-1<br><span class="hljs-string">...</span><br>部分省略<br><span class="hljs-string">...</span><br>Events:<br>  Type    Reason                 Age   From                   Message<br>  <span class="hljs-params">----</span>    <span class="hljs-params">------</span>                 <span class="hljs-params">----</span>  <span class="hljs-params">----</span>                   <span class="hljs-params">-------</span><br>  Normal  Scheduled              1m    default-scheduler      Successfully assigned rbd-rest-api-registrykey-m262-1 to 192.168.1.16<br>  Normal  SuccessfulMountVolume  1m    kubelet, 192.168.1.16  MountVolume.SetUp succeeded for volume <span class="hljs-string">&quot;default-token-fck44&quot;</span><br>  Normal  Pulling                1m    kubelet, 192.168.1.16  pulling image <span class="hljs-string">&quot;registry.martin.com:5000/registry&quot;</span><br>  Normal  Pulled                 1m    kubelet, 192.168.1.16  Successfully pulled image <span class="hljs-string">&quot;registry.martin.com:5000/registry&quot;</span><br>  Normal  Created                1m    kubelet, 192.168.1.16  Created container<br>  Normal  Started                1m    kubelet, 192.168.1.16  Started container<br>➜  nexus <br></code></pre></td></tr></table></figure>
+<p>正如期望的那样，引用了secret: registrykey-2.6.2的Pod成功Run起来了。</p>
+<p>查看指定运行pod的节点是否run了对应的image:</p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs subunit">[root@node3 docker]# docker ps<br>CONTAINER ID        IMAGE                                            COMMAND                  CREATED             STATUS              PORTS               NAMES<br>457e48f68bd7        registry.martin.com:5000/registry                &quot;/entrypoint.sh /e...&quot;   6 minutes ago       Up 5 minutes                            k8s_rbd-rest-api-registrykey-m262<span class="hljs-string">-1</span>_rbd-rest-api-registrykey-m262<span class="hljs-string">-1</span>_default_1265c1f5<span class="hljs-string">-75</span>f3<span class="hljs-string">-11</span>e8<span class="hljs-string">-8760</span><span class="hljs-string">-5254004</span>f2222_0<br></code></pre></td></tr></table></figure>
+<hr>
+<h3 id="如果一个pod中有来自不同私有仓库的不同镜像，需要怎么做呢？"><a href="#如果一个pod中有来自不同私有仓库的不同镜像，需要怎么做呢？" class="headerlink" title="如果一个pod中有来自不同私有仓库的不同镜像，需要怎么做呢？"></a>如果一个pod中有来自不同私有仓库的不同镜像，需要怎么做呢？</h3><p>通过kubectl create secret docker-registry一次只能建立一个registrykey，如果要访问两个镜像仓库，就需要分别为每个仓库创建一个registrykey。再来创建一个registrykey，对应的仓库为：registry.martin.com:6000</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs routeros">➜  nexus <br>➜  nexus kubectl create<span class="hljs-built_in"> secret </span>docker-registry registrykey-2.6.3 <span class="hljs-attribute">--docker-server</span>=registry.martin.com:6000 <span class="hljs-attribute">--docker-username</span>=martin <span class="hljs-attribute">--docker-password</span>=xxx2 <span class="hljs-attribute">--docker-email</span>=hanniusshine@gmail.com<span class="hljs-built_in"></span><br><span class="hljs-built_in">secret </span><span class="hljs-string">&quot;registrykey-2.6.3&quot;</span> created<br><br>➜  nexus kubectl <span class="hljs-builtin-name">get</span><span class="hljs-built_in"> secret </span>                                               <br>NAME                 <span class="hljs-built_in"> TYPE </span>                                 DATA      AGE<br>default-token-fck44   kubernetes.io/service-account-token   3         15d<br>registrykey-2.6.2     kubernetes.io/dockerconfigjson        1         3s<br>registrykey-2.6.3     kubernetes.io/dockerconfigjson        1         3s<br>➜  nexus <br></code></pre></td></tr></table></figure>
+
+<h4 id="创建一个包含多个container的Pod："><a href="#创建一个包含多个container的Pod：" class="headerlink" title="创建一个包含多个container的Pod："></a>创建一个包含多个container的Pod：</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">➜</span>  <span class="hljs-string">nexus</span> <span class="hljs-string">cat</span> <span class="hljs-string">test2.yaml</span> <br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Pod</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">rbd-rest-api-multi-registrykeys-m262-2</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">containers:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">rbd-rest-api-multi-registrykeys-m262-2</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">registry.martin.com:5000/registry</span><br>    <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">Always</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">test-multi-registrykeys-m262-2</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">registry.martin.com:6000/registry</span><br>    <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">Always</span><br>    <span class="hljs-attr">command:</span><br>       <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;tail&quot;</span><br>       <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;-f&quot;</span><br>       <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;/var/log/bootstrap.log&quot;</span><br>  <span class="hljs-attr">imagePullSecrets:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">registrykey-2.6.2</span> <br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">registrykey-2.6.3</span><br>  <span class="hljs-attr">nodeSelector:</span><br>    <span class="hljs-attr">kubernetes.io/hostname:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.16</span><br><span class="hljs-string">➜</span>  <span class="hljs-string">nexus</span> <br></code></pre></td></tr></table></figure>
+
+<h4 id="在secret引用中，将两个key都引用了进来。创建该pod"><a href="#在secret引用中，将两个key都引用了进来。创建该pod" class="headerlink" title="在secret引用中，将两个key都引用了进来。创建该pod"></a>在secret引用中，将两个key都引用了进来。创建该pod</h4><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-comment"># kubectl create -f test2.yaml</span><br><span class="hljs-attribute">pod</span> <span class="hljs-string">&quot;rbd-rest-api-multi-registrykeys-m262-2&quot;</span> created<br><br><span class="hljs-comment"># kubectl get pod</span><br><span class="hljs-attribute">NAME</span>                                   READY     STATUS             RESTARTS   AGE<br><span class="hljs-attribute">rbd</span>-rest-api-multi-registrykeys-m<span class="hljs-number">262</span>-<span class="hljs-number">2</span>   <span class="hljs-number">2</span>/<span class="hljs-number">2</span>       Running            <span class="hljs-number">0</span>          <span class="hljs-number">5</span>s<br></code></pre></td></tr></table></figure>
+
+<h4 id="通过pod的event，看下启动的操作顺序："><a href="#通过pod的event，看下启动的操作顺序：" class="headerlink" title="通过pod的event，看下启动的操作顺序："></a>通过pod的event，看下启动的操作顺序：</h4><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm"><span class="hljs-symbol">Events:</span><br>  Type    Reason                 Age   From                   Message<br>  ----    ------                 ----  ----                   -------<br>  <span class="hljs-keyword">Normal </span> <span class="hljs-keyword">Scheduled </span>             <span class="hljs-number">1</span>m    default-<span class="hljs-keyword">scheduler </span>     Successfully assigned rbd-rest-api-registrykey-m262<span class="hljs-number">-1</span> to <span class="hljs-number">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">1</span>.<span class="hljs-number">16</span><br>  <span class="hljs-keyword">Normal </span> SuccessfulMountVolume  <span class="hljs-number">1</span>m    kubelet, <span class="hljs-number">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">1</span>.<span class="hljs-number">16</span>  MountVolume.SetUp succeeded for volume <span class="hljs-string">&quot;default-token-fck44&quot;</span><br>  <span class="hljs-keyword">Normal </span> Pulling                <span class="hljs-number">1</span>m    kubelet, <span class="hljs-number">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">1</span>.<span class="hljs-number">16</span>  pulling image <span class="hljs-string">&quot;registry.martin.com:5000/registry&quot;</span><br>  <span class="hljs-keyword">Normal </span> Pulled                 <span class="hljs-number">1</span>m    kubelet, <span class="hljs-number">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">1</span>.<span class="hljs-number">16</span>  Successfully pulled image <span class="hljs-string">&quot;registry.martin.com:5000/registry&quot;</span><br>  <span class="hljs-keyword">Normal </span> Created                <span class="hljs-number">1</span>m    kubelet, <span class="hljs-number">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">1</span>.<span class="hljs-number">16</span>  Created container<br>  <span class="hljs-keyword">Normal </span> Started                <span class="hljs-number">1</span>m    kubelet, <span class="hljs-number">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">1</span>.<span class="hljs-number">16</span>  Started container<br>  <span class="hljs-keyword">Normal </span> Pulling                <span class="hljs-number">1</span>m    kubelet, <span class="hljs-number">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">1</span>.<span class="hljs-number">16</span>  pulling image <span class="hljs-string">&quot;registry.martin.com:6000/registry&quot;</span><br>  <span class="hljs-keyword">Normal </span> Pulled                 <span class="hljs-number">1</span>m    kubelet, <span class="hljs-number">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">1</span>.<span class="hljs-number">16</span>  Successfully pulled image <span class="hljs-string">&quot;registry.martin.com:6000/registry&quot;</span><br>  <span class="hljs-keyword">Normal </span> Created                <span class="hljs-number">1</span>m    kubelet, <span class="hljs-number">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">1</span>.<span class="hljs-number">16</span>  Created container<br>  <span class="hljs-keyword">Normal </span> Started                <span class="hljs-number">1</span>m    kubelet, <span class="hljs-number">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">1</span>.<span class="hljs-number">16</span>  Started container<br>➜  nexus <br></code></pre></td></tr></table></figure>
+<hr>
+<h3 id="方法3：通过secret-yaml文件创建pull-image所用的secret"><a href="#方法3：通过secret-yaml文件创建pull-image所用的secret" class="headerlink" title="方法3：通过secret yaml文件创建pull image所用的secret"></a>方法3：通过secret yaml文件创建pull image所用的secret</h3><p>除了上面通过kubectl可以快捷的创建pull image所用的secret外，还可以使用常规的手段-yaml描述文件来创建需要的secret资源。</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs dts">➜  nexus cat registrykey-m262<span class="hljs-number">-3.</span>yaml <br><span class="hljs-symbol">apiVersion:</span> v1<br><span class="hljs-symbol">kind:</span> Secret<br><span class="hljs-symbol">metadata:</span><br><span class="hljs-symbol">  name:</span> registrykey-m262<span class="hljs-number">-3</span><br><span class="hljs-symbol">  namespace:</span> default<br><span class="hljs-symbol">data:</span><br>    <span class="hljs-meta">#.dockerconfigjson: &#123;base64 -w 0 ~/.docker/config.json&#125;</span><br>    .dockerconfigjson: xxxxx<br><span class="hljs-symbol">type:</span> kubernetes.io/dockerconfigjson<br>➜  nexus <br></code></pre></td></tr></table></figure>
+<p>前面说过docker login会在~/.docker下面创建一个config.json文件保存鉴权串，这里secret yaml的.dockerconfigjson后面的数据就是那个json文件的base64编码输出（-w 0让base64输出在单行上，避免折行）。</p>
+<h4 id="创建registrykey-m262-3-secret"><a href="#创建registrykey-m262-3-secret" class="headerlink" title="创建registrykey-m262-3 secret:"></a>创建registrykey-m262-3 secret:</h4><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">➜  nexus cat ~/.docker/config.json                <br>&#123;<br>        &quot;auths&quot;: &#123;<br>                &quot;daocloud.io&quot;: &#123;<br>                        &quot;auth&quot;: &quot;aGFubml1czppYnhnMVE1QQ==&quot;<br>                &#125;,<br>                &quot;https://index.docker.io/v1/&quot;: &#123;<br>                        &quot;auth&quot;: &quot;aGFubml1czppYnhnMVE1QTg4Ng==&quot;<br>                &#125;,<br>                &quot;registry.martin.com:5000&quot;: &#123;<br>                        &quot;auth&quot;: &quot;bWFydGluOmlieGcxUTVB&quot;<br>                &#125;<br>        &#125;,<br>        &quot;HttpHeaders&quot;: &#123;<br>                &quot;User-Agent&quot;: &quot;Docker-Client/17.09.0-ce (linux)&quot;<br>        &#125;<br>&#125;#<br>➜  nexus<br>因为此处&quot;#&quot;的问题，导致通过base64 -w <span class="hljs-number">0</span> ~/.docker/config.json生成的base转码有问题，一直创建pod失败，原因是zsh模拟器引起的&quot;#&quot;,切换到正常shell下ok<br><br>➜  nexus kubectl <span class="hljs-keyword">create</span> -f registrykey-m262<span class="hljs-number">-3.</span>yaml<br>secret &quot;registrykey-m262-3&quot; created<br>➜  nexus <br><br>➜  nexus kubectl <span class="hljs-keyword">get</span> secret <br><span class="hljs-type">NAME</span>                  <span class="hljs-keyword">TYPE</span>                                  DATA      AGE<br><span class="hljs-keyword">default</span>-token-fck44   kubernetes.io/service-account-token   <span class="hljs-number">3</span>         <span class="hljs-number">15</span>d<br>registrykey<span class="hljs-number">-2.6</span><span class="hljs-number">.2</span>     kubernetes.io/dockerconfigjson        <span class="hljs-number">1</span>         <span class="hljs-number">2</span>h<br>registrykey-m262<span class="hljs-number">-3</span>    kubernetes.io/dockerconfigjson        <span class="hljs-number">1</span>         <span class="hljs-number">4</span>m<br><br></code></pre></td></tr></table></figure>
+
+<p>如果是以前老版本可能出现：<br>两个registrykey secret的类型略有不同，前者是:kubernetes.io/dockercfg，后者是:kubernetes.io/dockerconfigjson</p>
+<h4 id="同样的可以使用describe命令来查看详细信息："><a href="#同样的可以使用describe命令来查看详细信息：" class="headerlink" title="同样的可以使用describe命令来查看详细信息："></a>同样的可以使用describe命令来查看详细信息：</h4><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc">➜  nexus kubectl describe secret registrykey-m262-3<br>Name:         registrykey-m262-3<br>Namespace:    default<br>Labels:       &lt;none&gt;<br>Annotations:  &lt;none&gt;<br><br>Type:  kubernetes.io/dockerconfigjson<br><br><span class="hljs-section">Data</span><br><span class="hljs-section">====</span><br><span class="hljs-title">.dockerconfigjson:  305 bytes</span><br></code></pre></td></tr></table></figure>
+<h4 id="可以看到Data区域没有直接展示出来，如果想查看的话可以使用-o-yaml来输出展示出来："><a href="#可以看到Data区域没有直接展示出来，如果想查看的话可以使用-o-yaml来输出展示出来：" class="headerlink" title="可以看到Data区域没有直接展示出来，如果想查看的话可以使用-o yaml来输出展示出来："></a>可以看到Data区域没有直接展示出来，如果想查看的话可以使用-o yaml来输出展示出来：</h4><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs dts">➜  nexus kubectl get secret registrykey-m262<span class="hljs-number">-3</span> -o yaml<br><span class="hljs-symbol">apiVersion:</span> v1<br><span class="hljs-symbol">data:</span><br>  .dockerconfigjson: ewoJImF1dGhzIjogewoJCSJkYW9jbG91ZC5pbyI6IHsKCQkJImF1dGgiOiAiYUdGdWJtbDFjenBwWW5obk1WRTsdsdcmc9PSIKCQl9LAoJCSJyZWdpc3RyeS5tYXJ0aW4uY29tOjUwMDAiOiB7CgkJCSJhdXRoIjogImJXRnlkR2x1T21saWVHY3hVVFZCIgoJCX0KCX0sCgkiSHR0cEhlYWRlcnMiOiB7CgkJIlVzZXItQWdlbnQiOiAiRG9ja2VyLUNsaWVudC8xNy4wOS4wLWNlIChsaW51eCkiCgl9Cn0=<br><span class="hljs-symbol">kind:</span> Secret<br><span class="hljs-symbol">metadata:</span><br><span class="hljs-symbol">  creationTimestamp:</span> <span class="hljs-number">2018</span><span class="hljs-number">-06</span><span class="hljs-number">-22</span>T10:<span class="hljs-number">06</span>:<span class="hljs-number">27</span>Z<br><span class="hljs-symbol">  name:</span> registrykey-m262<span class="hljs-number">-3</span><br><span class="hljs-symbol">  namespace:</span> default<br><span class="hljs-symbol">  resourceVersion:</span> <span class="hljs-string">&quot;1519892&quot;</span><br><span class="hljs-symbol">  selfLink:</span> <span class="hljs-meta-keyword">/api/</span>v1<span class="hljs-meta-keyword">/namespaces/</span>default<span class="hljs-meta-keyword">/secrets/</span>registrykey-m262<span class="hljs-number">-3</span><br><span class="hljs-symbol">  uid:</span> ed2f027e<span class="hljs-number">-7603</span><span class="hljs-number">-11e8</span><span class="hljs-number">-8760</span><span class="hljs-number">-5254004</span>f2222<br><span class="hljs-symbol">type:</span> kubernetes.io/dockerconfigjson<br>➜  nexus <br></code></pre></td></tr></table></figure>
+
+<h4 id="可以把上面的data-dockerconfigjson下面的数据做一个base64解码，看看里面的数据是怎样的"><a href="#可以把上面的data-dockerconfigjson下面的数据做一个base64解码，看看里面的数据是怎样的" class="headerlink" title="可以把上面的data.dockerconfigjson下面的数据做一个base64解码，看看里面的数据是怎样的:"></a>可以把上面的data.dockerconfigjson下面的数据做一个base64解码，看看里面的数据是怎样的:</h4><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs 1c">nexus echo ewoJImF1dGhzIjogewoJCSJkYW9jbG91ZC5pbyI6IHsKCQkJImF1dGgiOiAiYUdGdWJtbDFjenBwWW5obk1WRTFRUT09IgoJCX0sCgkJImh0dHBzOi8vaW5kZXguZG9ja2VyLmlvL3YxLyI6IHsKCQkJImF1dGgiOiAiYUdGdWJtbDFjenBwWW5obk1WRTFRVGc0Tmc9PSIKCQl9LAoJCSJyZWdpc3RyeS5tYXJ0aW4uY29tOjUwMDAiOiB7CgkJCSJdsddImJXRnlkR2x1T21saWVHY3hVVFZCIgoJCX0KCX0sCgkiSHR0cEhlYWRlcnMiOiB7CgkJIlVzZXItQWdlbnQiOiAiRG9ja2VyLUNsaWVudC8xNy4wOS4wLWNlIChsaW51eCkiCgl9Cn0= <span class="hljs-string">|base64 -d</span><br>&#123;<br>        <span class="hljs-string">&quot;auths&quot;</span>: &#123;<br>                <span class="hljs-string">&quot;daocloud.io&quot;</span>: &#123;<br>                        <span class="hljs-string">&quot;auth&quot;</span>: <span class="hljs-string">&quot;aGFubmldffnhnMVE1QQ==&quot;</span><br>                &#125;,<br>                <span class="hljs-string">&quot;https://index.docker.io/v1/&quot;</span>: &#123;<br>                        <span class="hljs-string">&quot;auth&quot;</span>: <span class="hljs-string">&quot;aGFubml1czffnhnMVE1QTg4Ng==&quot;</span><br>                &#125;,<br>                <span class="hljs-string">&quot;registry.martin.com:5000&quot;</span>: &#123;<br>                        <span class="hljs-string">&quot;auth&quot;</span>: <span class="hljs-string">&quot;bWFydGff4dieGcxUTVB&quot;</span><br>                &#125;<br>        &#125;,<br>        <span class="hljs-string">&quot;HttpHeaders&quot;</span>: &#123;<br>                <span class="hljs-string">&quot;User-Agent&quot;</span>: <span class="hljs-string">&quot;Docker-Client/17.09.0-ce (linux)&quot;</span><br>        &#125;<br>&#125;<span class="hljs-meta">#                                                                             ➜  nexus</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="编写引用registrykey-m262-3的pod"><a href="#编写引用registrykey-m262-3的pod" class="headerlink" title="编写引用registrykey-m262-3的pod:"></a>编写引用registrykey-m262-3的pod:</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">➜</span>  <span class="hljs-string">nexus</span> <span class="hljs-string">cat</span> <span class="hljs-string">test3.yaml</span> <br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Pod</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">rbd-rest-api-registrykey-m262-3</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">containers:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">rbd-rest-api-registrykey-m262-3</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">registry.martin.com:5000/os/alpine</span><br>    <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">Always</span><br>  <span class="hljs-attr">imagePullSecrets:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">registrykey-m262-3</span>  <br>  <span class="hljs-attr">nodeSelector:</span><br>    <span class="hljs-attr">kubernetes.io/hostname:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.16</span><br><span class="hljs-string">➜</span>  <span class="hljs-string">nexus</span> <br></code></pre></td></tr></table></figure>
+
+<h4 id="创建运行pod"><a href="#创建运行pod" class="headerlink" title="创建运行pod:"></a>创建运行pod:</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs sql">➜  nexus kubectl <span class="hljs-keyword">create</span> <span class="hljs-operator">-</span>f test3.yaml <br>pod &quot;rbd-rest-api-registrykey-m262-3&quot; created<br>➜  nexus kubectl <span class="hljs-keyword">get</span> pod<br>NAME                              READY     STATUS             RESTARTS   AGE<br>nexus3<span class="hljs-number">-68</span>f55d9746<span class="hljs-operator">-</span>vfnf8           <span class="hljs-number">1</span><span class="hljs-operator">/</span><span class="hljs-number">1</span>       <span class="hljs-keyword">Running</span>            <span class="hljs-number">0</span>          <span class="hljs-number">3</span>d<br>rbd<span class="hljs-operator">-</span>rest<span class="hljs-operator">-</span>api<span class="hljs-operator">-</span>registrykey<span class="hljs-operator">-</span>m262<span class="hljs-number">-1</span>   <span class="hljs-number">1</span><span class="hljs-operator">/</span><span class="hljs-number">1</span>       <span class="hljs-keyword">Running</span>            <span class="hljs-number">0</span>          <span class="hljs-number">2</span>d<br>rbd<span class="hljs-operator">-</span>rest<span class="hljs-operator">-</span>api<span class="hljs-operator">-</span>registrykey<span class="hljs-operator">-</span>m262<span class="hljs-number">-3</span>   <span class="hljs-number">0</span><span class="hljs-operator">/</span><span class="hljs-number">1</span>       CrashLoopBackOff   <span class="hljs-number">1</span>          <span class="hljs-number">7</span>s<br>➜  nexus <br>➜  nexus kubectl <span class="hljs-keyword">describe</span> pod rbd<span class="hljs-operator">-</span>rest<span class="hljs-operator">-</span>api<span class="hljs-operator">-</span>registrykey<span class="hljs-operator">-</span>m262<span class="hljs-number">-3</span><br>Events:<br>  Type     Reason                 Age                <span class="hljs-keyword">From</span>                   Message<br>  <span class="hljs-comment">----     ------                 ----               ----                   -------</span><br>  Normal   Scheduled              <span class="hljs-number">39</span>s                <span class="hljs-keyword">default</span><span class="hljs-operator">-</span>scheduler      Successfully assigned rbd<span class="hljs-operator">-</span>rest<span class="hljs-operator">-</span>api<span class="hljs-operator">-</span>registrykey<span class="hljs-operator">-</span>m262<span class="hljs-number">-3</span> <span class="hljs-keyword">to</span> <span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.16</span><br>  Normal   SuccessfulMountVolume  <span class="hljs-number">39</span>s                kubelet, <span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.16</span>  MountVolume.SetUp succeeded <span class="hljs-keyword">for</span> volume &quot;default-token-fck44&quot;<br>  Normal   Pulling                <span class="hljs-number">22</span>s (x3 <span class="hljs-keyword">over</span> <span class="hljs-number">38</span>s)  kubelet, <span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.16</span>  pulling image &quot;registry.martin.com:5000/os/alpine&quot;<br>  Normal   Pulled                 <span class="hljs-number">22</span>s (x3 <span class="hljs-keyword">over</span> <span class="hljs-number">38</span>s)  kubelet, <span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.16</span>  Successfully pulled image &quot;registry.martin.com:5000/os/alpine&quot;<br>  Normal   Created                <span class="hljs-number">22</span>s (x3 <span class="hljs-keyword">over</span> <span class="hljs-number">38</span>s)  kubelet, <span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.16</span>  Created container<br>  Normal   Started                <span class="hljs-number">22</span>s (x3 <span class="hljs-keyword">over</span> <span class="hljs-number">37</span>s)  kubelet, <span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.16</span>  Started container<br>  Warning  BackOff                <span class="hljs-number">7</span>s (x4 <span class="hljs-keyword">over</span> <span class="hljs-number">36</span>s)   kubelet, <span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.16</span>  Back<span class="hljs-operator">-</span>off restarting failed container<br><br>➜  nexus kubectl <span class="hljs-keyword">get</span> pod                                     <br>NAME                              READY     STATUS      RESTARTS   AGE<br>nexus3<span class="hljs-number">-68</span>f55d9746<span class="hljs-operator">-</span>vfnf8           <span class="hljs-number">1</span><span class="hljs-operator">/</span><span class="hljs-number">1</span>       <span class="hljs-keyword">Running</span>     <span class="hljs-number">0</span>          <span class="hljs-number">3</span>d<br>rbd<span class="hljs-operator">-</span>rest<span class="hljs-operator">-</span>api<span class="hljs-operator">-</span>registrykey<span class="hljs-operator">-</span>m262<span class="hljs-number">-1</span>   <span class="hljs-number">1</span><span class="hljs-operator">/</span><span class="hljs-number">1</span>       <span class="hljs-keyword">Running</span>     <span class="hljs-number">0</span>          <span class="hljs-number">2</span>d<br>rbd<span class="hljs-operator">-</span>rest<span class="hljs-operator">-</span>api<span class="hljs-operator">-</span>registrykey<span class="hljs-operator">-</span>m262<span class="hljs-number">-3</span>   <span class="hljs-number">1</span><span class="hljs-operator">/</span><span class="hljs-number">1</span>       <span class="hljs-keyword">Running</span>   <span class="hljs-number">3</span>          <span class="hljs-number">50</span>s<br><br></code></pre></td></tr></table></figure>
+<p>创建成功。</p>
+<h4 id="那么这种方法如何应对含有来自多个镜像仓库container的Pod的呢？"><a href="#那么这种方法如何应对含有来自多个镜像仓库container的Pod的呢？" class="headerlink" title="那么这种方法如何应对含有来自多个镜像仓库container的Pod的呢？"></a>那么这种方法如何应对含有来自多个镜像仓库container的Pod的呢？</h4><p>这里的思路与方法2略有不同。不需要创建并引用两个或多个secret，而是==创建一个可以访问多个私有镜像仓库的secret==，需要将多个镜像仓库的访问鉴权串都放到~/.docker/config.json中：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<br>    <span class="hljs-attr">&quot;auths&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;registry.martin.com:5000&quot;</span>: &#123;<br>            <span class="hljs-attr">&quot;auth&quot;</span>: <span class="hljs-string">&quot;....省略....&quot;</span><br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>再docker login registry.martin.com:6000,得到config.json如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<br>    <span class="hljs-attr">&quot;auths&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;registry.martin.com:5000&quot;</span>: &#123;<br>            <span class="hljs-attr">&quot;auth&quot;</span>: <span class="hljs-string">&quot;....省略....&quot;</span><br>        &#125;,<br>        <span class="hljs-attr">&quot;registry.martin.com:6000&quot;</span>: &#123;<br>            <span class="hljs-attr">&quot;auth&quot;</span>: <span class="hljs-string">&quot;....省略....&quot;</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>看到Docker自动将新login的private registry的鉴权串merge到了同一个config.json中了，与云镜像加速器daocloud.io类似</p>
+<h4 id="现在基于该包含了两个库鉴权串的config-json创建一个新secret：registrykey-m262-4："><a href="#现在基于该包含了两个库鉴权串的config-json创建一个新secret：registrykey-m262-4：" class="headerlink" title="现在基于该包含了两个库鉴权串的config.json创建一个新secret：registrykey-m262-4："></a>现在基于该包含了两个库鉴权串的config.json创建一个新secret：registrykey-m262-4：</h4><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs dts">➜  nexus cat registrykey-m262<span class="hljs-number">-4.</span>yaml <br><span class="hljs-symbol">apiVersion:</span> v1<br><span class="hljs-symbol">kind:</span> Secret<br><span class="hljs-symbol">metadata:</span><br><span class="hljs-symbol">  name:</span> registrykey-m262<span class="hljs-number">-4</span><br><span class="hljs-symbol">  namespace:</span> default<br><span class="hljs-symbol">data:</span><br>  <span class="hljs-meta">#.dockerconfigjson: &#123;base64 -w 0 ~/.docker/config.json&#125; #基于该命令创建下面base64 encode码</span><br>  .dockerconfigjson: ewoJImF1dGhzIjogewoJCSJkYW9jbG91ZC5pbyI6IHsKCQkJImF1dGgiOiAiYUdGdWJtbDFjenBwWW5obk1WRTFRUT09IgoJCX0sCgkJImh0dHBzOi8vaW5kZXguZG9ja2VyLmlvL3YxLyI6IHsKCQkJImF1dGgiOiAiYUdGdWJtbDFjenBwWW5obk1WRTFRVGc0Tmc9PSIKCQl9LAoJCSJyZWdpc3RyeS5tYXJ0aW4uY29tOjUwMDAiOiB7CgkJCSJhdXRoIjogImJXRnlkR2x1T21saWVHY3hVVFZCIgoJCX0KCX0sCgkiSHR0cEhlYWRlcnMiOiB7CgkJIlVzZXItQWdlbnQiOiAiRG9ja2VyLUNsaWVudC8xNy4wOS4wLWNlIChsaW51eCkiCgl9Cn0=<br><span class="hljs-symbol">type:</span> kubernetes.io/dockerconfigjson<br></code></pre></td></tr></table></figure>
+
+<h4 id="创建secret-registrykey-m262-4"><a href="#创建secret-registrykey-m262-4" class="headerlink" title="创建secret:registrykey-m262-4"></a>创建secret:registrykey-m262-4</h4><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vala"><span class="hljs-meta"># kubectl create -f registrykey-m262-4.yaml </span><br></code></pre></td></tr></table></figure>
+
+<h4 id="编辑一个包含两个容器，引用secret-“registrykey-m262-4″-的Pod-yaml："><a href="#编辑一个包含两个容器，引用secret-“registrykey-m262-4″-的Pod-yaml：" class="headerlink" title="编辑一个包含两个容器，引用secret “registrykey-m262-4″ 的Pod yaml："></a>编辑一个包含两个容器，引用secret “registrykey-m262-4″ 的Pod yaml：</h4><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs dts">cat test4.yaml<br><span class="hljs-symbol">apiVersion:</span> v1<br><span class="hljs-symbol">kind:</span> Pod<br><span class="hljs-symbol">metadata:</span><br><span class="hljs-symbol">  name:</span> rbd-rest-api-multi-registrykeys-m262<span class="hljs-number">-2</span><br><span class="hljs-symbol">spec:</span><br><span class="hljs-symbol">  containers:</span><br>  - name: rbd-rest-api-multi-registrykeys-m262<span class="hljs-number">-2</span><br><span class="hljs-symbol">    image:</span> registry.martin.com:<span class="hljs-number">5000</span><span class="hljs-meta-keyword">/xxxx/</span>rbd-rest-api:latest<br><span class="hljs-symbol">    imagePullPolicy:</span> Always<br>  - name: test-multi-registrykeys-m262<span class="hljs-number">-2</span><br><span class="hljs-symbol">    image:</span> registry.martin.com:<span class="hljs-number">6000</span><span class="hljs-meta-keyword">/xxxx/</span>test:latest<br><span class="hljs-symbol">    imagePullPolicy:</span> Always<br><span class="hljs-symbol">    command:</span><br>       - <span class="hljs-string">&quot;tail&quot;</span><br>       - <span class="hljs-string">&quot;-f&quot;</span><br>       - <span class="hljs-string">&quot;/var/log/bootstrap.log&quot;</span><br><span class="hljs-symbol">  imagePullSecrets:</span><br>  - name: registrykey-m262<span class="hljs-number">-4</span><br></code></pre></td></tr></table></figure>
+<h4 id="创建改pod"><a href="#创建改pod" class="headerlink" title="创建改pod:"></a>创建改pod:</h4><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-comment"># kubectl create -f test4.yaml</span><br><span class="hljs-attribute">pod</span> <span class="hljs-string">&quot;rbd-rest-api-multi-registrykeys-m262-2&quot;</span> created<br><br><span class="hljs-comment"># kubectl get pod</span><br><span class="hljs-attribute">NAME</span>                                   READY     STATUS             RESTARTS   AGE<br><span class="hljs-attribute">rbd</span>-rest-api-multi-registrykeys-m<span class="hljs-number">262</span>-<span class="hljs-number">2</span>   <span class="hljs-number">2</span>/<span class="hljs-number">2</span>       Running            <span class="hljs-number">0</span>          <span class="hljs-number">4</span>s<br><br></code></pre></td></tr></table></figure>
+<p>Pod创建成功</p>
+<h3 id="调用API创建registrykey-secret"><a href="#调用API创建registrykey-secret" class="headerlink" title="调用API创建registrykey secret"></a>调用API创建registrykey secret</h3><p>对比了方法2和方法3，方法2更简洁，方法3更强大。但在任何一个产品中，secret都不应该是手动创建的，在这种情况下， API创建 registrykey secret便是必经之路。一旦选择通过API创建，我们显然将依仗着方法2中的原理，将config.json中的内容通过API请求的Body Post给K8s api server。</p>
+<h4 id="如何在远端构建出config-json的内容继而构建出secret-yaml中-dockerconfigjson的值数据呢？"><a href="#如何在远端构建出config-json的内容继而构建出secret-yaml中-dockerconfigjson的值数据呢？" class="headerlink" title="如何在远端构建出config.json的内容继而构建出secret yaml中.dockerconfigjson的值数据呢？"></a>如何在远端构建出config.json的内容继而构建出secret yaml中.dockerconfigjson的值数据呢？</h4><p>我们发现config.json套路中，唯一不确定的就是每个private repository下的auth串，那么这个串是啥？你大可base64 -d一下：</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-meta"># echo -n <span class="hljs-string">&quot;sddfhbfUGFzcgg3dgf=&quot;</span>|base64 -d</span><br><span class="hljs-symbol">UserName:</span>Password<br></code></pre></td></tr></table></figure>
+<p>可以看到实质上这个auth串就是UserName:Password的base64编码值。因此，首先要用某个仓库的UserName和Password按照’UserName:Password’格式进行base64编码，利用编码的结果值构造json内容，比如：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<br>    <span class="hljs-attr">&quot;auths&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;registry.martin.com:5000/xxxx/rbd-rest-api&quot;</span>: &#123;<br>            <span class="hljs-attr">&quot;auth&quot;</span>: <span class="hljs-string">&quot;Vsddff3dfFzc3dfgQ=&quot;</span><br>        &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>然后对这段json数据再做base64编码，所得到的值就是secret yaml中的.dockerconfigjson的值数据。</p>
+<h4 id="通过API创建一个secret："><a href="#通过API创建一个secret：" class="headerlink" title="通过API创建一个secret："></a>通过API创建一个secret：</h4><figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs llvm">➜  nexus cat secret_api.sh <br>#!/bin/bash<br>#<span class="hljs-string">&quot;.dockerconfigjson&quot;</span>: <span class="hljs-string">&quot;&#123;cat ~/.docker/config.json |base64 -w 0&#125;&quot;</span><br>curl -v -H <span class="hljs-string">&quot;Content-type: application/json&quot;</span>  -X POST -d &#x27; &#123;<br>  <span class="hljs-string">&quot;apiVersion&quot;</span>: <span class="hljs-string">&quot;v1&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-string">&quot;kind&quot;</span>: <span class="hljs-string">&quot;Secret&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-string">&quot;metadata&quot;</span>: &#123;<br>    <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;registrykey-m262-5&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-string">&quot;namespace&quot;</span>: <span class="hljs-string">&quot;default&quot;</span><br>  &#125;<span class="hljs-punctuation">,</span><br>  <span class="hljs-string">&quot;data&quot;</span>: &#123;<br>    <span class="hljs-string">&quot;.dockerconfigjson&quot;</span>: <span class="hljs-string">&quot;ewoJImF1dGhzIjogewoJCSJkYW9jbG91ZC5pbyI6IHsKCQkJImF1dGgiOiAiYUdGdWJtbDFjenBwWW5obk1WRTFRUT09IgoJCX0sCgkJImh0dHBzOi8vaW5kZXguZG9ja2VyLmlvL3YxLyI6IHsKCQkJImF1dGgiOiAiYUdGdWJtbDFjenBwWW5obk1WRTFRVGc0Tmc9PSIKCQl9LAoJCSJyZWdpc3RyeS5tYXJ0aW4uY29tOjUwMDAiOiB7CgkJCSJhdXRoIjogImJXRnlkR2x1T21saWVHY3hVVFZCIgoJCX0KCX0sCgkiSHR0cEhlYWRlcnMiOiB7CgkJIlVzZXItQWdlbnQiOiAiRG9ja2VyLUNsaWVudC8xNy4wOS4wLWNlIChsaW51eCkiCgl9Cn0=&quot;</span><br>  &#125;<span class="hljs-punctuation">,</span><br>  <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;kubernetes.io/dockerconfigjson&quot;</span><br>&#125;&#x27; http://<span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">8080</span>/api/v<span class="hljs-number">1</span>/namespaces/<span class="hljs-keyword">default</span>/secrets<br>➜  nexus<br>➜  nexus ./secret_api.sh  <br>* About <span class="hljs-keyword">to</span> connect() <span class="hljs-keyword">to</span> <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span> port <span class="hljs-number">8080</span> (<span class="hljs-variable">#0</span>)<br>*   Trying <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>...<br>* Connected <span class="hljs-keyword">to</span> <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span> (<span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>) port <span class="hljs-number">8080</span> (<span class="hljs-variable">#0</span>)<br>&gt; POST /api/v<span class="hljs-number">1</span>/namespaces/<span class="hljs-keyword">default</span>/secrets HTTP/<span class="hljs-number">1.1</span><br>&gt; User-Agent: curl/<span class="hljs-number">7.29</span>.<span class="hljs-number">0</span><br>&gt; Host: <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">8080</span><br>&gt; Accept: */*<br>&gt; Content-<span class="hljs-keyword">type</span>: application/json<br>&gt; Content-Length: <span class="hljs-number">624</span><br>&gt; <br>* upload completely sent off: <span class="hljs-number">624</span> out of <span class="hljs-number">624</span> bytes<br>&lt; HTTP/<span class="hljs-number">1.1</span> <span class="hljs-number">201</span> Created<br>&lt; Content-Type: application/json<br>&lt; Date: Mon<span class="hljs-punctuation">,</span> <span class="hljs-number">25</span> Jun <span class="hljs-number">2018</span> <span class="hljs-number">07</span>:<span class="hljs-number">01</span>:<span class="hljs-number">04</span> GMT<br>&lt; Content-Length: <span class="hljs-number">830</span><br>&lt; <br>&#123;<br>  <span class="hljs-string">&quot;kind&quot;</span>: <span class="hljs-string">&quot;Secret&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-string">&quot;apiVersion&quot;</span>: <span class="hljs-string">&quot;v1&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-string">&quot;metadata&quot;</span>: &#123;<br>    <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;registrykey-m262-5&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-string">&quot;namespace&quot;</span>: <span class="hljs-string">&quot;default&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-string">&quot;selfLink&quot;</span>: <span class="hljs-string">&quot;/api/v1/namespaces/default/secrets/registrykey-m262-5&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-string">&quot;uid&quot;</span>: <span class="hljs-string">&quot;86ccae15-7845-11e8-8760-5254004f2222&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-string">&quot;resourceVersion&quot;</span>: <span class="hljs-string">&quot;1815470&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-string">&quot;creationTimestamp&quot;</span>: <span class="hljs-string">&quot;2018-06-25T07:01:04Z&quot;</span><br>  &#125;<span class="hljs-punctuation">,</span><br>  <span class="hljs-string">&quot;data&quot;</span>: &#123;<br>    <span class="hljs-string">&quot;.dockerconfigjson&quot;</span>: <span class="hljs-string">&quot;ewoJImF1dGhzIjogewoJCSJkYW9jbG91ZC5pbyI6IHsKCQkJImF1dGgiOiAiYUdGdWJtbDFjenBwWW5obk1WRTFRUT09IgoJCX0sCgkJImh0dHBzOi8vaW5kZXguZG9ja2VyLmlvL3YxLyI6IHsKCQkJImF1dGgiOiAiYUdGdWJtbDFjenBwWW5obk1WRTFRVGc0Tmc9PSIKCQl9LAoJCSJyZWdpc3RyeS5tYXJ0aW4uY29tOjUwMDAiOiB7CgkJCSJhdXRoIjogImJXRnlkR2x1T21saWVHY3hVVFZCIgoJCX0KCX0sCgkiSHR0cEhlYWRlcnMiOiB7CgkJIlVzZXItQWdlbnQiOiAiRG9ja2VyLUNsaWVudC8xNy4wOS4wLWNlIChsaW51eCkiCgl9Cn0=&quot;</span><br>  &#125;<span class="hljs-punctuation">,</span><br>  <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;kubernetes.io/dockerconfigjson&quot;</span><br>* Connection <span class="hljs-variable">#0</span> <span class="hljs-keyword">to</span> host <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span> left intact<br>&#125;<br>➜  nexus kubectl get secret<br>NAME                  TYPE                                  DATA      AGE<br><span class="hljs-keyword">default</span>-token-fck<span class="hljs-number">44</span>   kubernetes.io/service-account-token   <span class="hljs-number">3</span>         <span class="hljs-number">17</span>d<br>registrykey<span class="hljs-number">-2.6</span>.<span class="hljs-number">2</span>     kubernetes.io/dockerconfigjson        <span class="hljs-number">1</span>         <span class="hljs-number">2</span>d<br>registrykey-m<span class="hljs-number">262</span><span class="hljs-number">-3</span>    kubernetes.io/dockerconfigjson        <span class="hljs-number">1</span>         <span class="hljs-number">2</span>d<br>registrykey-m<span class="hljs-number">262</span><span class="hljs-number">-5</span>    kubernetes.io/dockerconfigjson        <span class="hljs-number">1</span>         <span class="hljs-number">2</span>m<br>➜  nexus <br></code></pre></td></tr></table></figure>
+
+<h4 id="基于registrykey-m262-5，启动一个Pod："><a href="#基于registrykey-m262-5，启动一个Pod：" class="headerlink" title="基于registrykey-m262-5，启动一个Pod："></a>基于registrykey-m262-5，启动一个Pod：</h4><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-symbol">apiVersion:</span> v1<br><span class="hljs-symbol">kind:</span> Pod<br><span class="hljs-symbol">metadata:</span><br><span class="hljs-symbol">  name:</span> rbd-rest-api-registrykey-m262<span class="hljs-number">-5</span><br><span class="hljs-symbol">spec:</span><br><span class="hljs-symbol">  containers:</span><br>  - name: rbd-rest-api-registrykey-m262<span class="hljs-number">-5</span><br><span class="hljs-symbol">    image:</span> registry.martin.com:<span class="hljs-number">5000</span><span class="hljs-meta-keyword">/xxxx/</span>api:latest<br><span class="hljs-symbol">    imagePullPolicy:</span> Always<br><span class="hljs-symbol">  imagePullSecrets:</span><br>  - name: registrykey-m262<span class="hljs-number">-5</span><br><br><span class="hljs-meta"># kubectl create -f test5.yaml</span><br>pod <span class="hljs-string">&quot;rbd-rest-api-registrykey-m262-5&quot;</span> created<br><br><span class="hljs-meta"># kubectl get pod</span><br>NAME                            READY     STATUS             RESTARTS   AGE<br>rbd-rest-api-registrykey-m262<span class="hljs-number">-5</span>   <span class="hljs-number">1</span>/<span class="hljs-number">1</span>       Running            <span class="hljs-number">0</span>          <span class="hljs-number">5</span>s<br></code></pre></td></tr></table></figure>
+<p>Pod创建成功！</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/k8s/">k8s</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/k8s/">k8s</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/06/27/bernetes-RBAC-Detailed/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Kubernetes RBAC  Detailed</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018/06/22/%E5%9F%BA%E4%BA%8Ek8s%20%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE%E5%8F%8A%E6%89%A9%E5%AE%B9maven%20nexus%E7%A7%81%E6%9C%8D/">
+                        <span class="hidden-mobile">基于k8s 动态配置及扩容maven nexus私服</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDM4OS8xMDkyNg==">
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#lv-container', function() {
+        Fluid.utils.createScript('https://cdn-city.livere.com/js/embed.dist.js');
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hannius.github.io/" target="_blank" rel="nofollow noopener"><span>Blog</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/hannius" target="_blank" rel="nofollow noopener"><span>Hannius</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        粤ICP备18019482号-1
+      </a>
+    </span>
+    
+      
+        <span>
+          <a
+            href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=18019482"
+            rel="nofollow noopener"
+            class="beian-police"
+            target="_blank"
+          >
+            
+              <span style="visibility: hidden; width: 0">|</span>
+              <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+            
+            <span>粤公网安备18019482号</span>
+          </a>
+        </span>
+      
+    
+  </div>
+
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

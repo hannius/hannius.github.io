@@ -1,0 +1,635 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="Still Waters Run Deep">
+  <meta name="author" content="Martin Lei">
+  <meta name="keywords" content="">
+  
+  <title>Postman 入门 - 让一切随风</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="让一切随风" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Martin.Lei's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Postman 入门">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2017-05-07 16:37" pubdate>
+        May 7, 2017 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      31
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Postman 入门</h1>
+            
+            <div class="markdown-body">
+              <ul>
+<li>官网： <a target="_blank" rel="noopener" href="https://www.getpostman.com/">https://www.getpostman.com</a>  </li>
+<li><strong>可能是目前最好用的web接口调试工具</strong></li>
+<li>无需注册（注册后可多终端同步用例）</li>
+<li>免费（每年付费$60可用云服务，30天免费试用）</li>
+<li>保存历史记录</li>
+<li>支持录制请求</li>
+<li>基于Chrome的V8引擎，支持JS脚本（基本支持ES6，浏览器相关对象和API和<code>require()</code> <code>import</code>等除外）</li>
+<li>同样的代码和用例可用于自动化接口测试，见它的命令行版本<a target="_blank" rel="noopener" href="https://www.getpostman.com/docs/newman_intro">Newman</a>介绍</li>
+<li>能生成各种语言的HTTP请求代码模板</li>
+<li>能生成比较好看的在线API文档</li>
+<li>官网提供简易版持续集成环境（只支持公网IP的请求）</li>
+</ul>
+<p>限制：</p>
+<ul>
+<li>JS代码在沙盒里运行，需要读写文件和数据库的场景请用JMeter</li>
+<li>非HTTP协议、需要引入第三方库、需要重用大量代码、需要……凡是稍微复杂点的请用JMeter</li>
+</ul>
+<hr>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><a target="_blank" rel="noopener" href="https://www.getpostman.com/apps">https://www.getpostman.com/apps</a></p>
+<p>建议选择Mac/Windows app，比起Chrome app，下载不需要翻墙，功能更强大</p>
+<hr>
+<h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.getpostman.com/docs/">官方文档</a>  </p>
+</blockquote>
+<p>教程  </p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="http://blog.qiji.tech/archives/6575">[API 测试]postman</a>, 2016-02-29<br><a target="_blank" rel="noopener" href="http://www.bayescafe.com/tools/use-postman-to-test-api-automatically.html">API自动化测试利器——Postman</a>, 2015-09-26（教程里的版本比较旧了，但还是讲得不错）<br><a target="_blank" rel="noopener" href="http://blog.getpostman.com/2015/09/03/how-to-write-powerful-automated-api-tests-with-postman-newman-and-jenkins/">How to write powerful automated API tests with Postman, Newman and Jenkins</a>, 2015-09-03<br><a target="_blank" rel="noopener" href="http://blog.getpostman.com/2014/03/07/writing-automated-tests-for-apis-using-postman/">How to write automated tests for APIs using Postman – Part 1</a>, 2014-03-07<br><a target="_blank" rel="noopener" href="http://blog.getpostman.com/2014/04/17/how-to-write-automated-tests-for-apis-with-postman-part-2/">How to write automated tests for APIs with Postman – Part 2</a>, 2014-04-17<br><a target="_blank" rel="noopener" href="http://blog.getpostman.com/2014/05/09/writing-automated-tests-with-postman-part-3/">Writing automated tests with Postman – Part 3</a>, 2014-05-09</p>
+<ul>
+<li>有些早期文章会提到Jetpack，曾经收10美元，现在是Postman左上角的Runner，可以批量执行用例</li>
+</ul>
+</blockquote>
+<p>示例</p>
+<p><a target="_blank" rel="noopener" href="https://echo.getpostman.com/">Postman Echo</a></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="http://blog.getpostman.com/2015/11/13/making-the-perfect-http-request-using-postman-echo/">Making the perfect HTTP request using Postman Echo</a>, 2015-11-13</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://documenter.getpostman.com/view/583/coopers-meal-plan/4u2">Cooper’s Meal Plan</a></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="http://blog.getpostman.com/2016/03/23/conditional-workflows-in-postman/">Conditional Workflows in Postman</a>, 2016-03-23</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://documenter.getpostman.com/view/583/spotify-playlist-generator-v1/2MtDWP">Spotify Playlist Generator</a></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="http://blog.getpostman.com/2016/11/09/generate-spotify-playlists-using-a-postman-collection/">Generate Spotify Playlists using a Postman Collection</a>, 2016-11-09</p>
+</blockquote>
+<p>CurencyCloud的<a target="_blank" rel="noopener" href="https://www.getpostman.com/collections/43e4377fd2e9d187dd0e">Postman集合</a>和<a target="_blank" rel="noopener" href="https://github.com/CurrencyCloud/postman">使用说明</a></p>
+<hr>
+<h3 id="录制接口"><a href="#录制接口" class="headerlink" title="录制接口"></a>录制接口</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.getpostman.com/docs/capture_native">Capturing requests (native app)</a><br><a target="_blank" rel="noopener" href="http://blog.getpostman.com/2016/06/26/using-postman-proxy-to-capture-and-inspect-api-calls-from-ios-or-android-devices/">Using Postman Proxy to Capture and Inspect API Calls from iOS or Android Devices</a>，2016-06-26</p>
+</blockquote>
+<p>接口调用方希望测试业务逻辑时，用不着Fiddler/Charles抓包再往里面一个个填这么麻烦<br>开启Postman的代理（默认5555端口），浏览器/手机设好对应的IP和端口就行，比JMeter的自带的代理方便 : )  </p>
+<p>支持正则表达式过滤URL</p>
+<p>可以设置保存的集合，<strong>建议保存到历史记录</strong>，因为会录到不想要的东西，只有历史记录有一键清空  </p>
+<hr>
+<h3 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.getpostman.com/docs/environments">Setting up an environment with variables</a>  </p>
+</blockquote>
+<p>分为 environment 和 global 2种</p>
+<p>2种环境变量分别存到内建的<code>environment</code>、<code>globals</code>对象（字典）<br>变量名作为key，变量的值作为value（一律存储为字符串） </p>
+<p>通过菜单设置，或在用例里通过代码设置且经Postman运行过的环境变量默认存到IndexedDB，设了就一直在，除非你把它删了<br>（这话很拗口，看到下文数据文件的部分就知道了）</p>
+<h4 id="environment"><a href="#environment" class="headerlink" title="environment"></a>environment</h4><p>满足99%的需要，平时只用它就够了</p>
+<ul>
+<li>作用域为整个集合</li>
+<li>能创建多个environment文件，方便切换不同测试环境</li>
+</ul>
+<p>在地址栏、header、请求参数、外部数据文件里，用 <code>&#123;&#123;变量名&#125;&#125;</code> 获取环境变量的值<br>如：<code>&#123;&#123;URL&#125;&#125;/register</code></p>
+<p>还有以下内建变量，适合一次性使用：</p>
+<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">$guid</span>&#125;&#125;</span><span class="xml">  生成GUID</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">$timestamp</span>&#125;&#125;</span><span class="xml">  当前时间戳</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">$randomInt</span>&#125;&#125;</span><span class="xml">  0-1000的随机整数</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="global"><a href="#global" class="headerlink" title="global"></a>global</h4><p>跟environment几乎完全一样，也是<code>&#123;&#123;&#125;&#125;</code>调用，除了：</p>
+<ul>
+<li>只有1个global文件</li>
+<li>菜单藏得较深，在生成的API文档里也不解析，决定了它不适合做参数化</li>
+<li>environment和global同名时，优先用environment</li>
+</ul>
+<p>global只建议用在1种场景：<strong>定义公共函数</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 先正常地写好函数，再缩成一行，可以考虑用在线压缩工具</span><br><span class="hljs-comment">// 在菜单里选 Bulk Edit，以每行一对 key:value 的形式编辑，变量名做key，函数做value</span><br><span class="hljs-attr">assertType</span>:<span class="hljs-keyword">var</span> assertType = <span class="hljs-function">(<span class="hljs-params">name, value, type</span>) =&gt;</span> &#123;<span class="hljs-keyword">if</span> (type === <span class="hljs-string">&#x27;array&#x27;</span>) &#123;tests[<span class="hljs-string">`Expect <span class="hljs-subst">$&#123;name&#125;</span> to be <span class="hljs-subst">$&#123;type&#125;</span>: <span class="hljs-subst">$&#123;value&#125;</span>`</span>] = <span class="hljs-built_in">Array</span>.isArray(value);&#125; <span class="hljs-keyword">else</span> &#123;tests[<span class="hljs-string">`Expect <span class="hljs-subst">$&#123;name&#125;</span> to be <span class="hljs-subst">$&#123;type&#125;</span>: <span class="hljs-subst">$&#123;value&#125;</span>`</span>] = <span class="hljs-keyword">typeof</span> value === type;&#125;&#125;;<br><span class="hljs-comment">// 注意在这里定义变量只有 var 的作用域够大，用 let 或 const 的话eval后就销毁了</span><br><br><span class="hljs-comment">// 在代码里用eval拿到</span><br><span class="hljs-built_in">eval</span>(globals.assertType);<br><br><span class="hljs-keyword">let</span> name = <span class="hljs-string">&#x27;张三&#x27;</span>;<br><span class="hljs-keyword">let</span> type = <span class="hljs-number">1</span>;<br>assertType(<span class="hljs-string">&#x27;user name&#x27;</span>, name, <span class="hljs-string">&#x27;string&#x27;</span>)  <span class="hljs-comment">// 输出： Expect user name to be string, actual: 张三</span><br>assertType(<span class="hljs-string">&#x27;user type&#x27;</span>, type, <span class="hljs-string">&#x27;number&#x27;</span>)  <span class="hljs-comment">// 输出： Expect user type to be number, actual: 1</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p><a target="_blank" rel="noopener" href="http://blog.getpostman.com/2015/09/29/writing-a-behaviour-driven-api-testing-environment-within-postman/">Writing a behaviour driven API testing environment within Postman</a></p>
+</blockquote>
+<p>在官方给出更方便的重用代码的方法前，这是除了复制粘贴外唯一的重用方法<br>如果不做自动化测试，且断言写得很简单，不建议这么搞  </p>
+<p>如果不幸跳了自动化的坑，通常一个项目会有100~200个接口要做自动化测试，要仔细比较哪种方法成本更高<br>定义函数前要仔细考虑好，万一中途要改参数和返回值，已经写好的n份也得改……</p>
+<p>建议定义的公共函数不超过个位数，并保留好没压缩的版本，不然别人没法接手</p>
+<hr>
+<h3 id="脚本"><a href="#脚本" class="headerlink" title="脚本"></a>脚本</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.getpostman.com/docs/sandbox">Testing Sandbox</a>  内建对象、方法、变量和可用的第三方库介绍<br><a target="_blank" rel="noopener" href="https://www.getpostman.com/docs/testing_examples">Testing examples</a><br><a target="_blank" rel="noopener" href="http://blog.getpostman.com/2014/01/27/extracting-data-from-responses-and-chaining-requests/">Extracting data from responses and chaining requests</a>, 2014-10-27</p>
+</blockquote>
+<p>JavaScript的语法不再赘述，上例子</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 下面出现的environment、postman、tests、responseCode、request、responseTime、responseBody均为Postman内建</span><br><span class="hljs-comment">// 具体见上面链接里的文档</span><br><br><span class="hljs-comment">/* 获取环境变量 */</span><br><span class="hljs-keyword">let</span> foo = environment.yourVariableName;  <span class="hljs-comment">// 或 environment[&#x27;yourVariableName&#x27;]</span><br><br><span class="hljs-comment">// 多个可以用ES6的object destructuring语法：</span><br><span class="hljs-keyword">let</span> &#123;foo, bar, foobar&#125; = environment;<br><br><span class="hljs-comment">// 注意值都是字符串，想要其他类型要转换：</span><br><span class="hljs-keyword">let</span> num = <span class="hljs-built_in">Number</span>(environment.yourVariableName);<br><span class="hljs-keyword">let</span> bool = <span class="hljs-built_in">Boolean</span>(environment.yourVariableName);  <span class="hljs-comment">// 或 !!environment.yourVariableName</span><br><br><br><span class="hljs-comment">/* 设置环境变量 */</span><br>postman.setEnvironmentVariable(<span class="hljs-string">&#x27;yourVariableName&#x27;</span>, <span class="hljs-string">&#x27;value&#x27;</span>);  <span class="hljs-comment">// 值是字符串或能转成字符串的类型</span><br><br><span class="hljs-comment">/* 更新环境变量 */</span><br><span class="hljs-comment">// 就是再调一次上面的方法，赋不同的值</span><br><br><span class="hljs-comment">/* 清除环境变量 */</span><br>postman.clearEnvironmentVariable(<span class="hljs-string">&#x27;yourVariableName&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">/* 断言 */</span><br><span class="hljs-comment">// tests的key会显示在界面上，value是可以解析为boolean的表达式，true显示为成功，false失败</span><br>tests[<span class="hljs-string">&#x27;Status code is 200&#x27;</span>] = responseCode.code === <span class="hljs-number">200</span>;  <span class="hljs-comment">// 推荐用全等 ===，确保类型和值都一致</span><br>tests[<span class="hljs-string">&#x27;Response time is less than 400ms&#x27;</span>] = responseTime &lt; <span class="hljs-number">400</span>;<br><br><span class="hljs-comment">// 变通：用总是为真的断言来显示信息</span><br>tests[<span class="hljs-string">`[INFO] Request params: <span class="hljs-subst">$&#123;<span class="hljs-built_in">JSON</span>.stringify(request.data)&#125;</span>`</span>] = <span class="hljs-literal">true</span>;  <span class="hljs-comment">// 显示所有请求参数（在自动化测试里很有用）</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">/* 提取接口返回值 */</span><br><span class="hljs-comment">// 返回JSON：</span><br><span class="hljs-keyword">let</span> json = <span class="hljs-built_in">JSON</span>.parse(responseBody);  <span class="hljs-comment">// responseBody是包含整个返回内容的字符串</span><br><span class="hljs-comment">// 提取某字段的值：</span><br><span class="hljs-keyword">let</span> foobar = json.foo.bar[<span class="hljs-number">0</span>].foobar;  <span class="hljs-comment">// 假设结构为 &#123;&quot;foo&quot;: &#123;&quot;bar&quot;: [&#123;&quot;foobar&quot;: 1&#125;, &#123;&quot;baz&quot;: 2&#125;]&#125;&#125;</span><br><br><span class="hljs-comment">// 想用在自动化测试可以多写点：</span><br><span class="hljs-keyword">let</span> json;<br><span class="hljs-keyword">try</span> &#123;<br>  json = <span class="hljs-built_in">JSON</span>.parse(responseBody);<br>&#125; <span class="hljs-keyword">catch</span> (err) &#123;<br>  tests[<span class="hljs-string">&#x27;Expect response body to be valid JSON&#x27;</span>] = <span class="hljs-literal">false</span>;<br>  tests[<span class="hljs-string">`Response body: <span class="hljs-subst">$&#123;responseBody&#125;</span>`</span>] = <span class="hljs-literal">true</span>;<br>  <span class="hljs-built_in">console</span>.error(err);<br>&#125;<br><br><span class="hljs-comment">// 返回HTML等：</span><br><span class="hljs-comment">// A. 用正则匹配</span><br><span class="hljs-keyword">let</span> foo = responseBody.match(<span class="hljs-regexp">/foo/g</span>);  <span class="hljs-comment">// g 全局 i 不分大小写 m 多行</span><br>tests[<span class="hljs-string">&#x27;blahblahblah&#x27;</span>] = foo[<span class="hljs-number">0</span>] === <span class="hljs-string">&#x27;bar&#x27;</span>;<br><span class="hljs-comment">// 正则表达式包含变量时：</span><br><span class="hljs-keyword">let</span> foo = <span class="hljs-string">&#x27;xxx&#x27;</span>;<br><span class="hljs-keyword">let</span> bar = responseBody.match(<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">`^<span class="hljs-subst">$&#123;foo&#125;</span>.*$`</span>, <span class="hljs-string">&#x27;g&#x27;</span>);<br><br><span class="hljs-comment">// B. 用CheerioJS库</span><br><span class="hljs-keyword">let</span> html = cheerio(responseBody);<br><span class="hljs-keyword">let</span> titleText = html.find(<span class="hljs-string">&#x27;title&#x27;</span>).text();  <span class="hljs-comment">// 取 &lt;title&gt;标签里的文字</span><br><br><span class="hljs-comment">// C. 只要有文字就行，不管在哪、有几个</span><br><span class="hljs-keyword">let</span> foo = responseBody.has(<span class="hljs-string">&#x27;xxx&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p><a target="_blank" rel="noopener" href="http://blog.getpostman.com/2016/08/30/jquery-replaced-by-cheeriojs-in-postman-sandbox/">jQuery replaced by CheerioJS in Postman Sandbox</a>, 2016-08-30</p>
+</blockquote>
+<p>其他请参考文档和界面右边的代码模板</p>
+<p>PS：<br>Postman毕竟不是IDE，只有部分语法高亮和提示，没方法和参数的提示，全靠笔记和查文档</p>
+<hr>
+<h3 id="数据文件"><a href="#数据文件" class="headerlink" title="数据文件"></a>数据文件</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.getpostman.com/docs/multiple_instances">Using data variables to run a collection multiple times</a><br><a target="_blank" rel="noopener" href="http://blog.getpostman.com/2014/10/28/using-csv-and-json-files-in-the-postman-collection-runner/">Using CSV and JSON data files in the Postman Collection Runner</a>, 2014-10-28<br><a target="_blank" rel="noopener" href="http://blog.getpostman.com/2014/02/20/using-variables-inside-postman-and-collection-runner/">Using variables inside Postman and Collection Runner</a>, 2014-02-20</p>
+</blockquote>
+<p>在Collection Runner或命令行的Newman里可以加载数据文件，适合做数据驱动测试（例如同一接口不同的参数组合）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// JSON格式：</span><br><span class="hljs-comment">// 每条用例1个对象，变量名和值为键值对，整个文件为1个数组</span><br><span class="hljs-comment">// 文件里依然可以用 &#123;&#123;&#125;&#125; 拿到环境变量</span><br><span class="hljs-comment">// 例：</span><br>[<br>  &#123;<span class="hljs-string">&quot;mobile&quot;</span>: <span class="hljs-string">&quot;17000000001&quot;</span>, <span class="hljs-string">&quot;pwd&quot;</span>: <span class="hljs-string">&quot;123456&quot;</span>&#125;,<br>  &#123;<span class="hljs-string">&quot;mobile&quot;</span>: <span class="hljs-string">&quot;17000000002&quot;</span>, <span class="hljs-string">&quot;pwd&quot;</span>: <span class="hljs-string">&quot;654321&quot;</span>&#125;,<br>  &#123;<span class="hljs-string">&quot;mobile&quot;</span>: <span class="hljs-string">&quot;17000000003&quot;</span>, <span class="hljs-string">&quot;pwd&quot;</span>: <span class="hljs-string">&quot;&quot;</span>&#125;,<br>  &#123;<span class="hljs-string">&quot;mobile&quot;</span>: <span class="hljs-string">&quot;&#123;&#123;ADMIN_MOBILE&#125;&#125;&quot;</span>, <span class="hljs-string">&quot;pwd&quot;</span>: <span class="hljs-string">&quot;&#123;&#123;ADMIN_PWD&#125;&#125;&quot;</span>&#125;<br>]<br><br><span class="hljs-comment">// CSV格式：</span><br><span class="hljs-comment">// 第1行变量名，下面是值，每行1条用例，没有空格</span><br>mobile,pwd<br><span class="hljs-number">17000000001</span>,<span class="hljs-number">123456</span><br><span class="hljs-number">17000000002</span>,<span class="hljs-number">654321</span><br><span class="hljs-number">17000000003</span>,<br><br><br><span class="hljs-comment">// 用例的请求参数里照旧用 &#123;&#123;&#125;&#125; 拿到数据文件里定义的变量</span><br><span class="hljs-comment">// 如x-www-form-urlencoded的请求参数：</span><br>telephone  &#123;&#123;mobile&#125;&#125;<br>password   &#123;&#123;pwd&#125;&#125;<br><br><span class="hljs-comment">// 如果文件里定义的变量跟environment/global重名，优先用文件里的</span><br><br><span class="hljs-comment">// 代码里想得到当前循环次数，用 iteration（从0开始）  </span><br><span class="hljs-comment">// 想得到数据文件里的变量值，用 data.yourVariableName （data对象包含数据文件里第n条用例的所有变量）</span><br></code></pre></td></tr></table></figure>
+
+<p>PS：<br>在用例里通过代码设置的环境变量，如果在Runner或Newman里运行，默认不保存，跑完用例就消失</p>
+<hr>
+<h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><p><code>cmd + alt + c</code>（windows <code>ctrl + alt + c</code>）打开Postman控制台，可以看请求和响应内容</p>
+<p><code>console.log()</code>打印</p>
+<hr>
+<h3 id="mock"><a href="#mock" class="headerlink" title="mock"></a>mock</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="http://blog.getpostman.com/2016/01/26/using-a-mocking-service-to-create-postman-collections/">Using a mocking service to create Postman Collections</a>，2016-01-26</p>
+</blockquote>
+<hr>
+<h3 id="收费功能"><a href="#收费功能" class="headerlink" title="收费功能"></a>收费功能</h3><p>目前管理员不能解散自己创建的团队，不能删别人创建的环境变量模板，几乎残废  </p>
+<h4 id="团队协作"><a href="#团队协作" class="headerlink" title="团队协作"></a>团队协作</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="http://blog.getpostman.com/2016/10/27/new-more-useful-activity-feed-in-postman-collections/">New, More Useful Activity Feed in Postman Collections</a>, 2016-10-27<br><a target="_blank" rel="noopener" href="http://blog.getpostman.com/2016/03/10/environment-sharing/">Announcing: Environment Sharing!</a>, 2016-03-10</p>
+</blockquote>
+<h4 id="发布"><a href="#发布" class="headerlink" title="发布"></a>发布</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="http://blog.getpostman.com/2016/01/28/the-run-in-postman-button-for-improved-documentation/">Call for Partners: The Run in Postman Button for API documentation</a></p>
+</blockquote>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/postman/">postman</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/postman/">postman</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/02/26/name/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ELK x-pack 详细说明</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDM4OS8xMDkyNg==">
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#lv-container', function() {
+        Fluid.utils.createScript('https://cdn-city.livere.com/js/embed.dist.js');
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hannius.github.io/" target="_blank" rel="nofollow noopener"><span>Blog</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/hannius" target="_blank" rel="nofollow noopener"><span>Hannius</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        粤ICP备18019482号-1
+      </a>
+    </span>
+    
+      
+        <span>
+          <a
+            href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=18019482"
+            rel="nofollow noopener"
+            class="beian-police"
+            target="_blank"
+          >
+            
+              <span style="visibility: hidden; width: 0">|</span>
+              <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+            
+            <span>粤公网安备18019482号</span>
+          </a>
+        </span>
+      
+    
+  </div>
+
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

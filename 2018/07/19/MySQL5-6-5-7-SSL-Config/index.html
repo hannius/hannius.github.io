@@ -1,0 +1,573 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="Still Waters Run Deep">
+  <meta name="author" content="Martin Lei">
+  <meta name="keywords" content="">
+  
+  <title>MySQL5.6  5.7 SSL Config - 让一切随风</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="让一切随风" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Martin.Lei's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="MySQL5.6  5.7 SSL Config">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2018-07-19 11:02" pubdate>
+        July 19, 2018 am
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      39
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">MySQL5.6  5.7 SSL Config</h1>
+            
+            <div class="markdown-body">
+              <h3 id="5-7"><a href="#5-7" class="headerlink" title="5.7"></a>5.7</h3><h4 id="1-mysql5-7上开启并配置ssl"><a href="#1-mysql5-7上开启并配置ssl" class="headerlink" title="1.mysql5.7上开启并配置ssl"></a>1.mysql5.7上开启并配置ssl</h4><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc">[root@mysqlmaster01 bin]# ./mysql_ssl_rsa_setup --datadir=/data/mysql_data1/ --user=mysql<br><br>Generating a 2048 bit RSA private key<br>............................................................................<span class="hljs-code">+++</span><br>............<span class="hljs-code">+++</span><br><span class="hljs-section">writing new private key to &#x27;ca-key.pem&#x27;</span><br><span class="hljs-section">-----</span><br>Generating a 2048 bit RSA private key<br>.......................<span class="hljs-code">+++</span><br>..........................<span class="hljs-code">+++</span><br><span class="hljs-section">writing new private key to &#x27;server-key.pem&#x27;</span><br><span class="hljs-section">-----</span><br>Generating a 2048 bit RSA private key<br>...........<span class="hljs-code">+++</span><br>..........<span class="hljs-code">+++</span><br><span class="hljs-section">writing new private key to &#x27;client-key.pem&#x27;</span><br><span class="hljs-section">-----</span><br></code></pre></td></tr></table></figure>
+
+<p>查看：</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs gherkin">mysql&gt; show variables like &#x27;%ssl%&#x27;;<br>+---------------+-----------------+<br>|<span class="hljs-string"> Variable_name </span>|<span class="hljs-string"> Value </span>|<br>+---------------+-----------------+<br>|<span class="hljs-string"> have_openssl </span>|<span class="hljs-string"> DISABLED </span>|<br>|<span class="hljs-string"> have_ssl </span>|<span class="hljs-string"> DISABLED </span>|<br>|<span class="hljs-string"> ssl_ca </span>|<span class="hljs-string"> ca.pem </span>|<br>|<span class="hljs-string"> ssl_capath </span>|<span class="hljs-string"> </span>|<br>|<span class="hljs-string"> ssl_cert </span>|<span class="hljs-string"> server-cert.pem </span>|<br>|<span class="hljs-string"> ssl_cipher </span>|<span class="hljs-string"> </span>|<br>|<span class="hljs-string"> ssl_crl </span>|<span class="hljs-string"> </span>|<br>|<span class="hljs-string"> ssl_crlpath </span>|<span class="hljs-string"> </span>|<br>|<span class="hljs-string"> ssl_key </span>|<span class="hljs-string"> server-key.pem </span>|<br>+---------------+-----------------+<br>9 rows in set (0.01 sec)<br></code></pre></td></tr></table></figure>
+<p>(SSL还是没有启用)</p>
+<p>解决办法：把数据目录下.pem的文件，属主和属组改成mysql</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs autoit">[root<span class="hljs-symbol">@mysqlmaster01</span> mysql_data1]<span class="hljs-meta"># chown -R mysql.mysql *.pem</span><br></code></pre></td></tr></table></figure>
+<p>然后重启服务</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs gherkin">[root<span class="hljs-meta">@mysqlmaster01</span> mysql_data1]<span class="hljs-comment"># /etc/init.d/mysqld_multi stop 1</span><br><br>[root<span class="hljs-meta">@mysqlmaster01</span> mysql_data1]<span class="hljs-comment"># /etc/init.d/mysqld_multi start 1</span><br>[root<span class="hljs-meta">@mysqlmaster01</span> mysql_data1]<span class="hljs-comment"># /etc/init.d/mysqld_multi report</span><br>Reporting MySQL servers<br>MySQL server from group: mysqld1 is running<br><br>[root<span class="hljs-meta">@mysqlmaster01</span> mysql_data1]<span class="hljs-comment"># mysql --login-path=mysql1 -e &quot;show variables like &#x27;have%ssl%&#x27;;&quot;</span><br>+---------------+-------+<br>|<span class="hljs-string"> Variable_name </span>|<span class="hljs-string"> Value </span>|<br>+---------------+-------+<br>|<span class="hljs-string"> have_openssl </span>|<span class="hljs-string"> YES </span>|<br>|<span class="hljs-string"> have_ssl </span>|<span class="hljs-string"> YES </span>|<br>+---------------+-------+<br><br>(说明ssl已经启用）<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs tap">[root@mysqlmaster01 mysql_data1]<span class="hljs-comment"># ll *.pem</span><br>-rw-------.<span class="hljs-number"> 1 </span>mysql mysql<span class="hljs-number"> 1679 </span>Nov<span class="hljs-number"> 24 </span>11:14 ca-key.pem<br>-rw-r--r--.<span class="hljs-number"> 1 </span>mysql mysql<span class="hljs-number"> 1107 </span>Nov<span class="hljs-number"> 24 </span>11:14 ca.pem<br>-rw-r--r--.<span class="hljs-number"> 1 </span>mysql mysql<span class="hljs-number"> 1107 </span>Nov<span class="hljs-number"> 24 </span>11:14 client-cert.pem<br>-rw-------.<span class="hljs-number"> 1 </span>mysql mysql<span class="hljs-number"> 1679 </span>Nov<span class="hljs-number"> 24 </span>11:14 client-key.pem<br>-rw-------.<span class="hljs-number"> 1 </span>mysql mysql<span class="hljs-number"> 1679 </span>Nov<span class="hljs-number"> 24 </span>11:14 private_key.pem<br>-rw-r--r--.<span class="hljs-number"> 1 </span>mysql mysql<span class="hljs-number"> 451 </span>Nov<span class="hljs-number"> 24 </span>11:14 public_key.pem<br>-rw-r--r--.<span class="hljs-number"> 1 </span>mysql mysql<span class="hljs-number"> 1107 </span>Nov<span class="hljs-number"> 24 </span>11:14 server-cert.pem<br>-rw-------.<span class="hljs-number"> 1 </span>mysql mysql<span class="hljs-number"> 1675 </span>Nov<span class="hljs-number"> 24 </span>11:14 server-key.pem<br></code></pre></td></tr></table></figure>
+<h4 id="2-通过ssl进行连接："><a href="#2-通过ssl进行连接：" class="headerlink" title="2.通过ssl进行连接："></a>2.通过ssl进行连接：</h4><figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs smali">[root@mysqlmaster01 mysql_data2]<span class="hljs-comment"># mysql -u ssl -p -h 10.2.11.226 --ssl-cert=/data/mysql_data2/client-cert.pem --ssl-key=/data/mysql_data2/client-key.pem -P 3307</span><br>Enter password: <br>Welcome to the MySQ<span class="hljs-class">L monitor. Commands end with ;</span><span class="hljs-built_in"> or </span>\g.<br>Your MySQL connection id is 15<br>Server version: 5.7.20-log MySQL Community Server (GPL)<br><br>Copyright (c) 2000, 2017, Oracle<span class="hljs-built_in"> and/or </span>its affiliates. All rights reserved.<br><br>Oracle is a registered trademark of Oracle Corporation<span class="hljs-built_in"> and/or </span>its<br>affiliates. Other names may be trademarks of their respective<br>owners.<br><br>Type &#x27;help;&#x27;<span class="hljs-built_in"> or </span>&#x27;\h&#x27; for help. Type &#x27;\c&#x27; to clear the current input statement.<br><br>mysql&gt; \q<br></code></pre></td></tr></table></figure>
+<p>(默认如果授权没有做任何限制，用户既可以通过秘钥登录,也可以通过用户名和密码登录)</p>
+<h4 id="3-用户授权规定只能通过ssl方式登录"><a href="#3-用户授权规定只能通过ssl方式登录" class="headerlink" title="3.用户授权规定只能通过ssl方式登录"></a>3.用户授权规定只能通过ssl方式登录</h4><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">mysql</span>&gt; create user &#x27;tom&#x27;@&#x27;<span class="hljs-number">10</span>.<span class="hljs-number">2</span>.<span class="hljs-number">11</span>.%&#x27; identified by &#x27;Aa<span class="hljs-number">123456</span>&#x27;;<br><span class="hljs-attribute">Query</span> OK, <span class="hljs-number">0</span> rows affected (<span class="hljs-number">0</span>.<span class="hljs-number">00</span> sec)<br><br><span class="hljs-attribute">mysql</span>&gt; grant <span class="hljs-literal">all</span> <span class="hljs-literal">on</span> *.* to &#x27;tom&#x27;@&#x27;<span class="hljs-number">10</span>.<span class="hljs-number">2</span>.<span class="hljs-number">11</span>.%&#x27; require ssl;<br><span class="hljs-attribute">Query</span> OK, <span class="hljs-number">0</span> rows affected, <span class="hljs-number">1</span> warning (<span class="hljs-number">0</span>.<span class="hljs-number">00</span> sec)<br></code></pre></td></tr></table></figure>
+
+<h4 id="4-测试"><a href="#4-测试" class="headerlink" title="4.测试"></a>4.测试</h4><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc">[root@mysqlmaster01 ~]# mysql -u tom -p -h 10.2.11.226 --ssl-mode <span class="hljs-emphasis">&#x27;REQUIRED&#x27;</span> -P 3306 <br>Enter password: <br>Welcome to the MySQL monitor. Commands end with ; or \g.<br><br><span class="hljs-section">mysql&gt; \s</span><br><span class="hljs-section">--------------</span><br>mysql Ver 14.14 Distrib 5.7.20, for linux-glibc2.12 (x86_64) using EditLine wrapper<br><br>Connection id:	25<br>Current database:	<br>Current user:	tom@10.2.11.226<br>SSL:	Cipher in use is DHE-RSA-AES256-SHA<br>Current pager:	stdout<br>Using outfile:	&#x27;&#x27;<br>Using delimiter:	;<br>Server version:	5.7.20-log MySQL Community Server (GPL)<br>Protocol version:	10<br>Connection:	10.2.11.226 via TCP/IP<br>Server characterset:	latin1<br>Db characterset:	latin1<br>Client characterset:	utf8<br>Conn. characterset:	utf8<br>TCP port:	3306<br>Uptime:	1 hour 34 min 11 sec<br><br><span class="hljs-section">Threads: 2 Questions: 56 Slow queries: 0 Opens: 124 Flush tables: 1 Open tables: 117 Queries per second avg: 0.009</span><br><span class="hljs-section">--------------</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="5-不仅需要ssl还需要秘钥"><a href="#5-不仅需要ssl还需要秘钥" class="headerlink" title="5.不仅需要ssl还需要秘钥"></a>5.不仅需要ssl还需要秘钥</h4><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">mysql</span>&gt; alter user &#x27;tom&#x27;@&#x27;<span class="hljs-number">10</span>.<span class="hljs-number">2</span>.<span class="hljs-number">11</span>.%&#x27; require x<span class="hljs-number">509</span>;<br><span class="hljs-attribute">Query</span> OK, <span class="hljs-number">0</span> rows affected (<span class="hljs-number">0</span>.<span class="hljs-number">01</span> sec)<br></code></pre></td></tr></table></figure>
+<p>或者新建一个用户，要求ssl+秘钥登录</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">mysql</span>&gt; grant <span class="hljs-literal">all</span> <span class="hljs-literal">on</span> *.* to &#x27;test&#x27;@&#x27;<span class="hljs-number">10</span>.<span class="hljs-number">2</span>.<span class="hljs-number">11</span>.%&#x27; identified by &#x27;Aa<span class="hljs-number">123456</span>&#x27; require x<span class="hljs-number">509</span>;<br><span class="hljs-attribute">Query</span> OK, <span class="hljs-number">0</span> rows affected, <span class="hljs-number">1</span> warning (<span class="hljs-number">0</span>.<span class="hljs-number">01</span> sec)<br><br><span class="hljs-attribute">mysql</span>&gt; grant <span class="hljs-literal">all</span> <span class="hljs-literal">on</span> *.* to &#x27;test&#x27;@&#x27;<span class="hljs-number">10</span>.<span class="hljs-number">2</span>.<span class="hljs-number">18</span>.%&#x27; identified by &#x27;Aa<span class="hljs-number">123456</span>&#x27; require x<span class="hljs-number">509</span>;<br><span class="hljs-attribute">Query</span> OK, <span class="hljs-number">0</span> rows affected, <span class="hljs-number">1</span> warning (<span class="hljs-number">0</span>.<span class="hljs-number">01</span> sec)<br><br><span class="hljs-attribute">mysql</span>&gt; flush privileges;<br><span class="hljs-attribute">Query</span> OK, <span class="hljs-number">0</span> rows affected (<span class="hljs-number">0</span>.<span class="hljs-number">00</span> sec)<br></code></pre></td></tr></table></figure>
+<p>测试登录：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql">[root<span class="hljs-variable">@mysqlmaster01</span> mysql_data1]# mysql <span class="hljs-operator">-</span>u test <span class="hljs-operator">-</span>p <span class="hljs-operator">-</span>h <span class="hljs-number">10.2</span><span class="hljs-number">.11</span><span class="hljs-number">.226</span> <span class="hljs-operator">-</span>P <span class="hljs-number">3306</span> <span class="hljs-comment">--ssl</span><br>WARNING: <span class="hljs-comment">--ssl is deprecated and will be removed in a future version. Use --ssl-mode instead.</span><br>Enter password: <br>ERROR <span class="hljs-number">1045</span> (<span class="hljs-number">28000</span>): Access denied <span class="hljs-keyword">for</span> <span class="hljs-keyword">user</span> <span class="hljs-string">&#x27;test&#x27;</span>@<span class="hljs-string">&#x27;10.2.11.226&#x27;</span> (<span class="hljs-keyword">using</span> password: YES)<br><br>[root<span class="hljs-variable">@mysqlmaster01</span> mysql_data1]# mysql <span class="hljs-operator">-</span>u test <span class="hljs-operator">-</span>p <span class="hljs-operator">-</span>h <span class="hljs-number">10.2</span><span class="hljs-number">.11</span><span class="hljs-number">.226</span> <span class="hljs-operator">-</span>P <span class="hljs-number">3306</span> <span class="hljs-comment">--ssl-cert=/data/dbdata/client-cert.pem --ssl-key=/data/dbdata/client-key.pem</span><br>mysql<span class="hljs-operator">&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="5-6"><a href="#5-6" class="headerlink" title="5.6"></a>5.6</h3><h4 id="1-加密连接服务端配置"><a href="#1-加密连接服务端配置" class="headerlink" title="1.加密连接服务端配置"></a>1.加密连接服务端配置</h4><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[mysqld]</span><br><span class="hljs-attr">ssl-ca</span>=ca.pem<br><span class="hljs-attr">ssl-cert</span>=server-cert.pem<br><span class="hljs-attr">ssl-key</span>=server-key.pem<br></code></pre></td></tr></table></figure>
+
+<p>说明：</p>
+<ul>
+<li>ss-ca：证书颁发机构(CA)证书文件的路径名</li>
+<li>ssl-cert：服务器公钥证书文件的路径名。这可以发送到客户端，并通过CA证书进行身份验证。</li>
+<li>ssl-key：服务器的私钥证书文件的路径名</li>
+</ul>
+<h4 id="2-客户端使用ssl"><a href="#2-客户端使用ssl" class="headerlink" title="2.客户端使用ssl"></a>2.客户端使用ssl</h4><p>案例：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">mysql  <span class="hljs-attribute">--ssl-ca</span>=ca.pem  <span class="hljs-attribute">--ssl-cert</span>=client-cert.pem  <span class="hljs-attribute">--ssl-key</span>=client-key.pem<br></code></pre></td></tr></table></figure>
+
+<h4 id="3-通过openssl-制作生成-SSL-证书"><a href="#3-通过openssl-制作生成-SSL-证书" class="headerlink" title="3.通过openssl 制作生成 SSL 证书"></a>3.通过openssl 制作生成 SSL 证书</h4><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs autoit">[root<span class="hljs-symbol">@mysqlmaster01</span> CA]<span class="hljs-meta"># touch index.txt</span><br>[root<span class="hljs-symbol">@mysqlmaster01</span> CA]<span class="hljs-meta"># echo 01&gt;serial</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="4-创建CA证书"><a href="#4-创建CA证书" class="headerlink" title="4.创建CA证书"></a>4.创建CA证书</h4><figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs delphi">[root@server mysql56]# openssl genrsa <span class="hljs-number">2048</span> &gt; ca-key.pem<br>Generating RSA <span class="hljs-keyword">private</span> key, <span class="hljs-number">2048</span> bit long modulus<br>...............................................+++<br>......................................................................................................................+++<br>e <span class="hljs-keyword">is</span> <span class="hljs-number">65537</span> (<span class="hljs-number">0</span>x10001)<br>[root@server mysql56]# openssl req -new -x509 -nodes -days <span class="hljs-number">3600</span> -key ca-key.pem -<span class="hljs-keyword">out</span> ca.pem<br>You are about <span class="hljs-keyword">to</span> be asked <span class="hljs-keyword">to</span> enter information that will be incorporated<br>into your certificate request.<br>What you are about <span class="hljs-keyword">to</span> enter <span class="hljs-keyword">is</span> what <span class="hljs-keyword">is</span> called a Distinguished <span class="hljs-keyword">Name</span> <span class="hljs-keyword">or</span> a DN.<br>There are quite a few fields but you can leave some blank<br><span class="hljs-keyword">For</span> some fields there will be a <span class="hljs-keyword">default</span> value,<br><span class="hljs-keyword">If</span> you enter <span class="hljs-string">&#x27;.&#x27;</span>, the field will be left blank.<br>-----<br>Country <span class="hljs-keyword">Name</span> (<span class="hljs-number">2</span> letter code) [XX]:CN<br>State <span class="hljs-keyword">or</span> Province <span class="hljs-keyword">Name</span> (full <span class="hljs-keyword">name</span>) []:shanghai<br>Locality <span class="hljs-keyword">Name</span> (eg, city) [<span class="hljs-keyword">Default</span> City]:shanghai<br>Organization <span class="hljs-keyword">Name</span> (eg, company) [<span class="hljs-keyword">Default</span> Company Ltd]:als<br>Organizational <span class="hljs-keyword">Unit</span> <span class="hljs-keyword">Name</span> (eg, section) []:ops<br>Common <span class="hljs-keyword">Name</span> (eg, your <span class="hljs-keyword">name</span> <span class="hljs-keyword">or</span> your server<span class="hljs-string">&#x27;s hostname) []:ca.test.com</span><br><span class="hljs-string">Email Address []:</span><br><span class="hljs-string">[root@server mysql56]# ll *.pem</span><br><span class="hljs-string">-rw-r--r--. 1 root root 1679 Nov 24 15:15 ca-key.pem</span><br><span class="hljs-string">-rw-r--r--. 1 root root 1314 Nov 24 15:16 ca.pem</span><br></code></pre></td></tr></table></figure>
+<h4 id="5-创建服务器证书"><a href="#5-创建服务器证书" class="headerlink" title="5.创建服务器证书"></a>5.创建服务器证书</h4><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs vbnet">[root@server mysql56]# openssl req -newkey rsa:<span class="hljs-number">2048</span> -days <span class="hljs-number">3600</span> -nodes -keyout server-<span class="hljs-keyword">key</span>.pem -out server-req.pem<br>Generating a <span class="hljs-number">2048</span> bit RSA <span class="hljs-keyword">private</span> <span class="hljs-keyword">key</span><br>......................................................+++<br>.........................+++<br>writing <span class="hljs-built_in">new</span> <span class="hljs-keyword">private</span> <span class="hljs-keyword">key</span> <span class="hljs-keyword">to</span> <span class="hljs-comment">&#x27;server-key.pem&#x27;</span><br>-----<br>You are about <span class="hljs-keyword">to</span> be asked <span class="hljs-keyword">to</span> enter information that will be incorporated<br><span class="hljs-keyword">into</span> your certificate request.<br>What you are about <span class="hljs-keyword">to</span> enter <span class="hljs-built_in">is</span> what <span class="hljs-built_in">is</span> called a Distinguished Name <span class="hljs-built_in">or</span> a DN.<br>There are quite a few fields but you can leave some blank<br><span class="hljs-keyword">For</span> some fields there will be a <span class="hljs-keyword">default</span> value,<br><span class="hljs-keyword">If</span> you enter <span class="hljs-comment">&#x27;.&#x27;, the field will be left blank.</span><br>-----<br>Country Name (<span class="hljs-number">2</span> letter code) [XX]:CN<br>State <span class="hljs-built_in">or</span> Province Name (full name) []:shanghai<br>Locality Name (eg, city) [<span class="hljs-keyword">Default</span> City]:shanghai<br>Organization Name (eg, company) [<span class="hljs-keyword">Default</span> Company Ltd]:als<br>Organizational Unit Name (eg, section) []:ops<br>Common Name (eg, your name <span class="hljs-built_in">or</span> your server<span class="hljs-comment">&#x27;s hostname) []:server.test.com</span><br>Email Address []:<br><br>Please enter the following <span class="hljs-comment">&#x27;extra&#x27; attributes</span><br><span class="hljs-keyword">to</span> be sent <span class="hljs-keyword">with</span> your certificate request<br>A challenge password []:<br>An <span class="hljs-keyword">optional</span> company name []:<br>[root@server mysql56]# openssl rsa -<span class="hljs-keyword">in</span> server-<span class="hljs-keyword">key</span>.pem -out server-<span class="hljs-keyword">key</span>.pem <br>writing RSA <span class="hljs-keyword">key</span><br><br>[root@server mysql56]# openssl x509 -req -<span class="hljs-keyword">in</span> server-req.pem -days <span class="hljs-number">3600</span> -CA ca.pem -CAkey ca-<span class="hljs-keyword">key</span>.pem -set_serial <span class="hljs-number">01</span> -out server-cert.pem<br>Signature ok<br>subject=/C=CN/ST=shanghai/L=shanghai/O=als/OU=ops/CN=server.test.com<br>Getting CA <span class="hljs-keyword">Private</span> <span class="hljs-keyword">Key</span><br></code></pre></td></tr></table></figure>
+<h4 id="6-创建客户端证书"><a href="#6-创建客户端证书" class="headerlink" title="6.创建客户端证书"></a>6.创建客户端证书</h4><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs vbnet">[root@server mysql56]# openssl req -newkey rsa:<span class="hljs-number">2048</span> -days <span class="hljs-number">3600</span> -nodes -keyout client-<span class="hljs-keyword">key</span>.pem -out client-req.pem<br>Generating a <span class="hljs-number">2048</span> bit RSA <span class="hljs-keyword">private</span> <span class="hljs-keyword">key</span><br>.+++<br>...............................................+++<br>writing <span class="hljs-built_in">new</span> <span class="hljs-keyword">private</span> <span class="hljs-keyword">key</span> <span class="hljs-keyword">to</span> <span class="hljs-comment">&#x27;client-key.pem&#x27;</span><br>-----<br>You are about <span class="hljs-keyword">to</span> be asked <span class="hljs-keyword">to</span> enter information that will be incorporated<br><span class="hljs-keyword">into</span> your certificate request.<br>What you are about <span class="hljs-keyword">to</span> enter <span class="hljs-built_in">is</span> what <span class="hljs-built_in">is</span> called a Distinguished Name <span class="hljs-built_in">or</span> a DN.<br>There are quite a few fields but you can leave some blank<br><span class="hljs-keyword">For</span> some fields there will be a <span class="hljs-keyword">default</span> value,<br><span class="hljs-keyword">If</span> you enter <span class="hljs-comment">&#x27;.&#x27;, the field will be left blank.</span><br>-----<br>Country Name (<span class="hljs-number">2</span> letter code) [XX]:CN<br>State <span class="hljs-built_in">or</span> Province Name (full name) []:shanghai<br>Locality Name (eg, city) [<span class="hljs-keyword">Default</span> City]:shanghai<br>Organization Name (eg, company) [<span class="hljs-keyword">Default</span> Company Ltd]:als<br>Organizational Unit Name (eg, section) []:ops<br>Common Name (eg, your name <span class="hljs-built_in">or</span> your server<span class="hljs-comment">&#x27;s hostname) []:client.test.com </span><br>Email Address []:<br><br>Please enter the following <span class="hljs-comment">&#x27;extra&#x27; attributes</span><br><span class="hljs-keyword">to</span> be sent <span class="hljs-keyword">with</span> your certificate request<br>A challenge password []:<br>An <span class="hljs-keyword">optional</span> company name []:<br>[root@server mysql56]# openssl rsa -<span class="hljs-keyword">in</span> client-<span class="hljs-keyword">key</span>.pem -out client-<span class="hljs-keyword">key</span>.pem <br>writing RSA <span class="hljs-keyword">key</span><br>[root@server mysql56]# openssl x509 -req -<span class="hljs-keyword">in</span> client-req.pem -days <span class="hljs-number">3600</span> -CA ca.pem -CAkey ca-<span class="hljs-keyword">key</span>.pem -set_serial <span class="hljs-number">02</span> -out client-cert.pem<br>Signature ok<br>subject=/C=CN/ST=shanghai/L=shanghai/O=als/OU=ops/CN=client.test.com<br>Getting CA <span class="hljs-keyword">Private</span> <span class="hljs-keyword">Key</span><br></code></pre></td></tr></table></figure>
+<h4 id="7-检测"><a href="#7-检测" class="headerlink" title="7.检测"></a>7.检测</h4><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs axapta">[root@mysqlmaster01 mysql56]<span class="hljs-meta"># openssl verify -CAfile ca.pem server-cert.pem client-cert.pem </span><br><span class="hljs-keyword">server</span>-cert.pem: OK<br><span class="hljs-keyword">client</span>-cert.pem: OK<br></code></pre></td></tr></table></figure>
+<p>说明：</p>
+<ul>
+<li><p>ca.pem: Use this as the argument to –ssl-ca on the server and client sides. (The CA certificate, if used, must be the same on both sides.)</p>
+</li>
+<li><p>server-cert.pem, server-key.pem: Use these as the arguments to –ssl-cert and –ssl-key on the server side.</p>
+</li>
+<li><p>client-cert.pem, client-key.pem: Use these as the arguments to –ssl-cert and –ssl-key on the client side.</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs autoit">[root<span class="hljs-symbol">@mysqlmaster01</span> mysql56]<span class="hljs-meta"># chown -R mysql.mysql *.pem （更改属主和属组</span><br></code></pre></td></tr></table></figure>
+<p>编写my.cnf文件，在【mysqld】下填写</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs arcade">ssl-ca=<span class="hljs-regexp">/data/my</span>sql56/ca.pem <br>ssl-cert=<span class="hljs-regexp">/data/my</span>sql56/server-cert.pem <br>ssl-key=<span class="hljs-regexp">/data/my</span>sql56/server-key.pem<br></code></pre></td></tr></table></figure>
+<p>测试：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs routeros">mysql&gt; grant all on *.* <span class="hljs-keyword">to</span> <span class="hljs-string">&#x27;test&#x27;</span>@<span class="hljs-string">&#x27;10.2.11.%&#x27;</span> identified by <span class="hljs-string">&#x27;Aa123456&#x27;</span> require x509; （授权test用户通过ssl+秘钥登录）<br>Query OK, 0 rows affected (0.00 sec)<br><br>mysql&gt; flush privileges;<br>Query OK, 0 rows affected (0.00 sec)<br><br>[root@mysqlmaster01 ~]# mysql -u test -h 10.2.11.226 -p -P 3308<br>Enter password: <br><span class="hljs-builtin-name">ERROR</span> 1045 (28000): Access denied <span class="hljs-keyword">for</span><span class="hljs-built_in"> user </span><span class="hljs-string">&#x27;test&#x27;</span>@<span class="hljs-string">&#x27;10.2.11.226&#x27;</span> (using password: <span class="hljs-literal">YES</span>)<br>(直接用密码登录错误)<br><br>[root@mysqlmaster01 ~]# mysql -u test -h 10.2.11.226 -p -P 3308 <span class="hljs-attribute">-ssl-cert</span>=client-cert.pem <span class="hljs-attribute">--ssl-key</span>=client-key.pem <span class="hljs-attribute">--ssl-ca</span>=ca.pem<br>mysql: [<span class="hljs-builtin-name">ERROR</span>] mysql: unknown option <span class="hljs-string">&#x27;-l&#x27;</span><br>[root@mysqlmaster01 ~]# mysql -u test -h 10.2.11.226 -p -P 3308 <span class="hljs-attribute">--ssl-cert</span>=client-cert.pem <span class="hljs-attribute">--ssl-key</span>=client-key.pem <span class="hljs-attribute">--ssl-ca</span>=ca.pem<br>Enter password: <br><span class="hljs-builtin-name">ERROR</span> 2026 (HY000): SSL<span class="hljs-built_in"> connection </span>error: SSL_CTX_set_default_verify_paths failed<br>[root@mysqlmaster01 ~]# mysql -u test -h 10.2.11.226 -p -P 3308 <span class="hljs-attribute">--ssl-cert</span>=/data/mysql56/client-cert.pem <span class="hljs-attribute">--ssl-key</span>=/data/mysql56/client-key.pem<br>Enter password: <br>Welcome <span class="hljs-keyword">to</span> the MySQL monitor. Commands end with ; <span class="hljs-keyword">or</span> \g.<br>Your MySQL<span class="hljs-built_in"> connection </span>id is 5<span class="hljs-built_in"></span><br><span class="hljs-built_in">Server </span>version: 5.6.38-log MySQL<span class="hljs-built_in"> Community Server </span>(GPL)<br><br>Copyright (c) 2000, 2017, Oracle <span class="hljs-keyword">and</span>/<span class="hljs-keyword">or</span> its affiliates. All rights reserved.<br><br>Oracle is a registered trademark of Oracle Corporation <span class="hljs-keyword">and</span>/<span class="hljs-keyword">or</span> its<br>affiliates. Other names may be trademarks of their respective<br>owners.<br><span class="hljs-built_in"></span><br><span class="hljs-built_in">Type </span><span class="hljs-string">&#x27;help;&#x27;</span> <span class="hljs-keyword">or</span> <span class="hljs-string">&#x27;\h&#x27;</span> <span class="hljs-keyword">for</span> help.<span class="hljs-built_in"> Type </span><span class="hljs-string">&#x27;\c&#x27;</span> <span class="hljs-keyword">to</span> clear the current input statement.<br><br>mysql&gt;<br></code></pre></td></tr></table></figure>
+<p>(如果要在其他电脑上通过ssl登录该机器的数据库，必须要ca.pem,client-cert.pem,client-key.pem拷贝到其他电脑上，然后配置连接数据库的工具使用ssl)</p>
+</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/mysql/">mysql</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/mysql/">mysql</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/08/19/%E5%8F%AA%E5%9C%A8%E7%A7%BB%E5%8A%A8%E7%AB%AF%E7%BD%91%E9%A1%B5%E5%86%85%E6%98%BE%E7%A4%BA%E2%80%9DFork-me-on-Github%E2%80%9D/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">只在移动端网页内显示”Fork me on Github”</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018/07/10/Jenkins-CICD%E5%AE%9E%E7%94%A8%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/">
+                        <span class="hidden-mobile">Jenkins CICD实用经验分享</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDM4OS8xMDkyNg==">
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#lv-container', function() {
+        Fluid.utils.createScript('https://cdn-city.livere.com/js/embed.dist.js');
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hannius.github.io/" target="_blank" rel="nofollow noopener"><span>Blog</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/hannius" target="_blank" rel="nofollow noopener"><span>Hannius</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        粤ICP备18019482号-1
+      </a>
+    </span>
+    
+      
+        <span>
+          <a
+            href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=18019482"
+            rel="nofollow noopener"
+            class="beian-police"
+            target="_blank"
+          >
+            
+              <span style="visibility: hidden; width: 0">|</span>
+              <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+            
+            <span>粤公网安备18019482号</span>
+          </a>
+        </span>
+      
+    
+  </div>
+
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
