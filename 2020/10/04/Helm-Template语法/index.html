@@ -1,0 +1,599 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="Still Waters Run Deep">
+  <meta name="author" content="Martin Lei">
+  <meta name="keywords" content="">
+  
+  <title>Helm Template语法 - 让一切随风</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="让一切随风" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Martin.Lei's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Helm Template语法">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-10-04 12:01" pubdate>
+        October 4, 2020 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      33
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Helm Template语法</h1>
+            
+            <div class="markdown-body">
+              <ul>
+<li>官方文档：<a target="_blank" rel="noopener" href="https://helm.sh/docs/chart_template_guide/function_list/">https://helm.sh/docs/chart_template_guide/function_list/</a></li>
+</ul>
+<h3 id="helpers-tpl"><a href="#helpers-tpl" class="headerlink" title="_helpers.tpl"></a>_helpers.tpl</h3><p>在chart中以 “下划线” 开头的文件，称为”子模版”.</p>
+<p>例如在 <code>_helper.tpl </code>中定义子模块，格式：<code>&#123;&#123;- define "模版名字" -&#125;&#125;</code> 模版内容 <code>&#123;&#123;- end -&#125;&#125;</code></p>
+<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> define <span class="hljs-string">&quot;nginx.name&quot;</span> -&#125;&#125;</span><span class="xml"></span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> default .Chart.Name .Values.nameOverride | trunc <span class="hljs-number">63</span> | trimSuffix <span class="hljs-string">&quot;-&quot;</span> -&#125;&#125;</span><span class="xml"></span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> end -&#125;&#125;</span><span class="xml"></span><br><span class="xml"># 若 .Values.nameOverride 为空，则默认值为 .Chart.Name</span><br></code></pre></td></tr></table></figure>
+<p>引用模板，格式：<code>&#123;&#123; include "模版名字" 作用域&#125;&#125;</code></p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-symbol">apiVersion:</span> apps/v1<br><span class="hljs-symbol">kind:</span> Deployment<br><span class="hljs-symbol">metadata:</span><br><span class="hljs-symbol">  name:</span> &#123;&#123; include <span class="hljs-string">&quot;nginx.fullname&quot;</span> . &#125;&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="内置对象"><a href="#内置对象" class="headerlink" title="内置对象"></a>内置对象</h3><p>Build-in Objects:  <a target="_blank" rel="noopener" href="https://helm.sh/docs/chart_template_guide/builtin_objects/">https://helm.sh/docs/chart_template_guide/builtin_objects/</a></p>
+<p>Chart 预定义对象可直接在各模板中使用。</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">Release</span>：      代表<span class="hljs-keyword">Release</span>对象，属性包含：<span class="hljs-keyword">Release</span>.Name、<span class="hljs-keyword">Release</span>.Namespace、<span class="hljs-keyword">Release</span>.Revision等<br><span class="hljs-keyword">Values</span>：       表示 <span class="hljs-keyword">values</span>.yaml 文件数据<br>Chart：        表示 Chart.yaml 数据<br>Files：        用于访问 chart 中非标准文件<br>Capabilities： 用于获取 k8s 集群的一些信息<br>   - Capabilities.KubeVersion.Major：K8s的主版本<br><span class="hljs-keyword">Template</span>：     表示当前被执行的模板<br>   - <span class="hljs-type">Name</span>：表示模板名，如：mychart/templates/mytemplate.yaml<br>   - BasePath：表示路径，如：mychart/templates<br></code></pre></td></tr></table></figure>
+
+<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><p>默认情况点( . ), 代表全局作用域，用于引用全局对象。</p>
+<p>helm 全局作用域中有两个重要的全局对象：Values 和 Release</p>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs mathematica"><span class="hljs-type">#</span> <span class="hljs-built_in">Values</span><br><span class="hljs-type">#</span> 这里引用了全局作用域下的<span class="hljs-built_in">Values</span>对象中的<span class="hljs-variable">key</span>属性。 <br><span class="hljs-punctuation">&#123;</span><span class="hljs-punctuation">&#123;</span> <span class="hljs-operator">.</span><span class="hljs-built_in">Values</span><span class="hljs-operator">.</span><span class="hljs-variable">key</span> <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">&#125;</span><br><span class="hljs-built_in">Values</span>代表的就是<span class="hljs-variable">values</span><span class="hljs-operator">.</span><span class="hljs-variable">yaml</span>定义的参数，通过<span class="hljs-operator">.</span><span class="hljs-built_in">Values</span>可以引用任意参数。<br>例子：<br><span class="hljs-punctuation">&#123;</span><span class="hljs-punctuation">&#123;</span> <span class="hljs-operator">.</span><span class="hljs-built_in">Values</span><span class="hljs-operator">.</span><span class="hljs-variable">replicaCount</span> <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">&#125;</span><br><span class="hljs-type">#</span> 引用嵌套对象例子，跟引用<span class="hljs-variable">json</span>嵌套对象类似<br><span class="hljs-punctuation">&#123;</span><span class="hljs-punctuation">&#123;</span> <span class="hljs-operator">.</span><span class="hljs-built_in">Values</span><span class="hljs-operator">.</span><span class="hljs-variable">image</span><span class="hljs-operator">.</span><span class="hljs-variable">repository</span> <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">&#125;</span><br><span class="hljs-type">#</span> <span class="hljs-built_in">Release</span> <br>其代表一次应用发布，下面是<span class="hljs-built_in">Release</span>对象包含的属性字段：<br><span class="hljs-built_in">Release</span><span class="hljs-operator">.</span><span class="hljs-variable">Name</span>       <span class="hljs-operator">-</span> <span class="hljs-variable">release</span>的名字，一般通过<span class="hljs-variable">Chart</span><span class="hljs-operator">.</span><span class="hljs-variable">yaml</span>定义，或者通过<span class="hljs-variable">helm</span>命令在安装应用的时候指定。<br><span class="hljs-built_in">Release</span><span class="hljs-operator">.</span><span class="hljs-variable">Time</span>       <span class="hljs-operator">-</span> <span class="hljs-variable">release</span>安装时间<br><span class="hljs-built_in">Release</span><span class="hljs-operator">.</span><span class="hljs-variable">Namespace</span>  <span class="hljs-operator">-</span> <span class="hljs-variable">k8s</span>名字空间<br><span class="hljs-built_in">Release</span><span class="hljs-operator">.</span><span class="hljs-variable">Revision</span>   <span class="hljs-operator">-</span> <span class="hljs-variable">release</span>版本号，是一个递增值，每次更新都会加一<br><span class="hljs-built_in">Release</span><span class="hljs-operator">.</span><span class="hljs-variable">IsUpgrade</span>  <span class="hljs-operator">-</span> <span class="hljs-variable">true</span>代表，当前<span class="hljs-variable">release</span>是一次更新<span class="hljs-operator">.</span><br><span class="hljs-built_in">Release</span><span class="hljs-operator">.</span><span class="hljs-variable">IsInstall</span>  <span class="hljs-operator">-</span> <span class="hljs-variable">true</span>代表，当前<span class="hljs-variable">release</span>是一次安装<br><span class="hljs-built_in">Release</span><span class="hljs-operator">.</span><span class="hljs-variable">Service</span><span class="hljs-operator">:</span>   <span class="hljs-operator">-</span> <span class="hljs-variable">The</span> <span class="hljs-variable">service</span> <span class="hljs-variable">that</span> <span class="hljs-variable">is</span> <span class="hljs-variable">rendering</span> <span class="hljs-variable">the</span> <span class="hljs-variable">present</span> <span class="hljs-variable">template</span><span class="hljs-operator">.</span> <span class="hljs-built_in">On</span> <span class="hljs-variable">Helm</span><span class="hljs-operator">,</span> <span class="hljs-variable">this</span> <span class="hljs-variable">is</span> <span class="hljs-variable">always</span> <span class="hljs-variable">Helm</span><span class="hljs-operator">.</span><br></code></pre></td></tr></table></figure>
+
+<p>自定义模版变量。</p>
+<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="xml"># 变量名以$开始命名， 赋值运算符是 := (冒号+等号)</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> $relname <span class="hljs-attr">:</span>= .Release.Name -&#125;&#125;</span><span class="xml"></span><br><span class="xml">引用自定义变量:</span><br><span class="xml">#不需要 . 引用</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">$relname</span> &#125;&#125;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="include"><a href="#include" class="headerlink" title="include"></a>include</h3><p>include是一个函数，所以他的输出结果是可以传给其他函数的</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 例子1：</span><br><span class="hljs-attr">env:</span><br>  &#123;&#123;<span class="hljs-bullet">-</span> <span class="hljs-string">include</span> <span class="hljs-string">&quot;xiaomage&quot;</span> <span class="hljs-string">.</span> &#125;&#125;<br><span class="hljs-comment"># 结果：</span><br>          <span class="hljs-attr">env:</span><br><span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">name</span><br>  <span class="hljs-attr">value:</span> <span class="hljs-string">xiaomage</span><br><span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">age</span><br>  <span class="hljs-attr">value:</span> <span class="hljs-string">secret</span><br><span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">favourite</span><br>  <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;Cloud Native DevSecOps&quot;</span><br><span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">wechat</span><br>  <span class="hljs-attr">value:</span> <span class="hljs-string">majinghe11</span><br><span class="hljs-comment"># 例子2：</span><br><span class="hljs-attr">env:</span><br>  &#123;&#123;<span class="hljs-bullet">-</span> <span class="hljs-string">include</span> <span class="hljs-string">&quot;xiaomage&quot;</span> <span class="hljs-string">.</span> <span class="hljs-string">|</span> <span class="hljs-string">indent</span> <span class="hljs-number">8</span>&#125;&#125;<br><span class="hljs-comment"># 结果：</span><br>          <span class="hljs-attr">env:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">name</span><br>              <span class="hljs-attr">value:</span> <span class="hljs-string">xiaomage</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">age</span><br>              <span class="hljs-attr">value:</span> <span class="hljs-string">secret</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">favourite</span><br>              <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;Cloud Native DevSecOps&quot;</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">wechat</span><br>              <span class="hljs-attr">value:</span> <span class="hljs-string">majinghe11</span><br></code></pre></td></tr></table></figure>
+<h3 id="with"><a href="#with" class="headerlink" title="with"></a>with</h3><p>with关键字可以控制变量的作用域,主要就是用来修改 . 作用域的，默认 . 代表全局作用域，with 语句可以修改 . 的含义</p>
+<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="xml"># 例子：</span><br><span class="xml"># .Values.favorite 是一个 object 类型</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> with .Values.favorite &#125;&#125;</span><span class="xml"></span><br><span class="xml">drink: </span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">.drink</span> | default <span class="hljs-string">&quot;tea&quot;</span> | quote &#125;&#125;</span><span class="xml">   # 相当于.Values.favorite.drink</span><br><span class="xml">food:  </span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">.food</span>  | upper | quote &#125;&#125;</span><span class="xml"></span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> end &#125;&#125;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="toYaml-转-yaml"><a href="#toYaml-转-yaml" class="headerlink" title="toYaml 转 yaml"></a>toYaml 转 yaml</h3><p>将数据转为yaml格式</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc">spec:<br><span class="hljs-code">  strategy:</span><br><span class="hljs-section">&#123;&#123; toYaml .Values.strategy | indent 4 &#125;&#125;</span><br><span class="hljs-section">------------------------------------------------------------------</span><br>values.yaml数据：<br>strategy:<br><span class="hljs-code">  type: RollingUpdate</span><br><span class="hljs-code">  rollingUpdate:</span><br><span class="hljs-section">    maxUnavailable: 0</span><br><span class="hljs-section">------------------------------------------------------------------</span><br>渲染效果：<br>spec:<br><span class="hljs-code">  strategy:</span><br><span class="hljs-code">    type: RollingUpdate</span><br><span class="hljs-code">    rollingUpdate:</span><br><span class="hljs-code">      maxUnavailable: 0</span><br></code></pre></td></tr></table></figure>
+<p>区别：nindent &amp; indent</p>
+<ul>
+<li>nindent 为向右移动 N 个缩进 </li>
+<li>indent 为向左的缩进。</li>
+</ul>
+<h3 id="Values-对象"><a href="#Values-对象" class="headerlink" title="Values 对象"></a>Values 对象</h3><p>values 对象的值有四个来源：</p>
+<ul>
+<li> chart 包中的 values.yaml 文件</li>
+<li> 父 chart 包的 values.yaml 文件</li>
+<li> 使用 helm install 或者 helm upgrade 的 -f 或者 –values 参数传入的自定义的 yaml 文件</li>
+<li> 通过 –set 参数传入的值<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs dts">cat global.yaml <br><span class="hljs-symbol">course:</span> k8s<br>cat mychart<span class="hljs-meta-keyword">/templates/</span>configmap.yaml <br><span class="hljs-symbol">apiVersion:</span> v1<br><span class="hljs-symbol">kind:</span> ConfigMap<br><span class="hljs-symbol">metadata:</span><br><span class="hljs-symbol">  name:</span> &#123;&#123; .Release.Name &#125;&#125;-configmap<br><span class="hljs-symbol">data:</span><br><span class="hljs-symbol">  myvalue:</span> <span class="hljs-string">&quot;Hello World&quot;</span><br><span class="hljs-symbol">  course:</span>  &#123;&#123; .Values.course &#125;&#125;<br>helm install --name mychart --dry-run --debug -f global.yaml .<span class="hljs-meta-keyword">/mychart/</span><br>helm install --name mychart --dry-run --debug --set course=<span class="hljs-string">&quot;k8s&quot;</span> .<span class="hljs-meta-keyword">/mychart/</span><br><span class="hljs-meta"># 运行部分结果:</span><br><span class="hljs-meta"># Source: mychart/templates/configmap.yaml</span><br><span class="hljs-symbol">apiVersion:</span> v1<br><span class="hljs-symbol">kind:</span> ConfigMap<br><span class="hljs-symbol">metadata:</span><br><span class="hljs-symbol">  name:</span> mychart-configmap<br><span class="hljs-symbol">data:</span><br><span class="hljs-symbol">  myvalue:</span> <span class="hljs-string">&quot;Hello World&quot;</span><br><span class="hljs-symbol">  course:</span>  k8s<br><span class="hljs-meta"># 编辑 mychart/values.yaml，在最后加入</span><br><span class="hljs-symbol">course:</span><br><span class="hljs-symbol">  k8s:</span> klvchen<br><span class="hljs-symbol">  python:</span> lily<br>cat mychart<span class="hljs-meta-keyword">/templates/</span>configmap.yaml <br><span class="hljs-symbol">apiVersion:</span> v1<br><span class="hljs-symbol">kind:</span> ConfigMap<br><span class="hljs-symbol">metadata:</span><br><span class="hljs-symbol">  name:</span> &#123;&#123; .Release.Name &#125;&#125;-configmap<br><span class="hljs-symbol">data:</span><br><span class="hljs-symbol">  myvalue:</span> <span class="hljs-string">&quot;Hello World&quot;</span><br><span class="hljs-symbol">  k8s:</span>  &#123;&#123; quote .Values.course.k8s &#125;&#125;      <span class="hljs-meta"># quote 叫双引号</span><br><span class="hljs-symbol">  python:</span>  &#123;&#123; .Values.course.python &#125;&#125;<br>helm install --name mychart --dry-run --debug .<span class="hljs-meta-keyword">/mychart/</span><br><span class="hljs-meta"># 运行结果：</span><br><span class="hljs-meta"># Source: mychart/templates/configmap.yaml</span><br><span class="hljs-symbol">apiVersion:</span> v1<br><span class="hljs-symbol">kind:</span> ConfigMap<br><span class="hljs-symbol">metadata:</span><br><span class="hljs-symbol">  name:</span> mychart-configmap<br><span class="hljs-symbol">data:</span><br><span class="hljs-symbol">  myvalue:</span> <span class="hljs-string">&quot;Hello World&quot;</span><br><span class="hljs-symbol">  k8s:</span>  <span class="hljs-string">&quot;klvchen&quot;</span><br><span class="hljs-symbol">  python:</span>  lily<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h3><ul>
+<li>k8s:  <code>&#123;&#123; quote .Values.course.k8s &#125;&#125;</code> # 加双引号</li>
+<li>k8s:  <code>&#123;&#123; .Values.course.k8s | upper | quote &#125;&#125;</code> # 大写字符串加双引号</li>
+<li>k8s:  <code>&#123;&#123; .Values.course.k8s | upper | quote &#125;&#125;</code> # 加双引号和重复3次字符串</li>
+</ul>
+<h3 id="if-else-条件"><a href="#if-else-条件" class="headerlink" title="if/else 条件"></a>if/else 条件</h3><p>if/else 块是用于在模板中有条件地包含文本块的方法，条件块的基本结构</p>
+<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name"><span class="hljs-builtin-name">if</span></span> PIPELINE &#125;&#125;</span><span class="xml"></span><br><span class="xml">   # Do something</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">else</span> if OTHER PIPELINE &#125;&#125;</span><span class="xml"></span><br><span class="xml">   # Do something else</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">else</span> &#125;&#125;</span><span class="xml"></span><br><span class="xml">   # Default case</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">end</span> &#125;&#125;</span><br></code></pre></td></tr></table></figure>
+<p>判断条件，如果值为以下几种情况，管道的结果为 false：</p>
+<ul>
+<li>一个布尔类型的假</li>
+<li>一个数字零</li>
+<li>一个空的字符串</li>
+<li>一个 nil(空或null)</li>
+<li>一个空的集合(map, slice, tuple, dict, array)</li>
+</ul>
+<p>除了上面的这些情况外，其他所有的条件都为真。</p>
+<p>常用的关系运算符&gt;、 &gt;=、 &lt;、!=、与或非在helm模版中都以函数的形式实现。</p>
+<p>关系运算函数定义：</p>
+<ul>
+<li>eq 相当于 =</li>
+<li>ne 相当于 !=</li>
+<li>lt 相当于 &lt;=</li>
+<li>gt 相当于 &gt;=</li>
+<li>and 相当于 &amp;&amp;</li>
+<li>or 相当于 ||</li>
+<li>not 相当于 !</li>
+</ul>
+<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="xml"># 例子</span><br><span class="xml">cat mychart/templates/configmap.yaml </span><br><span class="xml">apiVersion: v1</span><br><span class="xml">kind: ConfigMap</span><br><span class="xml">metadata:</span><br><span class="xml">  name: </span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">.Release.Name</span> &#125;&#125;</span><span class="xml">-configmap</span><br><span class="xml">data:</span><br><span class="xml">  myvalue: </span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">.Values.hello</span> | default <span class="hljs-string">&quot;Hello World&quot;</span> | quote &#125;&#125;</span><span class="xml"></span><br><span class="xml">  k8s:  </span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">.Values.course.k8s</span> | upper | quote | repeat <span class="hljs-number">3</span> &#125;&#125;</span><span class="xml"></span><br><span class="xml">  python:  </span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">.Values.course.python</span> | repeat <span class="hljs-number">3</span> | quote &#125;&#125;</span><span class="xml"></span><br><span class="xml">  </span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name"><span class="hljs-builtin-name">if</span></span> eq .Values.course.python <span class="hljs-string">&quot;django&quot;</span> &#125;&#125;</span><span class="xml">web: true</span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">end</span> &#125;&#125;</span><span class="xml"></span><br><span class="xml"></span><br><span class="xml">helm install --name mychart --dry-run --debug ./mychart/</span><br><span class="xml">运行部分结果：</span><br><span class="xml"># Source: mychart/templates/configmap.yaml</span><br><span class="xml">apiVersion: v1</span><br><span class="xml">kind: ConfigMap</span><br><span class="xml">metadata:</span><br><span class="xml">  name: mychart-configmap</span><br><span class="xml">data:</span><br><span class="xml">  myvalue: &quot;Hello World&quot;</span><br><span class="xml">  k8s:  &quot;KLVCHEN&quot;&quot;KLVCHEN&quot;&quot;KLVCHEN&quot;</span><br><span class="xml">  python:  &quot;djangodjangodjango&quot;</span><br><span class="xml">  web: true</span><br><span class="xml"># 空格控制</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> if eq .Values.course.python <span class="hljs-string">&quot;django&quot;</span> &#125;&#125;</span><span class="xml"></span><br><span class="xml">web: true</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> end &#125;&#125;</span><span class="xml"></span><br><span class="xml"></span><br><span class="xml">如果要实现：</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> if eq .Values.isCar <span class="hljs-literal">true</span> &#125;&#125;</span><span class="xml"> OR </span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> if eq .Values.isBus <span class="hljs-literal">true</span> &#125;&#125;</span><span class="xml"></span><br><span class="xml"># do something</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> end &#125;&#125;</span><span class="xml"></span><br><span class="xml">功能，可以执行如下判断：</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> if or (<span class="hljs-name">eq</span> .Values.gitdev.enable <span class="hljs-string">&quot;true&quot;</span>) (<span class="hljs-name">eq</span> .Values.gitpreftest.enable <span class="hljs-string">&quot;true&quot;</span>) &#125;&#125;</span><span class="xml"></span><br><span class="xml"></span><br><span class="xml">- name: galaxymxsdk-logs-pvc</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> if eq .Values.pvc.enabled <span class="hljs-string">&quot;true&quot;</span> &#125;&#125;</span><span class="xml">  #如果values.pvc.enabled的值等于true，则存储用pvc，否则(不为true)用空卷</span><br><span class="xml">  persistentVolumeClaim:</span><br><span class="xml">    claimName: </span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">.Values.pvc.name</span> &#125;&#125;</span><span class="xml"></span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> else &#125;&#125;</span><span class="xml"></span><br><span class="xml">  emptyDir: &#123;&#125;</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> end &#125;&#125;</span><span class="xml"></span><br><span class="xml"></span><br><span class="xml">values值为：</span><br><span class="xml">pvc:</span><br><span class="xml">  enabled: &quot;true&quot;</span><br><span class="xml">  name: logs-pvc</span><br><span class="xml"></span><br><span class="xml">通过dd测试是否有用cfs持久存储：dd if=/dev/zero of=test bs=1M count=1000</span><br><span class="xml"></span><br><span class="xml">区别存在判断：</span><br><span class="xml">- name: galaxymxsdk-logs-pvc</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> if .Values.pvc &#125;&#125;</span><span class="xml">  #如果存在values.pvc，则存储用pvc，否则(不存在)用空卷</span><br><span class="xml">  persistentVolumeClaim:</span><br><span class="xml">    claimName: </span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">.Values.pvc.name</span> &#125;&#125;</span><span class="xml"></span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> else &#125;&#125;</span><span class="xml"></span><br><span class="xml">  emptyDir: &#123;&#125;</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> end &#125;&#125;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="With-关键字"><a href="#With-关键字" class="headerlink" title="With 关键字"></a>With 关键字</h3><p>with 关键字可以控制变量的作用域</p>
+<p><code>&#123;&#123; .Release.xxx &#125;&#125;</code> 其中的.就是表示对当前范围的引用，.Values就是告诉模板在当前范围中查找Values对象的值。</p>
+<p>with 语句可以允许将当前范围 . 设置为特定的对象，比如前面一直使用的.Values.course,可以使用 with 来将范围指向 <code>.Values.course:(templates/configmap.yaml)</code></p>
+<p>with主要就是用来修改 . 作用域的，默认 . 代表全局作用域，with语句可以修改.的含义.</p>
+<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="xml">语法:</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name"><span class="hljs-builtin-name">with</span></span> 引用的对象 &#125;&#125;</span><span class="xml"></span><br><span class="xml">这里可以使用 . (点)， 直接引用with指定的对象</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">end</span> &#125;&#125;</span><span class="xml"></span><br><span class="xml">例子:</span><br><span class="xml">#.Values.favorite是一个object类型</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> with .Values.favorite &#125;&#125;</span><span class="xml"></span><br><span class="xml">drink: </span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">.drink</span> | default <span class="hljs-string">&quot;tea&quot;</span> | quote &#125;&#125;</span><span class="xml">   #相当于.Values.favorite.drink</span><br><span class="xml">food: </span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">.food</span> | upper | quote &#125;&#125;</span><span class="xml"></span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> end &#125;&#125;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="range-关键字"><a href="#range-关键字" class="headerlink" title="range 关键字"></a>range 关键字</h3><p>range主要用于循环遍历数组类型。</p>
+<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="xml">语法1:</span><br><span class="xml"># 遍历map类型，用于遍历键值对象</span><br><span class="xml"># 变量key代表对象的属性名，val代表属性值</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> range key,val <span class="hljs-attr">:</span>= 键值对象 &#125;&#125;</span><span class="xml"></span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">$key</span> &#125;&#125;</span><span class="xml">: </span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">$val</span> | quote &#125;&#125;</span><span class="xml"></span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> end&#125;&#125;</span><span class="xml"></span><br><span class="xml">语法2：</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> range 数组 &#125;&#125;</span><span class="xml"></span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123; . | <span class="hljs-name">title</span> | quote &#125;&#125;</span><span class="xml"> # . (点)，引用数组元素值,title即为把单词首字母大写,quote则为加引号,以字符串形式展示</span><br><span class="xml">#如果不需要任何形式的应用，直接用：</span><span class="hljs-template-variable">&#123;&#123; . &#125;&#125;</span><span class="xml"></span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> end &#125;&#125;</span><span class="xml"></span><br><span class="xml">例子:</span><br><span class="xml"># values.yaml定义</span><br><span class="xml"># map类型</span><br><span class="xml">favorite:</span><br><span class="xml">  drink: coffee</span><br><span class="xml">  food: pizza</span><br><span class="xml"> </span><br><span class="xml"># 数组类型</span><br><span class="xml">pizzaToppings:</span><br><span class="xml">  - mushrooms</span><br><span class="xml">  - cheese</span><br><span class="xml">  - peppers</span><br><span class="xml">  - onions</span><br><span class="xml"> </span><br><span class="xml"># map类型遍历例子:</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> range $key, $val <span class="hljs-attr">:</span>= .Values.favorite &#125;&#125;</span><span class="xml"></span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">$key</span> &#125;&#125;</span><span class="xml">: </span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">$val</span> | quote &#125;&#125;</span><span class="xml"></span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> end&#125;&#125;</span><span class="xml"></span><br><span class="xml"> </span><br><span class="xml"># 数组类型遍历例子:</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> range .Values.pizzaToppings&#125;&#125;</span><span class="xml"></span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123; . | <span class="hljs-name">quote</span> &#125;&#125;</span><span class="xml"></span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">-</span> end&#125;&#125;</span><br></code></pre></td></tr></table></figure>
+<h3 id="常用函数："><a href="#常用函数：" class="headerlink" title="常用函数："></a>常用函数：</h3><figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="xml">1. quote 函数，将值渲染模板时候，以字符串方式引用.</span><br><span class="xml">2. upper 函数，将小写字母转换为大写</span><br><span class="xml">3. repeat 函数，写法repeat n 是将参数复制n遍</span><br><span class="xml">4. default 函数，用法default &quot;tee&quot; 给一个默认的参数，建议将静态的参数都写入values.yaml</span><br><span class="xml">drink: </span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">.Values.favorite.drink</span> | default <span class="hljs-string">&quot;tea&quot;</span> | quote &#125;&#125;</span><span class="xml"></span><br><span class="xml">5. title 函数，首字母大写</span><br><span class="xml">6. indent 函数，缩进字符，以空格为单位</span><br><span class="xml"></span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">toYaml</span> .Values.strategy | indent <span class="hljs-number">4</span> &#125;&#125;</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>参考：<a target="_blank" rel="noopener" href="https://chenyongjun.vip/articles/136">https://chenyongjun.vip/articles/136</a></li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/k8s/">k8s</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/k8s/">k8s</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/10/11/Untitled/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Kubelet 证书自动续期</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/08/03/Jenkins-use-ca-https-to-access-kubernetes-cluster-api/">
+                        <span class="hidden-mobile">Jenkins use ca_https to access kubernetes_cluster api</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDM4OS8xMDkyNg==">
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#lv-container', function() {
+        Fluid.utils.createScript('https://cdn-city.livere.com/js/embed.dist.js');
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hannius.github.io/" target="_blank" rel="nofollow noopener"><span>Blog</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/hannius" target="_blank" rel="nofollow noopener"><span>Hannius</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        粤ICP备18019482号
+      </a>
+    </span>
+    
+      
+        <span>
+          <a
+            href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=18019482"
+            rel="nofollow noopener"
+            class="beian-police"
+            target="_blank"
+          >
+            
+              <span style="visibility: hidden; width: 0">|</span>
+              <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+            
+            <span>粤公网安备18019482号</span>
+          </a>
+        </span>
+      
+    
+  </div>
+
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

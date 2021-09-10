@@ -2,6 +2,41 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.leiyawu.com/2020/10/04/Helm-Template%E8%AF%AD%E6%B3%95/</loc>
+    
+    <lastmod>2021-08-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.leiyawu.com/2020/10/11/Untitled/</loc>
+    
+    <lastmod>2021-08-13</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.leiyawu.com/2021/05/08/k8s-%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4Terminating%E4%BA%A7%E7%94%9F%E5%8E%9F%E5%9B%A0%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</loc>
+    
+    <lastmod>2021-08-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.leiyawu.com/2021/02/18/as/</loc>
+    
+    <lastmod>2021-08-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.leiyawu.com/2018/04/20/hexo%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E7%AB%AF%E5%8F%A3/</loc>
+    
+    <lastmod>2021-08-04</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.leiyawu.com/2019/01/21/Windows-batch%E7%BC%96%E7%A8%8B%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95%E5%8F%8A%E5%91%BD%E4%BB%A4/</loc>
     
     <lastmod>2021-08-03</lastmod>
@@ -122,13 +157,6 @@
   
   <url>
     <loc>http://www.leiyawu.com/2020/08/03/Jenkins-use-ca-https-to-access-kubernetes-cluster-api/</loc>
-    
-    <lastmod>2021-08-03</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.leiyawu.com/2018/04/20/hexo%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E7%AB%AF%E5%8F%A3/</loc>
     
     <lastmod>2021-08-03</lastmod>
     
@@ -256,7 +284,7 @@
 
   <url>
     <loc>http://www.leiyawu.com/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -264,84 +292,84 @@
   
   <url>
     <loc>http://www.leiyawu.com/tags/ELK/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.leiyawu.com/tags/docker/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.leiyawu.com/tags/SyncWriteStream/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.leiyawu.com/tags/hexo/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.leiyawu.com/tags/x-pack/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.leiyawu.com/tags/jenkins/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.leiyawu.com/tags/postman/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.leiyawu.com/tags/k8s/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.leiyawu.com/tags/logrotate/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.leiyawu.com/tags/kafka/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.leiyawu.com/tags/mysql/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.leiyawu.com/tags/windows/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -350,70 +378,70 @@
   
   <url>
     <loc>http://www.leiyawu.com/categories/ELK/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.leiyawu.com/categories/docker/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.leiyawu.com/categories/hexo/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.leiyawu.com/categories/jenkins/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.leiyawu.com/categories/postman/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.leiyawu.com/categories/k8s/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.leiyawu.com/categories/logrotate/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.leiyawu.com/categories/kafka/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.leiyawu.com/categories/mysql/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.leiyawu.com/categories/windows/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>

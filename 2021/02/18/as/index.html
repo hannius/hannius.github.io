@@ -1,0 +1,594 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="Still Waters Run Deep">
+  <meta name="author" content="Martin Lei">
+  <meta name="keywords" content="">
+  
+  <title>Helm Hooks Usage - 让一切随风</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="让一切随风" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Martin.Lei's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Helm Hooks Usage">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-18 11:36" pubdate>
+        February 18, 2021 am
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      21
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Helm Hooks Usage</h1>
+            
+            <div class="markdown-body">
+              <h3 id="Helm-Hooks"><a href="#Helm-Hooks" class="headerlink" title="Helm Hooks"></a>Helm Hooks</h3><p>和 Kubernetes 里面的容器一样，Helm 也提供了 Hook 的机制，允许 chart 开发人员在 release 的生命周期中的某些节点来进行干预，比如可以利用 Hooks 来做下面的这些事情：</p>
+<ul>
+<li>在加载任何其他 chart 之前，在安装过程中加载 ConfigMap 或 Secret</li>
+<li>在安装新 chart 之前执行作业以备份数据库，然后在升级后执行第二个作业以恢复数据</li>
+<li>在删除 release 之前运行作业，以便在删除 release 之前优雅地停止服务</li>
+</ul>
+<p>值得注意的是 Hooks 和普通模板一样工作，但是它们具有特殊的注释，可以使 Helm 以不同的方式使用它们。</p>
+<p>Hook 在资源清单中的 metadata 部分用 annotations 的方式进行声明：</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-symbol">apiVersion:</span> ...<br><span class="hljs-symbol">kind:</span> ....<br><span class="hljs-symbol">metadata:</span><br><span class="hljs-symbol">  annotations:</span><br>    <span class="hljs-string">&quot;helm.sh/hook&quot;</span>: <span class="hljs-string">&quot;pre-install&quot;</span><br><span class="hljs-meta"># ...</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="Helm-Hooks-的一些基本使用方法"><a href="#Helm-Hooks-的一些基本使用方法" class="headerlink" title="Helm Hooks 的一些基本使用方法"></a>Helm Hooks 的一些基本使用方法</h3><p>在 Helm 中定义如下一些可供使用的 Hooks：</p>
+<ul>
+<li>预安装pre-install：在模板渲染后，kubernetes 创建任何资源之前执行</li>
+<li>安装后post-install：在所有 kubernetes 资源安装到集群后执行</li>
+<li>预删除pre-delete：在从 kubernetes 删除任何资源之前执行删除请求</li>
+<li>删除后post-delete：删除所有 release 的资源后执行 #rancher uninstall|del</li>
+<li>升级前pre-upgrade：在模板渲染后，但在任何资源升级之前执行</li>
+<li>升级后post-upgrade：在所有资源升级后执行</li>
+<li>预回滚pre-rollback：在模板渲染后，在任何资源回滚之前执行</li>
+<li>回滚后post-rollback：在修改所有资源后执行回滚请求</li>
+<li>crd-install：在运行其他检查之前添加 CRD 资源，只能用于 chart 中其他的资源清单定义的 CRD 资源。</li>
+</ul>
+<h3 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h3><p>Hooks 允许开发人员在 release 的生命周期中的一些关键节点执行一些钩子函数，正常安装一个 chart 包的时候的生命周期如下所示：</p>
+<ol>
+<li>用户运行helm install foo</li>
+<li>chart 被加载到服务端 Tiller Server 中</li>
+<li>经过一些验证，Tiller Server 渲染 foo 模板</li>
+<li>Tiller 将产生的资源加载到 kubernetes 中去</li>
+<li>Tiller 将 release 名称和其他数据返回给 Helm 客户端</li>
+<li>Helm 客户端退出</li>
+</ol>
+<p>如果开发人员在 install 的生命周期中定义了两个 hook：pre-install和post-install，那么安装一个 chart 包的生命周期就会多一些步骤了：</p>
+<ol>
+<li>用户运行helm install foo</li>
+<li>chart 被加载到服务端 Tiller Server 中</li>
+<li>经过一些验证，Tiller Server 渲染 foo 模板</li>
+<li>Tiller 将 hook 资源加载到 kubernetes 中，准备执行pre-install hook</li>
+<li>Tiller 会根据权重对 hook 进行排序（默认分配权重0，权重相同的 hook 按升序排序）</li>
+<li>Tiller 然后加载最低权重的 hook</li>
+<li>Tiller 等待，直到 hook 准备就绪</li>
+<li>Tiller 将产生的资源加载到 kubernetes 中</li>
+<li>Tiller 执行post-install hook</li>
+<li>Tiller 等待，直到 hook 准备就绪</li>
+<li>Tiller 将 release 名称和其他数据返回给客户端</li>
+<li>Helm 客户端退出</li>
+</ol>
+<p>等待 hook 准备就绪，这是一个阻塞的操作，如果 hook 中声明的是一个 Job 资源，那么 Tiller 将等待 Job 成功完成，如果失败，则发布失败，在这个期间，Helm 客户端是处于暂停状态的。</p>
+<p>对于所有其他类型，只要 kubernetes 将资源标记为加载（添加或更新），资源就被视为就绪状态，当一个 hook 声明了很多资源是，这些资源是被串行执行的。</p>
+<p>另外需要注意的是 hook 创建的资源不会作为 release 的一部分进行跟踪和管理，一旦 Tiller Server 验证了 hook 已经达到了就绪状态，它就不会去管它了。</p>
+<p>所以，如果在 hook 中创建了资源，那么不能依赖helm delete去删除资源，因为 hook 创建的资源已经不受控制了，要销毁这些资源，需要在pre-delete或者post-delete这两个 hook 函数中去执行相关操作，或者将 helm.sh/hook-delete-policy 这个 annotation 添加到 hook 模板文件中。</p>
+<h3 id="写一个-hook"><a href="#写一个-hook" class="headerlink" title="写一个 hook"></a>写一个 hook</h3><p>hook 和普通模板一样，也可以使用普通的模板函数和常用的一些对象，比如Values、Chart、Release等等，唯一和普通模板不太一样的地方就是在资源清单文件中的 metadata 部分会有一些特殊的注释 annotation。</p>
+<p>例如，创建一个 hook，在前面的示例 templates 目录中添加一个 post-install-job.yaml 的文件，表示安装后执行的一个 hook：</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-symbol">apiVersion:</span> batch/v1<br><span class="hljs-symbol">kind:</span> Job<br><span class="hljs-symbol">metadata:</span><br><span class="hljs-symbol">  name:</span> &#123;&#123; .Release.Name &#125;&#125;-post-install-job<br><span class="hljs-symbol">  lables:</span><br><span class="hljs-symbol">    release:</span> &#123;&#123; .Release.Name &#125;&#125;<br><span class="hljs-symbol">    chart:</span> &#123;&#123; .Chart.Name &#125;&#125;<br><span class="hljs-symbol">    version:</span> &#123;&#123; .Chart.Version &#125;&#125;<br><span class="hljs-symbol">  annotations:</span><br>    <span class="hljs-meta"># 注意，如果没有下面的这个注释的话，当前的这个Job就会被当成release的一部分</span><br>    <span class="hljs-string">&quot;helm.sh/hook&quot;</span>: post-install<br>    <span class="hljs-string">&quot;helm.sh/hook-weight&quot;</span>: <span class="hljs-string">&quot;-5&quot;</span><br>    <span class="hljs-string">&quot;helm.sh/hook-delete-policy&quot;</span>: hook-succeeded<br><span class="hljs-symbol">spec:</span><br><span class="hljs-symbol">  template:</span><br><span class="hljs-symbol">    metadata:</span><br><span class="hljs-symbol">      name:</span> &#123;&#123; .Release.Name &#125;&#125;<br><span class="hljs-symbol">      labels:</span><br><span class="hljs-symbol">        release:</span> &#123;&#123; .Release.Name &#125;&#125;<br><span class="hljs-symbol">        chart:</span> &#123;&#123; .Chart.Name &#125;&#125;<br><span class="hljs-symbol">        version:</span> &#123;&#123; .Chart.Version &#125;&#125;<br><span class="hljs-symbol">    spec:</span><br><span class="hljs-symbol">      restartPolicy:</span> Never<br><span class="hljs-symbol">      containers:</span><br>      - name: post-install-job<br><span class="hljs-symbol">        image:</span> alpine<br><span class="hljs-symbol">        command:</span> [<span class="hljs-string">&quot;/bin/sleep&quot;</span>, <span class="hljs-string">&quot;&#123;&#123; default &quot;</span><span class="hljs-number">10</span><span class="hljs-string">&quot; .Values.sleepTime &#125;&#125;&quot;</span>]<br><br></code></pre></td></tr></table></figure>
+
+<p>上面的 Job 资源中添加一个 annotations，要注意的是，如果没有添加下面这行注释的话，这个资源就会被当成是 release 的一部分资源：</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs avrasm"><span class="hljs-symbol">annotations:</span><br>  <span class="hljs-string">&quot;helm.sh/hook&quot;</span>: post-install<br></code></pre></td></tr></table></figure>
+
+<p>当然一个资源中也可以同时部署多个 hook，比如还可以添加一个post-upgrade的钩子：</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver">annotations:<br>  <span class="hljs-string">&quot;helm.sh/hook&quot;</span>: <span class="hljs-built_in">post</span>-install,<span class="hljs-built_in">post</span>-upgrade<br></code></pre></td></tr></table></figure>
+
+<p>另外值得注意的是为 hook 定义了一个权重，这有助于建立一个确定性的执行顺序，权重可以是正数也可以是负数，但是必须是字符串才行。</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs avrasm"><span class="hljs-symbol">annotations:</span><br>  <span class="hljs-string">&quot;helm.sh/hook-weight&quot;</span>: <span class="hljs-string">&quot;-5&quot;</span><br></code></pre></td></tr></table></figure>
+<p>最后还添加了一个删除 hook 资源的策略：</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs avrasm"><span class="hljs-symbol">annotations:</span><br>  <span class="hljs-string">&quot;helm.sh/hook-delete-policy&quot;</span>: hook-succeeded<br></code></pre></td></tr></table></figure>
+
+<p>删除资源的策略可供选择的注释值：</p>
+<ul>
+<li>hook-succeeded：表示 Tiller 在 hook 成功执行后删除 hook 资源</li>
+<li>hook-failed：表示如果 hook 在执行期间失败了，Tiller 应该删除 hook 资源</li>
+<li>before-hook-creation：表示在删除新的 hook 之前应该删除以前的 hook</li>
+</ul>
+<p>当 helm 的 release 更新时，有可能 hook 资源已经存在于群集中。默认情况下，helm 会尝试创建资源，并抛出错误”… already exists”。</p>
+<p>可以选择 “helm.sh/hook-delete-policy”: “before-hook-creation”，取代 “helm.sh/hook-delete-policy”: “hook-succeeded,hook-failed” </p>
+<p>因为：例如为了手动调试，将错误的 hook 作业资源保存在 kubernetes 中是很方便的。 出于某种原因，可能有必要将成功的 hook 资源保留在 kubernetes 中。</p>
+<p>同时，在 helm release 升级之前进行手动资源删除是不可取的。 “helm.sh/hook-delete-policy”: “before-hook-creation” 在 hook 中的注释，如果在新的 hook 启动前有一个 hook 的话，会使 Tiller 将以前的release 中的 hook 删除，而这个 hook 同时它可能正在被其他一个策略使用。</p>
+<p>参考文献：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/BigData_Mining/article/details/97368032">https://blog.csdn.net/BigData_Mining/article/details/97368032</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/k8s/">k8s</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/k8s/">k8s</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/04/24/Hexo%20Update%20From%203.5%20to%205.4/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Hexo Update From 3.5 to 5.4</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/10/11/Untitled/">
+                        <span class="hidden-mobile">Kubelet 证书自动续期</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDM4OS8xMDkyNg==">
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#lv-container', function() {
+        Fluid.utils.createScript('https://cdn-city.livere.com/js/embed.dist.js');
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hannius.github.io/" target="_blank" rel="nofollow noopener"><span>Blog</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/hannius" target="_blank" rel="nofollow noopener"><span>Hannius</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        粤ICP备18019482号
+      </a>
+    </span>
+    
+      
+        <span>
+          <a
+            href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=18019482"
+            rel="nofollow noopener"
+            class="beian-police"
+            target="_blank"
+          >
+            
+              <span style="visibility: hidden; width: 0">|</span>
+              <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+            
+            <span>粤公网安备18019482号</span>
+          </a>
+        </span>
+      
+    
+  </div>
+
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

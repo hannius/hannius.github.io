@@ -1,0 +1,584 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="Still Waters Run Deep">
+  <meta name="author" content="Martin Lei">
+  <meta name="keywords" content="">
+  
+  <title>Kubelet 证书自动续期 - 让一切随风</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="让一切随风" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Martin.Lei's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Kubelet 证书自动续期">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-10-11 17:20" pubdate>
+        October 11, 2020 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      33
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kubelet 证书自动续期</h1>
+            
+            <div class="markdown-body">
+              <h3 id="一、问题现象和原因"><a href="#一、问题现象和原因" class="headerlink" title="一、问题现象和原因"></a>一、问题现象和原因</h3><h4 id="Kubernetes-日志错误"><a href="#Kubernetes-日志错误" class="headerlink" title="Kubernetes 日志错误"></a>Kubernetes 日志错误</h4><p>当 Kubernetes 集群日志中出现 certificate has expired or is not yet valid 错误信息时，表明证书过期</p>
+<h4 id="证书过期原因"><a href="#证书过期原因" class="headerlink" title="证书过期原因"></a>证书过期原因</h4><ul>
+<li>服务器时间不对，导致证书过期</li>
+<li>确实证书过期了<br>证书过期，很多同学会很疑惑，我证书明明签署10年有效期或者更久，怎么刚1年就过期了，下面就来解惑。</li>
+</ul>
+<h4 id="Kubernetes-集群证书"><a href="#Kubernetes-集群证书" class="headerlink" title="Kubernetes 集群证书"></a>Kubernetes 集群证书</h4><p>集群分为两种证书：一、用于集群 Master、Etcd等通信的证书。二、用于集群 Kubelet 组件证书</p>
+<h4 id="Kubernetes-集群中-Kubelet-组件坑"><a href="#Kubernetes-集群中-Kubelet-组件坑" class="headerlink" title="Kubernetes 集群中 Kubelet 组件坑"></a>Kubernetes 集群中 Kubelet 组件坑</h4><p>在搭建 Kubernetes 集群时，一般只声明用于集群 Master、Etcd等通信的证书 为 10年 或者 更久，但未声明集群 Kubelet 组件证书 ，Kubelet 组件证书 默认有效期为1年。</p>
+<p>集群运行1年以后就会导致报 certificate has expired or is not yet valid 错误，导致集群 Node不能和集群 Master正常通信。</p>
+<h3 id="二、-解决方法"><a href="#二、-解决方法" class="headerlink" title="二、 解决方法"></a>二、 解决方法</h3><h4 id="主要细节流程"><a href="#主要细节流程" class="headerlink" title="主要细节流程"></a>主要细节流程</h4><p>kubelet 首次启动通过加载 bootstrap.kubeconfig 中的用户 Token 和 apiserver CA 证书发起首次 CSR 请求，这个 Token 被预先内置在 apiserver 节点的 token.csv 中，其身份为 kubelet-bootstrap 用户和 system:bootstrappers 用户组；想要首次 CSR 请求能成功(成功指的是不会被 apiserver 401 拒绝)，则需要先将 kubelet-bootstrap 用户和 system:node-bootstrapper 内置 ClusterRole 绑定；</p>
+<p>对于首次 CSR 请求可以手动批准，也可以将 system:bootstrappers 用户组与 approve-node-client-csr ClusterRole 绑定实现自动批准(1.8 之前这个 ClusterRole 需要手动创建，1.8 后 apiserver 自动创建，并更名为 system:certificates.k8s.io:certificatesigningrequests:nodeclient)</p>
+<p>默认签署的的证书只有 1 年有效期，如果想要调整证书有效期可以通过设置 kube-controller-manager 的 –experimental-cluster-signing-duration 参数实现，该参数默认值为 8760h0m0s</p>
+<p>对于证书自动续签，需要通过协调两个方面实现：</p>
+<p>第一，想要 kubelet 在证书到期后自动发起续期请求，则需要在 kubelet 启动时增加 –feature-gates=RotateKubeletClientCertificate=true,RotateKubeletServerCertificate=true 来实现；</p>
+<p>第二，想要让 controller manager 自动批准续签的 CSR 请求需要在 controller manager 启动时增加–feature-gates=RotateKubeletServerCertificate=true 参数，并绑定对应的 RBAC 规则；同时需要注意的是 1.7 版本的 kubelet 自动续签后需要手动重启 kubelet 以使其重新加载新证书，而 1.8 后只需要在 kublet 启动时附带 –rotate-certificates 选项就会自动重新加载新证书</p>
+<h4 id="添加参数"><a href="#添加参数" class="headerlink" title="添加参数"></a>添加参数</h4><ul>
+<li>修改 kubelet 组件配置，具体添加下面参数<figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs haml">-<span class="ruby">-feature-gates=RotateKubeletServerCertificate=<span class="hljs-literal">true</span></span><br><span class="ruby"></span>-<span class="ruby">-feature-gates=RotateKubeletClientCertificate=<span class="hljs-literal">true</span></span><br><span class="ruby"></span># 1.8版本以上包含1.8都支持证书更换自动重载，以下版本只能手动重启服务<br>-<span class="ruby">-rotate-certificates</span><br></code></pre></td></tr></table></figure></li>
+<li>修改 controller-manager 组件配置，具体添加下面参数<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-comment"># 证书有效期为10年</span><br><span class="hljs-attr">--experimental-cluster-signing-duration</span>=<span class="hljs-number">87600</span>h0m0s<br><span class="hljs-attr">--feature-gates</span>=RotateKubeletServerCertificate=<span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="创建自动批准相关-CSR-请求的-ClusterRole"><a href="#创建自动批准相关-CSR-请求的-ClusterRole" class="headerlink" title="创建自动批准相关 CSR 请求的 ClusterRole"></a>创建自动批准相关 CSR 请求的 ClusterRole</h4><ul>
+<li>vim tls-instructs-csr.yaml &amp;&amp; kubectl apply -f tls-instructs-csr.yaml<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs vim">kind: ClusterRole<br>apiVersion: rbac.authorization.k8s.io/v1<br>metadat<span class="hljs-variable">a:</span><br>  name: <span class="hljs-built_in">system</span>:certificates.k8s.io:certificatesigningrequest<span class="hljs-variable">s:selfnodeserver</span><br>rule<span class="hljs-variable">s:</span><br>- apiGroup<span class="hljs-variable">s:</span> [<span class="hljs-string">&quot;certificates.k8s.io&quot;</span>]<br>  resource<span class="hljs-variable">s:</span> [<span class="hljs-string">&quot;certificatesigningrequests/selfnodeserver&quot;</span>]<br>  <span class="hljs-keyword">verb</span><span class="hljs-variable">s:</span> [<span class="hljs-string">&quot;create&quot;</span>]<br></code></pre></td></tr></table></figure></li>
+<li>自动批准 kubelet-bootstrap 用户 TLS bootstrapping 首次申请证书的 CSR 请求<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">kubectl create clusterrolebinding node-client-auto-approve-csr <span class="hljs-attribute">--clusterrole</span>=system:certificates.k8s.io:certificatesigningrequests:nodeclient <span class="hljs-attribute">--user</span>=kubelet-bootstrap<br></code></pre></td></tr></table></figure></li>
+<li>自动批准 system:nodes 组用户更新 kubelet 自身与 apiserver 通讯证书的 CSR 请求<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql">kubectl <span class="hljs-keyword">create</span> clusterrolebinding node-client-auto-renew-crt --clusterrole=<span class="hljs-keyword">system</span>:certificates.k8s.io:certificatesigningrequests:selfnodeclient --<span class="hljs-keyword">group</span>=<span class="hljs-keyword">system</span>:nodes<br></code></pre></td></tr></table></figure></li>
+<li>自动批准 system:nodes 组用户更新 kubelet 10250 api 端口证书的 CSR 请求<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql">kubectl <span class="hljs-keyword">create</span> clusterrolebinding node-server-auto-renew-crt --clusterrole=<span class="hljs-keyword">system</span>:certificates.k8s.io:certificatesigningrequests:selfnodeserver --<span class="hljs-keyword">group</span>=<span class="hljs-keyword">system</span>:nodes<br></code></pre></td></tr></table></figure>
+<h4 id="重启kube-controller-manager-和-kubelet-服务"><a href="#重启kube-controller-manager-和-kubelet-服务" class="headerlink" title="重启kube-controller-manager 和 kubelet 服务"></a>重启kube-controller-manager 和 kubelet 服务</h4><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-variable">$</span> systemctl restart kube<span class="hljs-literal">-controller</span><span class="hljs-literal">-manager</span><br><br><span class="hljs-comment"># 进入到ssl配置目录，删除 kubelet 证书</span><br><span class="hljs-variable">$</span> <span class="hljs-built_in">rm</span> <span class="hljs-operator">-f</span> kubelet<span class="hljs-literal">-client</span><span class="hljs-literal">-current</span>.pem kubelet<span class="hljs-literal">-client</span><span class="hljs-literal">-2019</span><span class="hljs-literal">-05</span><span class="hljs-literal">-10</span><span class="hljs-literal">-09</span><span class="hljs-literal">-57</span><span class="hljs-literal">-21</span>.pem kubelet.key kubelet.crt<br><br><span class="hljs-comment"># 重启启动，启动正常后会颁发有效期10年的ssl证书</span><br><span class="hljs-variable">$</span> systemctl restart kubelet<br><br><br><span class="hljs-comment"># 进入到ssl配置目录，查看证书有效期</span><br><span class="hljs-variable">$</span> openssl x509 <span class="hljs-operator">-in</span> kubelet<span class="hljs-literal">-client</span><span class="hljs-literal">-current</span>.pem <span class="hljs-literal">-noout</span> <span class="hljs-literal">-text</span> | grep <span class="hljs-string">&quot;Not&quot;</span><br><br>Not Before: May <span class="hljs-number">13</span> <span class="hljs-number">02</span>:<span class="hljs-number">36</span>:<span class="hljs-number">00</span> <span class="hljs-number">2019</span> GMT<br>Not After : May <span class="hljs-number">10</span> <span class="hljs-number">02</span>:<span class="hljs-number">36</span>:<span class="hljs-number">00</span> <span class="hljs-number">2029</span> GMT<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="证书及配置文件作用"><a href="#证书及配置文件作用" class="headerlink" title="证书及配置文件作用"></a>证书及配置文件作用</h4><ul>
+<li>token.csv</li>
+</ul>
+<p>该文件为一个用户的描述文件，基本格式为 Token,用户名,UID,用户组；这个文件在 apiserver 启动时被 apiserver 加载，然后就相当于在集群内创建了一个这个用户；接下来就可以用 RBAC 给他授权；持有这个用户 Token 的组件访问 apiserver 的时候，apiserver 根据 RBAC 定义的该用户应当具有的权限来处理相应请求</p>
+<ul>
+<li>bootstarp.kubeconfig</li>
+</ul>
+<p>该文件中内置了 token.csv 中用户的 Token，以及 apiserver CA 证书；kubelet 首次启动会加载此文件，使用 apiserver CA 证书建立与 apiserver 的 TLS 通讯，使用其中的用户 Token 作为身份标识像 apiserver 发起 CSR 请求</p>
+<ul>
+<li>kubelet-client.crt</li>
+</ul>
+<p>该文件在 kubelet 完成 TLS bootstrapping 后生成，此证书是由 controller manager 签署的，此后 kubelet 将会加载该证书，用于与 apiserver 建立 TLS 通讯，同时使用该证书的 CN 字段作为用户名，O 字段作为用户组向 apiserver 发起其他请求</p>
+<ul>
+<li>kubelet.crt</li>
+</ul>
+<p>该文件在 kubelet 完成 TLS bootstrapping 后并且没有配置 –feature-gates=RotateKubeletServerCertificate=true 时才会生成；这种情况下该文件为一个独立于 apiserver CA 的自签 CA 证书，有效期为 1 年；被用作 kubelet 10250 api 端口</p>
+<ul>
+<li>kubelet-server.crt</li>
+</ul>
+<p>该文件在 kubelet 完成 TLS bootstrapping 后并且配置了 –feature-gates=RotateKubeletServerCertificate=true 时才会生成；这种情况下该证书由 apiserver CA 签署，默认有效期同样是 1 年，被用作 kubelet 10250 api 端口鉴权</p>
+<ul>
+<li>kubelet-client-current.pem</li>
+</ul>
+<p>这是一个软连接文件，当 kubelet 配置了 –feature-gates=RotateKubeletClientCertificate=true 选项后，会在证书总有效期的 70%~90% 的时间内发起续期请求，请求被批准后会生成一个 kubelet-client-时间戳.pem；kubelet-client-current.pem 文件则始终软连接到最新的真实证书文件，除首次启动外，kubelet 一直会使用这个证书同 apiserver 通讯</p>
+<ul>
+<li>kubelet-server-current.pem</li>
+</ul>
+<p>同样是一个软连接文件，当 kubelet 配置了 –feature-gates=RotateKubeletServerCertificate=true 选项后，会在证书总有效期的 70%~90% 的时间内发起续期请求，请求被批准后会生成一个 kubelet-server-时间戳.pem；kubelet-server-current.pem 文件则始终软连接到最新的真实证书文件，该文件将会一直被用于 kubelet 10250 api 端口鉴权</p>
+<h4 id="TLS-bootstrapping-配置相关"><a href="#TLS-bootstrapping-配置相关" class="headerlink" title="TLS bootstrapping 配置相关"></a>TLS bootstrapping 配置相关</h4><p>当集群开启了 TLS 认证后，每个节点的 kubelet 组件都要使用由 apiserver 使用的 CA 签发的有效证书才能与 apiserver 通讯；此时如果节点多起来，为每个节点单独签署证书将是一件非常繁琐的事情；TLS bootstrapping 功能就是让 kubelet 先使用一个预定的低权限用户连接到 apiserver，然后向 apiserver 申请证书，kubelet 的证书由 apiserver 动态签署</p>
+<p> 在有些用户首次启动时，可能与遇到 kubelet 报 401 无权访问 apiserver 的错误；这是因为在默认情况下，kubelet 通过 bootstrap.kubeconfig 中的预设用户 Token 声明了自己的身份，然后创建 CSR 请求；但是不要忘记这个用户在我们不处理的情况下他没任何权限的，包括创建 CSR 请求；所以需要如下命令创建一个 ClusterRoleBinding，将预设用户 kubelet-bootstrap 与内置的 ClusterRole system:node-bootstrapper 绑定到一起，使其能够发起 CSR 请求<br> <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs routeros">kubectl create clusterrolebinding kubelet-bootstrap \<br> <span class="hljs-attribute">--clusterrole</span>=system:node-bootstrapper \<br> <span class="hljs-attribute">--user</span>=kubelet-bootstrap<br></code></pre></td></tr></table></figure></p>
+<h4 id="1-apiserver-预先放置-token-csv，内容样例如下"><a href="#1-apiserver-预先放置-token-csv，内容样例如下" class="headerlink" title="1. apiserver 预先放置 token.csv，内容样例如下:"></a>1. apiserver 预先放置 token.csv，内容样例如下:</h4><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs gradle"><span class="hljs-number">6</span>df3c701f979cee17732c30958745947,kubelet-bootstrap,<span class="hljs-number">10001</span>,<span class="hljs-string">&quot;system:bootstrappers&quot;</span><br><br>[root@linux-node1 ~]#  head -c <span class="hljs-number">16</span> <span class="hljs-regexp">/dev/u</span>random | od -An -t x | tr -d <span class="hljs-string">&#x27; &#x27;</span><br>ad6d5bb607a186796d8861557df0d17f <br>[root@linux-node1 ~]# vim <span class="hljs-regexp">/data/</span>kubernetes<span class="hljs-regexp">/ssl/</span> bootstrap-token.csv<br>ad6d5bb607a186796d8861557df0d17f,kubelet-bootstrap,<span class="hljs-number">10001</span>,<span class="hljs-string">&quot;system:kubelet-bootstrap&quot;</span><br><br></code></pre></td></tr></table></figure>
+<h4 id="2-允许-kubelet-bootstrap-用户创建首次启动的-CSR-请求"><a href="#2-允许-kubelet-bootstrap-用户创建首次启动的-CSR-请求" class="headerlink" title="2. 允许 kubelet-bootstrap 用户创建首次启动的 CSR 请求"></a>2. 允许 kubelet-bootstrap 用户创建首次启动的 CSR 请求</h4><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">[root@linux-node1 ~]<span class="hljs-comment"># kubectl create clusterrolebinding kubelet-bootstrap \</span><br>  --<span class="hljs-attr">clusterrole=</span>system:<span class="hljs-keyword">node</span><span class="hljs-title">-bootstrapper</span> \<br>  --<span class="hljs-attr">user=</span>kubelet-bootstrap<br>clusterrolebinding <span class="hljs-string">&quot;kubelet-bootstrap&quot;</span> created<br></code></pre></td></tr></table></figure>
+<h4 id="3-配置-kubelet-自动续期"><a href="#3-配置-kubelet-自动续期" class="headerlink" title="3. 配置 kubelet 自动续期"></a>3. 配置 kubelet 自动续期</h4><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs haml">RotateKubeletClientCertificate 用于自动续期 kubelet 连接 apiserver 所用的证书(kubelet-client-xxxx.pem)<br>RotateKubeletServerCertificate 用于自动续期 kubelet 10250 api 端口所使用的证书(kubelet-server-xxxx.pem)<br><br>KUBELET_ARGS=&quot;--cgroup-driver=cgroupfs \<br>              -<span class="ruby">-cluster-dns=<span class="hljs-number">10.254</span>.<span class="hljs-number">0.2</span> \</span><br><span class="ruby"></span>              -<span class="ruby">-resolv-conf=<span class="hljs-regexp">/etc/resolv</span>.conf \</span><br><span class="ruby"></span>              -<span class="ruby">-experimental-bootstrap-kubeconfig=<span class="hljs-regexp">/etc/kubernetes</span><span class="hljs-regexp">/bootstrap.kubeconfig \</span></span><br><span class="hljs-regexp"><span class="ruby"></span></span>              -<span class="ruby"><span class="hljs-regexp">-feature-gates=RotateKubeletClientCertificate=true,RotateKubeletServerCertificate=true \</span></span><br><span class="hljs-regexp"><span class="ruby"></span></span>              -<span class="ruby"><span class="hljs-regexp">-kubeconfig=/etc</span><span class="hljs-regexp">/kubernetes/kubelet</span>.kubeconfig \</span><br><span class="ruby"></span>              -<span class="ruby">-fail-swap-on=<span class="hljs-literal">false</span> \</span><br><span class="ruby"></span>              -<span class="ruby">-cert-dir=<span class="hljs-regexp">/etc/kubernetes</span><span class="hljs-regexp">/ssl \</span></span><br><span class="hljs-regexp"><span class="ruby"></span></span>              -<span class="ruby"><span class="hljs-regexp">-cluster-domain=cluster.local. \</span></span><br><span class="hljs-regexp"><span class="ruby"></span></span>              -<span class="ruby"><span class="hljs-regexp">-hairpin-mode=promiscuous-bridge \</span></span><br><span class="hljs-regexp"><span class="ruby"></span></span>              -<span class="ruby"><span class="hljs-regexp">-serialize-image-pulls=false \</span></span><br><span class="hljs-regexp"><span class="ruby"></span></span>              -<span class="ruby"><span class="hljs-regexp">-pod-infra-container-image=gcr.io/google</span>_containers/pause-<span class="hljs-symbol">amd64:</span><span class="hljs-number">3.0</span><span class="hljs-string">&quot;</span></span><br></code></pre></td></tr></table></figure>
+
+<h4 id="4-配置-controller-manager-自动批准相关-CSR-请求"><a href="#4-配置-controller-manager-自动批准相关-CSR-请求" class="headerlink" title="4. 配置 controller manager 自动批准相关 CSR 请求"></a>4. 配置 controller manager 自动批准相关 CSR 请求</h4><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs haml">如果不配置 --feature-gates=RotateKubeletServerCertificate=true 参数，则即使配置了相关的 RBAC 规则，也只会自动批准 kubelet client 的 renew 请求<br><br>KUBE_CONTROLLER_MANAGER_ARGS=&quot;--address=0.0.0.0 \<br>                              -<span class="ruby">-service-cluster-ip-range=<span class="hljs-number">10.254</span>.<span class="hljs-number">0.0</span>/<span class="hljs-number">16</span> \</span><br><span class="ruby"></span>                              -<span class="ruby">-feature-gates=RotateKubeletServerCertificate=<span class="hljs-literal">true</span> \</span><br><span class="ruby"></span>                              -<span class="ruby">-cluster-name=kubernetes \</span><br><span class="ruby"></span>                              -<span class="ruby">-cluster-signing-cert-file=<span class="hljs-regexp">/etc/kubernetes</span><span class="hljs-regexp">/ssl/k</span>8s-root-ca.pem \</span><br><span class="ruby"></span>                              -<span class="ruby">-cluster-signing-key-file=<span class="hljs-regexp">/etc/kubernetes</span><span class="hljs-regexp">/ssl/k</span>8s-root-ca-key.pem \</span><br><span class="ruby"></span>                              -<span class="ruby">-service-account-private-key-file=<span class="hljs-regexp">/etc/kubernetes</span><span class="hljs-regexp">/ssl/k</span>8s-root-ca-key.pem \</span><br><span class="ruby"></span>                              -<span class="ruby">-root-ca-file=<span class="hljs-regexp">/etc/kubernetes</span><span class="hljs-regexp">/ssl/k</span>8s-root-ca.pem \</span><br><span class="ruby"></span>                              -<span class="ruby">-leader-elect=<span class="hljs-literal">true</span> \</span><br><span class="ruby"></span>                              -<span class="ruby">-node-monitor-grace-period=40s \</span><br><span class="ruby"></span>                              -<span class="ruby">-node-monitor-period=5s \</span><br><span class="ruby"></span>                              -<span class="ruby">-pod-eviction-timeout=5m0s<span class="hljs-string">&quot;</span></span><br></code></pre></td></tr></table></figure>
+
+<h4 id="5-创建自动批准相关-CSR-请求的-ClusterRole"><a href="#5-创建自动批准相关-CSR-请求的-ClusterRole" class="headerlink" title="5. 创建自动批准相关 CSR 请求的 ClusterRole"></a>5. 创建自动批准相关 CSR 请求的 ClusterRole</h4><p>相对于 1.7 版本，1.8 的 apiserver 自动创建了前两条 ClusterRole，所以只需要创建一条就行了</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># A ClusterRole which instructs the CSR approver to approve a node requesting a</span><br><span class="hljs-comment"># serving cert matching its client cert.</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterRole</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">rbac.authorization.k8s.io/v1</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">system:certificates.k8s.io:certificatesigningrequests:selfnodeserver</span><br><span class="hljs-attr">rules:</span><br><span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;certificates.k8s.io&quot;</span>]<br>  <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;certificatesigningrequests/selfnodeserver&quot;</span>]<br>  <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;create&quot;</span>]<br></code></pre></td></tr></table></figure>
+
+<h4 id="6-将-ClusterRole-绑定到适当的用户组，以完成自动批准相关-CSR-请求"><a href="#6-将-ClusterRole-绑定到适当的用户组，以完成自动批准相关-CSR-请求" class="headerlink" title="6. 将 ClusterRole 绑定到适当的用户组，以完成自动批准相关 CSR 请求"></a>6. 将 ClusterRole 绑定到适当的用户组，以完成自动批准相关 CSR 请求</h4><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment"># 自动批准 system:bootstrappers 组用户 TLS bootstrapping 首次申请证书的 CSR 请求</span><br>kubectl create clusterrolebinding node-client-auto-approve-csr <span class="hljs-attribute">--clusterrole</span>=system:certificates.k8s.io:certificatesigningrequests:nodeclient <span class="hljs-attribute">--group</span>=system:bootstrappers<br><br><span class="hljs-comment"># 自动批准 system:nodes 组用户更新 kubelet 自身与 apiserver 通讯证书的 CSR 请求</span><br>kubectl create clusterrolebinding node-client-auto-renew-crt <span class="hljs-attribute">--clusterrole</span>=system:certificates.k8s.io:certificatesigningrequests:selfnodeclient <span class="hljs-attribute">--group</span>=system:nodes<br><br><span class="hljs-comment"># 自动批准 system:nodes 组用户更新 kubelet 10250 api 端口证书的 CSR 请求</span><br>kubectl create clusterrolebinding node-server-auto-renew-crt <span class="hljs-attribute">--clusterrole</span>=system:certificates.k8s.io:certificatesigningrequests:selfnodeserver <span class="hljs-attribute">--group</span>=system:nodes<br></code></pre></td></tr></table></figure>
+<p>一切就绪后重启 kubelet 组件，1.8 版本 kubelet 会自动重载证书</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/k8s/">k8s</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/k8s/">k8s</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/02/18/as/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Helm Hooks Usage</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/10/04/Helm-Template%E8%AF%AD%E6%B3%95/">
+                        <span class="hidden-mobile">Helm Template语法</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDM4OS8xMDkyNg==">
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#lv-container', function() {
+        Fluid.utils.createScript('https://cdn-city.livere.com/js/embed.dist.js');
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hannius.github.io/" target="_blank" rel="nofollow noopener"><span>Blog</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/hannius" target="_blank" rel="nofollow noopener"><span>Hannius</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        粤ICP备18019482号
+      </a>
+    </span>
+    
+      
+        <span>
+          <a
+            href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=18019482"
+            rel="nofollow noopener"
+            class="beian-police"
+            target="_blank"
+          >
+            
+              <span style="visibility: hidden; width: 0">|</span>
+              <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+            
+            <span>粤公网安备18019482号</span>
+          </a>
+        </span>
+      
+    
+  </div>
+
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

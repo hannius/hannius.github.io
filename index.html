@@ -183,6 +183,57 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/05/08/k8s-%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4Terminating%E4%BA%A7%E7%94%9F%E5%8E%9F%E5%9B%A0%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" target="_self">
+          k8s 命名空间Terminating产生原因及解决方法
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/05/08/k8s-%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4Terminating%E4%BA%A7%E7%94%9F%E5%8E%9F%E5%9B%A0%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" target="_self">
+          
+          
+            
+          
+          为什么删除ns会出现Terminating的情况当删除集群中的某个namespace之后，有时候namespace并没有按照我们的期望正常删除，而是一直卡在Terminating状态。
+删除namespace后到底发生了什么从kubectl delele namespace动作开始，当执行了删除命名空间的动作后，k8s并不会直接删除该命名空间，而是设置了namespace对象的metadata.d
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-05-08 10:56" pubdate>
+              2021-05-08
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/k8s/">k8s</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/k8s/">k8s</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/04/24/Hexo%20Update%20From%203.5%20to%205.4/" target="_self">
           Hexo Update From 3.5 to 5.4
         </a>
@@ -223,6 +274,168 @@ NexT 主题由之前的 5.1.x 更新至 7.x.
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/hexo/">hexo</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/02/18/as/" target="_self">
+          Helm Hooks Usage
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/02/18/as/" target="_self">
+          
+          
+            
+          
+          Helm Hooks和 Kubernetes 里面的容器一样，Helm 也提供了 Hook 的机制，允许 chart 开发人员在 release 的生命周期中的某些节点来进行干预，比如可以利用 Hooks 来做下面的这些事情：
+
+在加载任何其他 chart 之前，在安装过程中加载 ConfigMap 或 Secret
+在安装新 chart 之前执行作业以备份数据库，然后在升级后执行第二个作业以恢复
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-02-18 11:36" pubdate>
+              2021-02-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/k8s/">k8s</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/k8s/">k8s</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/10/11/Untitled/" target="_self">
+          Kubelet 证书自动续期
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/10/11/Untitled/" target="_self">
+          
+          
+            
+          
+          一、问题现象和原因Kubernetes 日志错误当 Kubernetes 集群日志中出现 certificate has expired or is not yet valid 错误信息时，表明证书过期
+证书过期原因
+服务器时间不对，导致证书过期
+确实证书过期了证书过期，很多同学会很疑惑，我证书明明签署10年有效期或者更久，怎么刚1年就过期了，下面就来解惑。
+
+Kubernetes 集群证书集群分
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-10-11 17:20" pubdate>
+              2020-10-11
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/k8s/">k8s</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/k8s/">k8s</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/10/04/Helm-Template%E8%AF%AD%E6%B3%95/" target="_self">
+          Helm Template语法
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/10/04/Helm-Template%E8%AF%AD%E6%B3%95/" target="_self">
+          
+          
+            
+          
+          
+官方文档：https://helm.sh/docs/chart_template_guide/function_list/
+
+_helpers.tpl在chart中以 “下划线” 开头的文件，称为”子模版”.
+例如在 _helper.tpl 中定义子模块，格式：&#123;&#123;- define "模版名字" -&#125;&#125; 模版内容 &#123;&#123;- end -&#
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-10-04 12:01" pubdate>
+              2020-10-04
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/k8s/">k8s</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/k8s/">k8s</a>
             
           </div>
         
@@ -479,212 +692,6 @@ cfssl方式1.cfssl下载地址:12345VERSION=R1.2for i in &#123;cf
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2018/08/19/%E5%8F%AA%E5%9C%A8%E7%A7%BB%E5%8A%A8%E7%AB%AF%E7%BD%91%E9%A1%B5%E5%86%85%E6%98%BE%E7%A4%BA%E2%80%9DFork-me-on-Github%E2%80%9D/" target="_self">
-          只在移动端网页内显示”Fork me on Github”
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2018/08/19/%E5%8F%AA%E5%9C%A8%E7%A7%BB%E5%8A%A8%E7%AB%AF%E7%BD%91%E9%A1%B5%E5%86%85%E6%98%BE%E7%A4%BA%E2%80%9DFork-me-on-Github%E2%80%9D/" target="_self">
-          
-          
-            
-          
-          1.修改文件hexo博客根目录\themes\next\layout_layout.swig 找到如下代码块1234&lt;html class=&quot;&#123;&#123; html_class | lower &#125;&#125;&quot; lang=&quot;&#123;&#123; config.language &#125;&#125;&quot;&gt;&lt;head
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-08-19 15:48" pubdate>
-              2018-08-19
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/hexo/">hexo</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/hexo/">hexo</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2018/07/19/MySQL5-6-5-7-SSL-Config/" target="_self">
-          MySQL5.6  5.7 SSL Config
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2018/07/19/MySQL5-6-5-7-SSL-Config/" target="_self">
-          
-          
-            
-          
-          5.71.mysql5.7上开启并配置ssl1234567891011121314151617[root@mysqlmaster01 bin]# ./mysql_ssl_rsa_setup --datadir=/data/mysql_data1/ --user=mysqlGenerating a 2048 bit RSA private key...........................
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-07-19 11:02" pubdate>
-              2018-07-19
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/mysql/">mysql</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/mysql/">mysql</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2018/07/10/Jenkins-CICD%E5%AE%9E%E7%94%A8%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/" target="_self">
-          Jenkins CICD实用经验分享
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2018/07/10/Jenkins-CICD%E5%AE%9E%E7%94%A8%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/" target="_self">
-          
-          
-            
-          
-          1.修改 JVM 的内存配置Jenkins 启动方式有两种方式，一种是以 Jdk Jar 方式运行，一种是将 War 包放在 Tomcat 容器下运行。不管何种方式运行，都会存在一个问题就是，默认 JVM 内存分配太少，导致启动或者运行一段时间后内存溢出报错 java.lang.OutOfMemoryError: PermGen space。所以，需要在启动前修改 JVM 内存配置。以 Tomca
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-07-10 16:33" pubdate>
-              2018-07-10
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/jenkins/">jenkins</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/jenkins/">jenkins</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2018/07/03/pipeline-jnlp/" target="_self">
-          pipeline jnlp
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2018/07/03/pipeline-jnlp/" target="_self">
-          
-          
-            
-          
-          通过默认的jnlp
-jenkins-&gt;系统管理-&gt;系统设置-&gt;新增一个云(kubernetes)
-kubernetes相应设置：
-
-
-Name: kubernetes_jnlp
-Kubernetes URL: http://127.0.0.1:8080(通过http访问不用添加certificate key,不然要使用6443的https协议:API Server证书经过知名CA
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-07-03 16:30" pubdate>
-              2018-07-03
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/jenkins/">jenkins</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/jenkins/">jenkins</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
@@ -770,7 +777,7 @@ Kubernetes URL: http://127.0.0.1:8080(通过http访问不用添加certificate ke
   <div class="beian">
     <span>
       <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
-        粤ICP备18019482号-1
+        粤ICP备18019482号
       </a>
     </span>
     

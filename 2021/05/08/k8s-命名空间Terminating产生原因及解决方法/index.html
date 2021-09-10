@@ -1,0 +1,560 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="Still Waters Run Deep">
+  <meta name="author" content="Martin Lei">
+  <meta name="keywords" content="">
+  
+  <title>k8s 命名空间Terminating产生原因及解决方法 - 让一切随风</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.leiyawu.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="让一切随风" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Martin.Lei's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="k8s 命名空间Terminating产生原因及解决方法">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-05-08 10:56" pubdate>
+        May 8, 2021 am
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      18
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">k8s 命名空间Terminating产生原因及解决方法</h1>
+            
+            <div class="markdown-body">
+              <h2 id="为什么删除ns会出现Terminating的情况"><a href="#为什么删除ns会出现Terminating的情况" class="headerlink" title="为什么删除ns会出现Terminating的情况"></a>为什么删除ns会出现Terminating的情况</h2><p>当删除集群中的某个namespace之后，有时候namespace并没有按照我们的期望正常删除，而是一直卡在Terminating状态。</p>
+<h3 id="删除namespace后到底发生了什么"><a href="#删除namespace后到底发生了什么" class="headerlink" title="删除namespace后到底发生了什么"></a>删除namespace后到底发生了什么</h3><p>从kubectl delele namespace动作开始，当执行了删除命名空间的动作后，k8s并不会直接删除该命名空间，而是设置了namespace对象的metadata.deleteTimestasp字段，然后kube-controlller-manager组件中的namespace-controller开始工作，负责执行namespace删除的相关事宜，比如清理被删除命名空间下面的资源等，最后才会删除该命名空间，而如果namespace-controller有报错或者没有走到终止流程，就会一直卡在Terminating状态。</p>
+<p>namespace-controller的工作流程，如图所示:</p>
+<p><img src="http://cos.leiyawu.com/docker/k8s/del_ns_status.png" srcset="/img/loading.gif" lazyload alt="es_user"></p>
+<h2 id="状态"><a href="#状态" class="headerlink" title="状态"></a>状态</h2><p>使用kubectl  delete -f xxx.yaml，再次执行 kubectl apply -f xxx.yaml，提示：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">➜  fb git:(master) kubectl apply -f .<br>Error <span class="hljs-keyword">from</span> <span class="hljs-keyword">server</span> (Forbidden): error <span class="hljs-keyword">when</span> creating &quot;kubesphere-complete-setup.yaml&quot;: configmaps &quot;ks-installer&quot; <span class="hljs-keyword">is</span> forbidden: unable <span class="hljs-keyword">to</span> <span class="hljs-keyword">create</span> <span class="hljs-built_in">new</span> content <span class="hljs-keyword">in</span> namespace kubesphere-<span class="hljs-keyword">system</span> because it <span class="hljs-keyword">is</span> being terminated<br>Error <span class="hljs-keyword">from</span> <span class="hljs-keyword">server</span> (Forbidden): error <span class="hljs-keyword">when</span> creating &quot;kubesphere-complete-setup.yaml&quot;: serviceaccounts &quot;ks-installer&quot; <span class="hljs-keyword">is</span> forbidden: unable <span class="hljs-keyword">to</span> <span class="hljs-keyword">create</span> <span class="hljs-built_in">new</span> content <span class="hljs-keyword">in</span> namespace kubesphere-<span class="hljs-keyword">system</span> because it <span class="hljs-keyword">is</span> being terminated<br>Error <span class="hljs-keyword">from</span> <span class="hljs-keyword">server</span> (Forbidden): error <span class="hljs-keyword">when</span> creating &quot;kubesphere-complete-setup.yaml&quot;: deployments.apps &quot;ks-installer&quot; <span class="hljs-keyword">is</span> forbidden: unable <span class="hljs-keyword">to</span> <span class="hljs-keyword">create</span> <span class="hljs-built_in">new</span> content <span class="hljs-keyword">in</span> namespace kubesphere-<span class="hljs-keyword">system</span> because it <span class="hljs-keyword">is</span> being terminated<br><br>➜  fb git:(master) kubectl  <span class="hljs-keyword">get</span> ns <br><span class="hljs-type">NAME</span>                STATUS        AGE<br><span class="hljs-keyword">default</span>             Active        <span class="hljs-number">15</span>h<br>kube-node-lease     Active        <span class="hljs-number">15</span>h<br>kube-<span class="hljs-built_in">public</span>         Active        <span class="hljs-number">15</span>h<br>kube-<span class="hljs-keyword">system</span>         Active        <span class="hljs-number">15</span>h<br>cattle-<span class="hljs-keyword">system</span>       Terminating   <span class="hljs-number">28</span>m<br><span class="hljs-keyword">Local</span>               Terminating   <span class="hljs-number">28</span>m<br></code></pre></td></tr></table></figure>
+
+
+<h2 id="原因及解决方法"><a href="#原因及解决方法" class="headerlink" title="原因及解决方法"></a>原因及解决方法</h2><h3 id="原因1：finalizer-main"><a href="#原因1：finalizer-main" class="headerlink" title="原因1：finalizer(main)"></a>原因1：finalizer(main)</h3><p>finalizer导致namespace Terminating一般主要集群中以下两种情况：</p>
+<h4 id="1-namespace资源对象的spec-finalizer-列表中不为空"><a href="#1-namespace资源对象的spec-finalizer-列表中不为空" class="headerlink" title="1. namespace资源对象的spec.finalizer[] 列表中不为空"></a>1. namespace资源对象的spec.finalizer[] 列表中不为空</h4><p>rancher删除之后，有些namespace删除后就是这种情况.</p>
+<p>解决办法：手动清理</p>
+<ul>
+<li>查看cattle-system的namespace描述<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">➜  fb git:(master) kubectl <span class="hljs-keyword">get</span> ns cattle-<span class="hljs-keyword">system</span>  -o <span class="hljs-type">json</span> &gt; cattle.json<br></code></pre></td></tr></table></figure></li>
+<li>编辑json文件，删除spec字段的内存，因为k8s集群需要认证<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs vim">➜  fb gi<span class="hljs-variable">t:</span>(master) <span class="hljs-keyword">vim</span> cattle-<span class="hljs-built_in">system</span>.json<br>将<br><span class="hljs-string">&quot;spec&quot;</span>: &#123;        <span class="hljs-string">&quot;finalizers&quot;</span>: [            <span class="hljs-string">&quot;kubernetes&quot;</span><br>        ]<br>    &#125;,<br>更改为：<br><span class="hljs-string">&quot;spec&quot;</span>: &#123;<br>    <br>  &#125;,<br></code></pre></td></tr></table></figure></li>
+<li>新开一个窗口运行kubectl proxy跑一个API代理在本地的8081端口<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs routeros">➜  ~ kubectl<span class="hljs-built_in"> proxy </span><span class="hljs-attribute">--port</span>=8081<br>Starting <span class="hljs-keyword">to</span> serve on 127.0.0.1:8081<br></code></pre></td></tr></table></figure></li>
+<li>check the status<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">➜  fb git:(<span class="hljs-literal">master</span>) lsof -i:<span class="hljs-number">8081</span><br>COMMAND   PID    <span class="hljs-keyword">USER</span>   <span class="hljs-title">FD</span>   <span class="hljs-keyword">TYPE</span>    DEVICE SIZE/OFF <span class="hljs-keyword">NODE</span> <span class="hljs-title">NAME</span><br>kubectl <span class="hljs-number">31323</span> leiyawu    <span class="hljs-number">3</span>u  IPv4 <span class="hljs-number">650617594</span>      <span class="hljs-number">0</span>t0  TCP localhost:tproxy (LISTEN)<br></code></pre></td></tr></table></figure></li>
+<li>运行curl命令进行删除 <figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">➜  fb git:(master) curl -k -H <span class="hljs-string">&quot;Content-Type:application/json&quot;</span> -X PUT --data-binary @cattle.json http:<span class="hljs-regexp">//</span><span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">8081</span><span class="hljs-regexp">/api/</span>v1<span class="hljs-regexp">/namespaces/</span>cattle-system/finalize<br></code></pre></td></tr></table></figure>
+<html>
+<font color=#A52A2A size=2 >注意：命令中的cattle.json是之前修改的json文件，cattle-system就是terminating的命名空间</font>
+</html></li>
+</ul>
+<ul>
+<li>再次查看namespace，发现cattle-system命名空间已经消失了。<br>如果出现多个命名空间无法删除的情况，循环遍历以上操作即可。</li>
+</ul>
+<html>
+<font color=#A52A2A size=3 >
+除了通过kube-proxy api来执行，也可以直接请求api server,使用kubectl replace命令(未测试)：</font>
+</html>
+
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">kubectl replace <span class="hljs-params">--raw</span> <span class="hljs-string">&quot;/api/v1/namespaces/cattle-system/finalize&quot;</span> -f <span class="hljs-string">./cattle.json</span><br></code></pre></td></tr></table></figure>
+
+
+<h4 id="2-namespace资源对象的metadata-finalizer-列表不为空"><a href="#2-namespace资源对象的metadata-finalizer-列表不为空" class="headerlink" title="2. namespace资源对象的metadata.finalizer[] 列表不为空"></a>2. namespace资源对象的metadata.finalizer[] 列表不为空</h4><p>比如：将集群托管到rancher管理后，rancher就会写finalizer到metadata.finalizer[] 列表，而当集群脱离rancher管理之后，手动删除namespace，往往就会发生Terminating</p>
+<p>解决办法：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs applescript">$ kubelet edit ns &lt;<span class="hljs-built_in">name</span>&gt; <span class="hljs-comment">#将metadata.finalizer[]列表删除</span><br></code></pre></td></tr></table></figure>
+<p>或者直接通过tke 控制台YAML编辑对应的NS</p>
+<h3 id="原因2：资源发现-minor"><a href="#原因2：资源发现-minor" class="headerlink" title="原因2：资源发现(minor)"></a>原因2：资源发现(minor)</h3><h4 id="k8s的api组织形式"><a href="#k8s的api组织形式" class="headerlink" title="k8s的api组织形式"></a>k8s的api组织形式</h4><p>k8s使用的是声明式API，其中API是通过分组、版本、资源名组成，而谈论某个资源，必须要属于某个API分组/版本，比如通过yaml创建对象时，除了要声明Kind外，还需要声明apiVersion对象。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><span class="hljs-comment"># 查看资源</span><br><span class="hljs-variable">$ </span>kubectl api-resources [-o wide]<br><span class="hljs-comment"># 查看API版本</span><br><span class="hljs-variable">$ </span>kubectl api-versions<br></code></pre></td></tr></table></figure>
+
+<h4 id="聚合层扩展kubernetes-api"><a href="#聚合层扩展kubernetes-api" class="headerlink" title="聚合层扩展kubernetes api"></a>聚合层扩展kubernetes api</h4><p>聚合层通常用于扩展k8s api-server，允许添加新的API分组/版本。用户通过创建apiService对象来注册API，并声明自定义的扩展apiserver，当请求到该API分组/版本的时候，k8s apiservice会代理转发到后端自定义的apiserver来处理。比如，TKE集群中的hpa-metrics-server，就实现了metrics.k8s.io/v1beta1 这个API分组/版本（用户也可以部署promethues的metrics-adapter进行替换）。</p>
+<p>在资源发现这里，会先获取API分组/版本信息，然后再获取各个API分组/版本的资源信息，从而罗列出集群中的所有资源。如果罗列资源发生报错，也有可能导致namespace卡主Terminating状态，常见于聚合层扩展kubernetes api。</p>
+<ol>
+<li>查看是namespace 卡住Terminating的原因<figure class="highlight vbscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs vbscript">$ kubectl <span class="hljs-keyword">get</span> namespace &lt;name&gt; -o yaml<br>conditions:<br>  - lastTransitionTime: <span class="hljs-string">&quot;2021-03-12T12:46:17Z&quot;</span><br>    message: <span class="hljs-comment">&#x27;Discovery failed for some groups, 1 failing: unable to retrieve the</span><br>      complete list of <span class="hljs-built_in">server</span> APIs: webhook.cert-manager.io/v1beta1: the <span class="hljs-built_in">server</span> <span class="hljs-keyword">is</span><br>      currently unable <span class="hljs-keyword">to</span> handle the <span class="hljs-built_in">request</span><span class="hljs-comment">&#x27;</span><br>    reason: DiscoveryFailed<br>    status: <span class="hljs-string">&quot;True&quot;</span><br>    type: NamespaceDeletionDiscoveryFailure<br></code></pre></td></tr></table></figure></li>
+<li>查看apiservice的状态<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs lasso">➜  fb git:(master) kubectl get apiservice<br>NAME                                   SERVICE                           AVAILABLE   AGE<br>v1.                                    <span class="hljs-built_in">Local</span>                             <span class="hljs-literal">True</span>        <span class="hljs-number">484</span>d<br>v1.admissionregistration.k8s.io        <span class="hljs-built_in">Local</span>                             <span class="hljs-literal">True</span>        <span class="hljs-number">484</span>d<br>v1.apiextensions.k8s.io                <span class="hljs-built_in">Local</span>                             <span class="hljs-literal">True</span>        <span class="hljs-number">484</span>d<br>v1.apps                                <span class="hljs-built_in">Local</span>                             <span class="hljs-literal">True</span>        <span class="hljs-number">484</span>d<br>v1.authentication.k8s.io               <span class="hljs-built_in">Local</span>                             <span class="hljs-literal">True</span>        <span class="hljs-number">484</span>d<br><span class="hljs-params">...</span><br></code></pre></td></tr></table></figure></li>
+<li>将异常的apiservice状态恢复成True或者删除不需要的apiservice，即可恢复</li>
+</ol>
+<p>参考文献：</p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1802531">https://cloud.tencent.com/developer/article/1802531</a><br><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1678604">https://cloud.tencent.com/developer/article/1678604</a><br><a target="_blank" rel="noopener" href="https://medium.com/%E8%BC%95%E9%AC%86%E5%B0%8F%E5%93%81-pks%E8%88%87k8s%E7%9A%84%E9%BB%9E%E6%BB%B4/%E7%A7%BB%E9%99%A4%E8%A9%B2%E6%AD%BB%E7%9A%84terminating-namespace-c6594ebe351">https://medium.com/%E8%BC%95%E9%AC%86%E5%B0%8F%E5%93%81-pks%E8%88%87k8s%E7%9A%84%E9%BB%9E%E6%BB%B4/%E7%A7%BB%E9%99%A4%E8%A9%B2%E6%AD%BB%E7%9A%84terminating-namespace-c6594ebe351</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/k8s/">k8s</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/k8s/">k8s</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/04/24/Hexo%20Update%20From%203.5%20to%205.4/">
+                        <span class="hidden-mobile">Hexo Update From 3.5 to 5.4</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDM4OS8xMDkyNg==">
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#lv-container', function() {
+        Fluid.utils.createScript('https://cdn-city.livere.com/js/embed.dist.js');
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hannius.github.io/" target="_blank" rel="nofollow noopener"><span>Blog</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/hannius" target="_blank" rel="nofollow noopener"><span>Hannius</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        粤ICP备18019482号
+      </a>
+    </span>
+    
+      
+        <span>
+          <a
+            href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=18019482"
+            rel="nofollow noopener"
+            class="beian-police"
+            target="_blank"
+          >
+            
+              <span style="visibility: hidden; width: 0">|</span>
+              <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+            
+            <span>粤公网安备18019482号</span>
+          </a>
+        </span>
+      
+    
+  </div>
+
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
